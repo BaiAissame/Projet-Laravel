@@ -12,9 +12,7 @@ return new class extends Migration {
     {
         Schema::create('task_priorities', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // Nom de la priorité (ex: "Haute", "Moyenne", "Basse")
-            $table->string('color')->nullable(); // Code couleur optionnel (ex: rouge, orange, vert)
-            $table->integer('level')->unique(); // Niveau de priorité (ex: 1=Haute, 2=Moyenne, 3=Basse)
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }

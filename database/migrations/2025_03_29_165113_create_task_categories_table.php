@@ -12,8 +12,7 @@ return new class extends Migration {
     {
         Schema::create('task_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // Nom de la catégorie
-            $table->text('description')->nullable(); // Description optionnelle
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }

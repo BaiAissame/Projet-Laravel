@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Nom du projet
-            $table->text('description')->nullable(); // Description du projet
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Créateur du projet
-            $table->date('start_date')->nullable(); // Date de début
-            $table->date('end_date')->nullable(); // Date de fin
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

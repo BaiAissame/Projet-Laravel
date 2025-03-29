@@ -52,6 +52,7 @@ Table tasks {
   title varchar
   description text
   project_id int
+  user_id int
   task_category_id int
   task_priority_id int
   created_at timestamp
@@ -72,3 +73,4 @@ Ref: tasks.task_priority_id > task_priorities.id
 Ref: task_user.task_id > tasks.id
 Ref: task_user.user_id > users.id
 Ref: projects.user_id > users.id
+Ref: users.id > tasks.user_id

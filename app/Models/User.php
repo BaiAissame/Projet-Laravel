@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -53,7 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_user')
-                    ->using(TaskUser::class)
-                    ->withTimestamps();
+            ->using(TaskUser::class)
+            ->withTimestamps();
     }
 }

@@ -64,7 +64,7 @@ Cela lance les conteneurs en arrière-plan.
 ## 🌍 Accès à l'application
 
 - **Frontend** : [http://localhost](http://localhost)
-- **PHPMyAdmin** (si configuré) : [http://localhost:8081](http://localhost:8081)
+- **PHPMyAdmin** (si configuré) : [http://localhost:8080](http://localhost:8080)
 
 ---
 
@@ -126,3 +126,7 @@ Vérifier que Docker est bien démarré avant d'exécuter `sail up`.
 ## 📜 Licence
 
 Ce projet est sous licence **MIT**. Voir le fichier `LICENSE` pour plus de détails.
+
+## PHP my admin
+
+Au cas ou votre phpmyadmin ne marche pas essayer cette commande `docker network create sail`

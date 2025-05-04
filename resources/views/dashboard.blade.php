@@ -1,11 +1,11 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-white leading-tight">
-            {{ __('Tableau de Bord') }}
-        </h2>
-    </x-slot>
+   <x-nav-left></x-nav-left>
+   <div class="col-span-1"></div>
+   <div class="col-span-8">
+      <x-block-projet title="Récemment consultés" icon="fas fa-clock" data=""></x-block-projet>
+      <div class="mt-20"></div>
+      <x-block-projet title="Espaces de travail" icon="fas fa-briefcase" data=""></x-block-projet>
+   </div>
+   <div class="col-span-1"></div>
 
-    <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bienvenue sur le Dashboard</h1>
-    </div>
 </x-app-layout>

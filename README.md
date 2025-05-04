@@ -95,6 +95,10 @@ Cela lance les conteneurs en arrière-plan.
 ./vendor/bin/sail npm run build
 ```
 
+**crée un lien symbolique vers le dossier storage/public (photo)**
+```bash
+./vendor/bin/sail artisan storage:link
+```
 ---
 
 ## 🔧 Dépannage

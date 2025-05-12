@@ -30,6 +30,7 @@
             <main class="grid grid-cols-12 flex-1">
                 <x-nav-left></x-nav-left>
                 {{ $slot }}
+                <x-modal-create-tableau></x-modal-create-tableau>
             </main>
         </div>
     </body>

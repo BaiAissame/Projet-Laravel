@@ -15,7 +15,7 @@
                     {{-- <x-nav-link :href="route('#')" :active="request()->routeIs('dashboard')"> --}}
                         <p class="cursor-pointer">Espaces de travail</p>
                         <p class="cursor-pointer">Récent</p>
-                        <p class="cursor-pointer">Crée</p>
+                        <p class="cursor-pointer" id="nav-create-table">Crée</p>
                     {{-- </x-nav-link> --}}
                     {{-- <x-nav-link :href="route('#')"> --}}
                         

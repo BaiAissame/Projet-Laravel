@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex">
                     <a href="{{ route('dashboard') }}">
-                        <img src="logo-kanboard.png" alt="kanboard-logo" class="h-14 object-cover">
+                        <img src="{{ asset('logo-kanboard.png') }}" alt="kanboard-logo" class="h-14 object-cover">
                     </a>
                 </div>
 

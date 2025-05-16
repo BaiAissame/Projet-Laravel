@@ -1,8 +1,8 @@
-@if (isset($data))
-    <section class="w-full">
-        <h2 class="mt-8 text-lg font-semibold text-[#262981]"><i class="{{ $icon }} mr-2"></i> {{ $title }}
-        </h2>
-        <ul class="mt-12 grid grid-cols-4 gap-4 max-w-[968px]">
+<section class="w-full">
+    <h2 class="mt-8 text-lg font-semibold text-[#262981]"><i class="{{ $icon }} mr-2"></i> {{ $title }}
+    </h2>
+    <ul class="mt-12 grid grid-cols-4 gap-4 max-w-[968px]">
+        @if (isset($data))
 
             @foreach ($data as $projet)
                 <li class="col-span-1">
@@ -17,6 +17,6 @@
                 </li>
             @endforeach
 
-        </ul>
-    </section>
-@endif
+        @endif
+    </ul>
+</section>

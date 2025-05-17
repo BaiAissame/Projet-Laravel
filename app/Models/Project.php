@@ -24,33 +24,44 @@ class Project extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Les membres du projet (utilisateurs qui ont accès mais ne sont pas le créateur)
-     */
+ 
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'project_user')
             ->using(ProjectUser::class)
             ->withTimestamps();
     }
+    
+   protected static function boot()
+{
+    parent::boot();
 
-    protected static function boot()
-    {
-        parent::boot();
+    static::creating(function ($project) {
+        $baseSlug = Str::slug($project->name);
+        $slug = $baseSlug;
+        $counter = 1;
+        while (self::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $project->slug = $slug;
+    });
 
-        static::creating(function ($project) {
-            $project->slug = Str::slug($project->name);
-        });
-
-        static::updating(function ($project) {
-            if ($project->isDirty('name')) {
-                $project->slug = Str::slug($project->name);
+    static::updating(function ($project) {
+        if ($project->isDirty('name')) {
+            $baseSlug = Str::slug($project->name);
+            $slug = $baseSlug;
+            $counter = 1;
+            while (self::where('slug', $slug)->where('id', '!=', $project->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
             }
-        });
-    }
-
-      public function getRouteKeyName()
+            $project->slug = $slug;
+        }
+    });
+}
+    
+    public function getRouteKeyName()
     {
         return 'slug';
     }

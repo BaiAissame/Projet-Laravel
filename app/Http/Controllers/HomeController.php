@@ -28,7 +28,11 @@ class HomeController extends Controller
 
     public function show(Project $projet)
     {
+         if ($projet->user_id != Auth::id() && !$projet->members->contains(Auth::id())) {
+            return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
+        }
+        
         $projets = Project::where('user_id', Auth::user()->id)->get();
-        return view('projet.show', compact('projets'));
+        return view('projet.show', compact('projets', 'projet'));
     }
 }

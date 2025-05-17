@@ -23,7 +23,7 @@ class TableauController extends Controller
         $project->save();
 
         // Redirect or return a response
-        return redirect()->route('dashboard')->with('success', 'Project created successfully!');
+        return redirect()->route('dashboard')->with('success', 'Projet crée avec succès!');
     }
 
     public function destroy(Project $projet)

@@ -19,7 +19,7 @@
                               
                                 @if($projet->user_id == auth()->id())
                                 <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded" 
-                                       onclick="event.preventDefault(); openAddMemberModal('{{ $projet->id }}', '{{ $projet->name }}')">
+                                       onclick="event.preventDefault(); openAddMemberModal('{{ $projet->slug }}', '{{ $projet->name }}')">
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 @endif

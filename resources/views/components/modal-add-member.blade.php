@@ -23,19 +23,16 @@
 </div>
 
 <script>
-    function openAddMemberModal(projectId, projectName) {
-
+    function openAddMemberModal(projectSlug, projectName) {
         document.getElementById('modalTitle').textContent = `Ajouter un membre au projet "${projectName}"`;
-        
-        document.getElementById('addMemberForm').action = `/projet/${projectId}/members`;
-        
+    
+        document.getElementById('addMemberForm').action = `/projet/${projectSlug}/members`;
         document.getElementById('addMemberModal').classList.remove('hidden');
     }
 
     function closeAddMemberModal() {
-      
         document.getElementById('addMemberModal').classList.add('hidden');
-       
+
         document.getElementById('addMemberForm').reset();
     }
 </script>

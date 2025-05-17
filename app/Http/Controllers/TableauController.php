@@ -28,17 +28,16 @@ class TableauController extends Controller
 
     public function destroy(Project $projet)
     {
-        // Vérification que l'utilisateur est bien le propriétaire du projet
+       
         if ($projet->user_id !== Auth::id()) {
             return redirect()->route('dashboard')->with('error', 'You are not authorized to delete this project');
         }
 
-        // Suppression des tâches associées au projet (si la relation a été définie avec cascade delete, cette étape est optionnelle)
         $projet->tasks()->delete();
         
-        // Suppression du projet
+       
         $projet->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Project deleted successfully!');
+        return redirect()->route('dashboard')->with('success', 'Projet supprimé avec succès');
     }
 }

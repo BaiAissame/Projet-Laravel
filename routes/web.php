@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TableauController;
 use App\Http\Controllers\WallController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/projet/{projet}', [HomeController::class, 'show'])->name('projet.show');
     Route::post('/tableau/create', [TableauController::class, 'create'])->name('tableau.create');
     Route::delete('/projet/{projet}', [TableauController::class, 'destroy'])->name('projet.destroy');
+    // Gestion des membres de projet
+    Route::post('/projet/{projet}/members', [ProjectMemberController::class, 'addMember'])->name('projet.members.add');
+    Route::delete('/projet/{projet}/members/{user}', [ProjectMemberController::class, 'removeMember'])->name('projet.members.remove');
 });
 
 require __DIR__ . '/auth.php';

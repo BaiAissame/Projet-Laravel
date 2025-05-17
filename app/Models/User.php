@@ -50,6 +50,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class);
     }
+
+        public function sharedProjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_user')
+            ->using(ProjectUser::class)
+            ->withTimestamps();
+    }
+    
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_user')

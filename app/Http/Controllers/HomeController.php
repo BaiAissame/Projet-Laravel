@@ -17,8 +17,13 @@ class HomeController extends Controller
                 ->get();
         }
 
+        // Projets créés par l'utilisateur
         $projets = Project::where('user_id', Auth::user()->id)->get();
-        return view('dashboard', compact('projets', 'results'));
+        
+        // Projets partagés avec l'utilisateur (où il est membre)
+        $sharedProjects = Auth::user()->sharedProjects;
+        
+        return view('dashboard', compact('projets', 'sharedProjects', 'results'));
     }
 
     public function show(Project $projet)

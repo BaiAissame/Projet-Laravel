@@ -1,11 +1,47 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-white leading-tight">
-            {{ __('Tableau de Bord') }}
-        </h2>
-    </x-slot>
 
-    <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Bienvenue sur le Dashboard</h1>
+    @if (isset($projets) && count($projets) > 0)
+        <x-nav-left :data="$projets"></x-nav-left>
+    @else
+        <x-nav-left></x-nav-left>
+    @endif
+
+    <div class="col-span-1"></div>
+    <div class="col-span-8">
+
+        {{-- projets récemment consultés --}}
+        {{-- @if (isset($consults) && count($consults) > 0)
+            <x-block-projet title="Récemment consultés" icon="fas fa-clock" :data="$consults"></x-block-projet>
+        @endif --}}
+
+        <div class="mt-20"></div>
+
+        @if (isset($results))
+            <x-block-projet title="Resultat de la recherche" icon="fas fa-magnifying-glass" :data="$results"></x-block-projet>
+        @else
+           
+            @if (isset($projets) && count($projets) > 0)
+                <x-block-projet title="Mes projets" icon="fas fa-folder" :data="$projets"></x-block-projet>
+            @endif
+
+            @if (isset($sharedProjects) && count($sharedProjects) > 0)
+                <div class="mt-16"></div>
+                <x-block-projet title="Projets partagés avec moi" icon="fas fa-share-alt" :data="$sharedProjects"></x-block-projet>
+            @endif
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mt-4">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mt-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
     </div>
+    <div class="col-span-1"></div>
 </x-app-layout>

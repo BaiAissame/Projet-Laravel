@@ -1,0 +1,17 @@
+services:  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_USER: '${DB_USERNAME}'
+      PMA_PASSWORD: '${DB_PASSWORD}'
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - sail
+# networks:
+#   sail:
+#     external: true

@@ -32,6 +32,7 @@
         <main class="grid grid-cols-12 flex-1">
             {{ $slot }}
             <x-modal-create-tableau></x-modal-create-tableau>
+            <x-modal-add-member></x-modal-add-member>
         </main>
     </div>
 </body>

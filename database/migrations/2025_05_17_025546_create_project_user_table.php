@@ -9,23 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('project_user', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug')->nullable()->unique(); // ← Ajout ici, unique direct si tu veux
-            $table->text('description')->nullable();
+            $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            
+            // Empêche qu'un utilisateur soit ajouté plusieurs fois au même projet
+            $table->unique(['project_id', 'user_id']);
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+      public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('project_user');
     }
 };

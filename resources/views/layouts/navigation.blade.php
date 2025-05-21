@@ -1,8 +1,8 @@
 <nav x-data="{ open: false }"
-    class="bg-white dark:bg-gray-800 border-b-[1px] border-[#262981] dark:border-gray-700 text-[#262981] h-[64px] fixed w-full">
+    class="bg-white dark:bg-gray-800 border-b-[1px] border-[#262981] dark:border-gray-700 text-[#262981] h-[74px] fixed w-full">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-[96%] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between ">
+    <div class="max-w-[96%] mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div class="flex justify-between h-full">
             <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex">

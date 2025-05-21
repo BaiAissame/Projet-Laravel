@@ -6,16 +6,8 @@
         <x-nav-left></x-nav-left>
     @endif
 
-    <div class="col-span-1"></div>
-    <div class="col-span-8">
-
-        {{-- projets récemment consultés --}}
-        {{-- @if (isset($consults) && count($consults) > 0)
-            <x-block-projet title="Récemment consultés" icon="fas fa-clock" :data="$consults"></x-block-projet>
-        @endif --}}
-
-        <div class="mt-20"></div>
-
+    <div>
+        <div class="mt-[6rem] md:mt-[8rem]"></div>
         @if (isset($results))
             <x-block-projet title="Resultat de la recherche" icon="fas fa-magnifying-glass" :data="$results"></x-block-projet>
         @else
@@ -43,5 +35,4 @@
         @endif
 
     </div>
-    <div class="col-span-1"></div>
 </x-app-layout>

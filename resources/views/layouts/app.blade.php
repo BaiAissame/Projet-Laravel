@@ -29,7 +29,7 @@
         {{-- @endisset --}}
 
         <!-- Page Content -->
-        <main class="grid grid-cols-12 flex-1">
+        <main class="flex">
             {{ $slot }}
             <x-modal-create-tableau></x-modal-create-tableau>
             <x-modal-add-member></x-modal-add-member>

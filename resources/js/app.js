@@ -1,5 +1,6 @@
 import './bootstrap';
 import './modal-create-table';
+import './tache';
 
 import Alpine from 'alpinejs';
 

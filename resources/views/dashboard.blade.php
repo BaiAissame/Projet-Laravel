@@ -6,19 +6,20 @@
         <x-nav-left></x-nav-left>
     @endif
 
-    <div>
-        <div class="mt-[6rem] md:mt-[8rem]"></div>
+    <div  class="mt-[6rem] md:mt-[8rem]">
+      
         @if (isset($results))
-            <x-block-projet title="Resultat de la recherche" icon="fas fa-magnifying-glass" :data="$results"></x-block-projet>
+            <x-block-projet title="Resultat de la recherche" icon="fas fa-magnifying-glass"
+                :data="$results"></x-block-projet>
         @else
-           
             @if (isset($projets) && count($projets) > 0)
                 <x-block-projet title="Mes projets" icon="fas fa-folder" :data="$projets"></x-block-projet>
             @endif
 
             @if (isset($sharedProjects) && count($sharedProjects) > 0)
-                <div class="mt-16"></div>
-                <x-block-projet title="Projets partagés avec moi" icon="fas fa-share-alt" :data="$sharedProjects"></x-block-projet>
+                <div class="mt-10 lg:mt-16"></div>
+                <x-block-projet title="Projets partagés avec moi" icon="fas fa-share-alt"
+                    :data="$sharedProjects"></x-block-projet>
             @endif
         @endif
 

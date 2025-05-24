@@ -29,7 +29,7 @@
         {{-- @endisset --}}
 
         <!-- Page Content -->
-        <main class="flex">
+        <main class="flex bg-white">
             {{ $slot }}
             <x-modal-create-tableau></x-modal-create-tableau>
             <x-modal-add-member></x-modal-add-member>

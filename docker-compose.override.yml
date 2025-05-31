@@ -1,4 +1,4 @@
-services:  
+services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
@@ -7,7 +7,7 @@ services:
       PMA_USER: '${DB_USERNAME}'
       PMA_PASSWORD: '${DB_PASSWORD}'
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - mysql
     networks:

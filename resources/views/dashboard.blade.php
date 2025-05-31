@@ -1,66 +1,59 @@
 <x-app-layout>
-    @if (isset($projets) && count($projets) > 0)
-        <x-nav-left :data="$projets"></x-nav-left>
-    @else
-        <x-nav-left></x-nav-left>
-    @endif
+    {{-- Navigation latérale --}}
+    <x-nav-left :data="$projets" />
 
     <div class="mt-[6rem] md:mt-[8rem]">
-
-        @if(!isset($results))
+        {{-- Statistiques principales (si aucune recherche) --}}
+        @unless(isset($results))
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
-                            <i class="fas fa-folder text-blue-600 dark:text-blue-400"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ isset($projets) ? count($projets) : 0 }}
-                            </h3>
-                            <p class="text-gray-600 dark:text-gray-400">Mes projets</p>
-                        </div>
-                    </div>
-                </div>
+                @php
+                    $stats = [
+                        [
+                            'count' => isset($projets) ? count($projets) : 0,
+                            'label' => 'Mes projets',
+                            'icon' => 'fas fa-folder',
+                            'bg' => 'blue',
+                        ],
+                        [
+                            'count' => isset($sharedProjects) ? count($sharedProjects) : 0,
+                            'label' => 'Projets partagés',
+                            'icon' => 'fas fa-share-alt',
+                            'bg' => 'green',
+                        ],
+                        [
+                            'count' => $totalTasks ?? 0,
+                            'label' => 'Tâches totales',
+                            'icon' => 'fas fa-tasks',
+                            'bg' => 'yellow',
+                        ],
+                    ];
+                @endphp
 
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
-                            <i class="fas fa-share-alt text-green-600 dark:text-green-400"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ isset($sharedProjects) ? count($sharedProjects) : 0 }}
-                            </h3>
-                            <p class="text-gray-600 dark:text-gray-400">Projets partagés</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900">
-                            <i class="fas fa-tasks text-yellow-600 dark:text-yellow-400"></i>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ $totalTasks ?? 0 }}
-                            </h3>
-                            <p class="text-gray-600 dark:text-gray-400">Tâches totales</p>
+                @foreach ($stats as $stat)
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-{{ $stat['bg'] }}-100 dark:bg-{{ $stat['bg'] }}-900">
+                                <i class="{{ $stat['icon'] }} text-{{ $stat['bg'] }}-600 dark:text-{{ $stat['bg'] }}-400"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $stat['count'] }}</h3>
+                                <p class="text-gray-600 dark:text-gray-400">{{ $stat['label'] }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-        @endif
+        @endunless
 
-        @if (isset($results))
-            <x-block-projet title="Résultat de la recherche" icon="fas fa-magnifying-glass"
-                :data="$results"></x-block-projet>
+        {{-- Résultats de recherche --}}
+        @isset($results)
+            <x-block-projet title="Résultat de la recherche" icon="fas fa-magnifying-glass" :data="$results" />
         @else
-            @if (isset($projets) && count($projets) > 0)
-                <x-block-projet title="Mes projets" icon="fas fa-folder" :data="$projets"></x-block-projet>
+            {{-- Mes projets --}}
+            @if(!empty($projets))
+                <x-block-projet title="Mes projets" icon="fas fa-folder" :data="$projets" />
             @else
-                <!-- État vide -->
+                {{-- État vide --}}
                 <div class="text-center py-12">
                     <div class="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                         <i class="fas fa-folder-plus text-3xl text-gray-400"></i>
@@ -68,7 +61,7 @@
                     <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">Aucun projet</h3>
                     <p class="mt-2 text-gray-500 dark:text-gray-400">Commencez par créer votre premier projet</p>
                     <div class="mt-6">
-                        <a href="{{ route('projets.create') }}"
+                        <a href="{{ route('projet.create') }}"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                             <i class="fas fa-plus mr-2"></i>
                             Créer un projet
@@ -77,14 +70,14 @@
                 </div>
             @endif
 
-            @if (isset($sharedProjects) && count($sharedProjects) > 0)
+            {{-- Projets partagés --}}
+            @if(!empty($sharedProjects))
                 <div class="mt-10 lg:mt-16"></div>
-                <x-block-projet title="Projets partagés avec moi" icon="fas fa-share-alt"
-                    :data="$sharedProjects"></x-block-projet>
+                <x-block-projet title="Projets partagés avec moi" icon="fas fa-share-alt" :data="$sharedProjects" />
             @endif
 
-            <!-- Activité récente -->
-            @if(isset($recentActivity) && count($recentActivity) > 0)
+            {{-- Activité récente --}}
+            @if(!empty($recentActivity))
                 <div class="mt-10 lg:mt-16">
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
                         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -119,24 +112,20 @@
                     </div>
                 </div>
             @endif
-        @endif
+        @endisset
 
-        <!-- Messages de session -->
-        @if (session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4 flex items-center">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                {{ session('error') }}
-            </div>
-        @endif
+        {{-- Messages de session --}}
+        @foreach (['error' => 'red', 'success' => 'green'] as $type => $color)
+            @if (session($type))
+                <div
+                    class="bg-{{ $color }}-100 border border-{{ $color }}-400 text-{{ $color }}-700 px-4 py-3 rounded-lg mt-4 flex items-center">
+                    <i class="fas fa-{{ $type === 'error' ? 'exclamation-circle' : 'check-circle' }} mr-2"></i>
+                    {{ session($type) }}
+                </div>
+            @endif
+        @endforeach
 
-        @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mt-4 flex items-center">
-                <i class="fas fa-check-circle mr-2"></i>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <!-- Indicateur hors ligne -->
+        {{-- Indicateur hors ligne --}}
         <div id="offline-indicator"
             class="hidden fixed top-4 right-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
             <i class="fas fa-wifi-slash mr-2"></i>
@@ -146,12 +135,11 @@
 
     @push('scripts')
         <script>
-            // Détection du mode hors ligne
-            window.addEventListener('online', function () {
+            window.addEventListener('online', () => {
                 document.getElementById('offline-indicator').classList.add('hidden');
             });
 
-            window.addEventListener('offline', function () {
+            window.addEventListener('offline', () => {
                 document.getElementById('offline-indicator').classList.remove('hidden');
             });
         </script>

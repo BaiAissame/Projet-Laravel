@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/kanban', function () {
         return view('kanban.index');
     })->name('kanban');
-    Route::post('/taches/{tache}/deplacer', [TaskController::class, 'deplacer'])->name('taches.deplacer');
+    Route::post('/tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');
 });
 
 require __DIR__ . '/auth.php';

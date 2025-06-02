@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Project;
 use App\Models\Task;
 
 
@@ -9,31 +11,31 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
 
-    public function index()
+    public function show(Project $projet)
     {
-        $tasks = Task::all();
+        $tasks = Task::where('task_column_id', $projet->id)
+            ->orderBy('order')
+            ->get();
         return response()->json(['tasks' => $tasks]);
     }
 
-    public function show(Task $task)
-    {
-        return response()->json(['task' => $task]);
-    }
-
-    public function create(Request $request)
+    public function create(Request $request, Project $projet)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'task_column_id' => 'required|exists:task_columns,id',
         ]);
+
+        $lastOrder = Task::where('project_id', $projet->id)->max('order');
+        $newOrder = $lastOrder ? $lastOrder + 1 : 1;
 
         $task = Task::create([
-            'title' => $request->title,
-            'task_column_id' => $request->task_column_id,
-            'order' => Task::where('task_column_id', $request->task_column_id)->max('order') + 1,
+            'title' => $request->input('title'),
+            'order' => $newOrder,
+            'project_id' => $projet->id,
         ]);
 
-        return response()->json(['message' => 'Tâche créée avec succès', 'task' => $task]);
+        $html = view('components.block-task', compact('task'))->render();
+        return response()->json(['html' => $html]);
     }
 
     public function update(Request $request, Task $task)
@@ -75,5 +77,4 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Tâche déplacée avec succès']);
     }
-
 }

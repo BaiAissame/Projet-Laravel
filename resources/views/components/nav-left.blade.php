@@ -1,4 +1,4 @@
-<section class="bg-white h-[100vh] shadow-lg text-[#262981] w-[8rem] md:w-[10rem] lg:w-[12rem]">
+<section class="bg-white h-[100vh] shadow-lg text-[#262981] w-[8rem] md:w-[10rem] lg:w-[12rem] lg:min-w-[12rem]">
     <ul class="list-none mt-[5rem] text-xs md:text-sm lg:text-lg font-medium">
         <li class="py-4 pl-2 sm:pl-4 lg:pl-6 cursor-pointer hover:bg-[#C8C9FF]">
             <a href="#" class="flex items-center"><i class="fas fa-table mr-2 lg:text-2xl"></i>

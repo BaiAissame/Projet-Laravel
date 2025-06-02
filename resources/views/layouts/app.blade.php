@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    {{-- <link rel="manifest" href="/site.webmanifest"> --}}
 
     <title>{{ config('app.name', 'Kanboard') }}</title>
 
@@ -30,19 +30,19 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Service Worker pour le mode hors ligne -->
-    <script>
+    {{-- <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
+            window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(function (registration) {
+                    .then(function(registration) {
                         console.log('SW registered: ', registration);
                     })
-                    .catch(function (registrationError) {
+                    .catch(function(registrationError) {
                         console.log('SW registration failed: ', registrationError);
                     });
             });
         }
-    </script>
+    </script> --}}
 
     @stack('styles')
 </head>
@@ -89,9 +89,10 @@
 
             const bgColor = type === 'success' ? 'bg-green-500' :
                 type === 'error' ? 'bg-red-500' :
-                    type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
+                type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
 
-            toast.className = `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg flex items-center transform transition-transform duration-300 translate-x-full`;
+            toast.className =
+                `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg flex items-center transform transition-transform duration-300 translate-x-full`;
             toast.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-3"></i>
                 <div>
@@ -123,7 +124,8 @@
             document.getElementById('notification-modal').classList.add('hidden');
         }
 
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');

@@ -1,4 +1,4 @@
-<li class="mx-2 max-h-max">
+<li class="mx-2 max-h-max" draggable="true" data-task-id="{{ $task->id }}" data-task-order="{{ $task->order }}">
     <article class="bg-[#EEEEEE] w-[322px] min-h-[146px] rounded-[16px] px-4 py-4 text-[#262981]">
         <div class="flex justify-between">
             <h1 class="text-lg font-semibold ml-4">{{ $task->title }}</h1>

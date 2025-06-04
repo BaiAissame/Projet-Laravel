@@ -77,4 +77,50 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Tâche déplacée avec succès']);
     }
+
+    public function updateOrder(Request $request)
+    {
+        $request->validate([
+            'taskId' => 'required|integer:exists:tasks,id',
+            'order' => 'required|integer',
+            'newOrder' => 'required|integer',
+            'projetId' => 'required|integer:exists:projects,id',
+        ]);
+
+        if ($request->input('newOrder') == 0) response()->json([
+            'message' => 'Ordre invalide',
+            'error' => true
+        ]);
+
+        if ($request->input('order') == $request->input('newOrder')) {
+            return response()->json([
+                'message' => 'Aucun changement d\'ordre nécessaire',
+                'error' => false
+            ]);
+        }
+
+        if ($request->input('order') < $request->input('newOrder')) {
+            Task::where('project_id', $request->input('projetId'))
+                ->where('order', $request->input('newOrder'))
+                ->decrement('order');
+
+            Task::where('project_id', $request->input('projetId'))
+                ->where('id', $request->input('taskId'))
+                ->increment('order');
+        } else {
+            Task::where('project_id', $request->input('projetId'))
+                ->where('order', $request->input('newOrder'))
+                ->increment('order');
+
+            Task::where('project_id', $request->input('projetId'))
+                ->where('id', $request->input('taskId'))
+                ->decrement('order');
+        }
+
+        $task = Task::where('id', $request->input('taskId'))
+            ->where('project_id', $request->input('projetId'))
+            ->firstOrFail();
+
+        return response()->json(['message' => $task, 'newOrder' => $request->input('newOrder')]);
+    }
 }

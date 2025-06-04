@@ -46,10 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/kanban', function () {
         return view('kanban.index');
     })->name('kanban');
+
     Route::post('/tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');
 
     // Routes pour les tâches
     Route::post('/task/create/{projet}', [TaskController::class, 'create'])->name('task.create');
+    Route::post('/task/update-order', [TaskController::class, 'updateOrder'])->name('task.updateOrder');
 });
 
 require __DIR__ . '/auth.php';

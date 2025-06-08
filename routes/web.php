@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ListTaskController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
@@ -47,11 +48,14 @@ Route::middleware('auth')->group(function () {
         return view('kanban.index');
     })->name('kanban');
 
-    Route::post('/tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');
+    
+    // Routes pour les listes des tâches
+    Route::post('/listTask/create/{projet}', [ListTaskController::class, 'create'])->name('listTask.create');
+    Route::post('/listTask/update-order', [ListTaskController::class, 'updateOrder'])->name('listTask.updateOrder');
+
 
     // Routes pour les tâches
-    Route::post('/task/create/{projet}', [TaskController::class, 'create'])->name('task.create');
-    Route::post('/task/update-order', [TaskController::class, 'updateOrder'])->name('task.updateOrder');
+    Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');
 });
 
 require __DIR__ . '/auth.php';

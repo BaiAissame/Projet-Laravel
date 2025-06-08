@@ -17,7 +17,7 @@ class Task extends Model
         'project_id',
         'task_category_id',
         'task_priority_id',
-        'task_column_id',
+        'list_task_id',
         'order',
         'created_at',
         'updated_at',
@@ -39,9 +39,9 @@ class Task extends Model
     {
         return $this->belongsTo(TaskPriority::class, 'task_priority_id');
     }
-    public function project(): BelongsTo
+    public function listTask(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(ListTask::class);
     }
     public function taskColumn()
     {

@@ -44,7 +44,6 @@ class ProjectController extends Controller
         if ($projet->user_id != Auth::id() && !$projet->members->contains(Auth::id())) {
             return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
         }
-  
         $projets = Project::where('user_id', Auth::user()->id)->get();
         return view('projet.show', compact('projets', 'projet'));
     }

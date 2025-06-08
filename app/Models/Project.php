@@ -16,9 +16,9 @@ class Project extends Model
         'slug',
     ];
 
-    public function tasks(): HasMany
+    public function listTasks(): HasMany
     {
-        return $this->hasMany(Task::class)->orderBy('order');
+        return $this->hasMany(ListTask::class)->orderBy('order');
     }
 
     public function user()

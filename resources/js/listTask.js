@@ -1,29 +1,35 @@
-document.getElementById('form-create-task').addEventListener('submit', function (e) {
-  e.preventDefault(); // Prevent the default form submission
-  const input = this.querySelector('.title-task');
-  if (input.value.trim() === '') {
-    alert('Veuillez entrer un titre pour la tâche.');
-    return;
-  }
+const fromCreateTask = document.getElementById('form-create-task');
+const taskList = document.getElementById('taskes-list');
 
-  fetch(this.action, {
-    method: 'POST',
-    body: new FormData(this),
-    headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-        'content')
+if (fromCreateTask) {
+  fromCreateTask.addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent the default form submission
+    const input = this.querySelector('.title-task');
+    if (input.value.trim() === '') {
+      alert('Veuillez entrer un titre pour la tâche.');
+      return;
     }
-  })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('taskes-list').insertAdjacentHTML('beforeend', data
-        .html);
-      input.value = ''; // Clear the input field after successful submission
 
-    }).catch(error => {
-      console.error('Erreur:', error);
-    });
-});
+    fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+          'content')
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('taskes-list').insertAdjacentHTML('beforeend', data
+          .html);
+        input.value = ''; // Clear the input field after successful submission
+        makeTasksDraggable();
+      }).catch(error => {
+        console.error('Erreur:', error);
+      });
+  });
+}
+
 
 function makeTasksDraggable() {
   document.querySelectorAll('#taskes-list > li').forEach(li => {
@@ -49,23 +55,23 @@ makeTasksDraggable();
 const throttledSendOrderUpdate = throttle(sendOrderUpdate, 100);
 
 // Gérer le dragover sur la liste
-document.getElementById('taskes-list').addEventListener('dragover', function (e) {
-  e.preventDefault();
-  const afterElement = getDragAfterElement(this, e.clientX);
-  const dragged = window.draggedLi;
-  const newOrder = Array.from(this.children).indexOf(dragged) + 1
-  if (!dragged) return;
-  if (afterElement == null) {
-    this.appendChild(dragged);
-    throttledSendOrderUpdate(dragged.dataset.taskId, dragged.dataset.taskOrder, newOrder, this.dataset
+if (taskList) {
+  taskList.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(this, e.clientX);
+    const dragged = window.draggedLi;
+    const newOrder = Array.from(this.children).indexOf(dragged) + 1
+    if (!dragged) return;
+    if (afterElement == null) {
+      this.appendChild(dragged);
+    } else {
+      this.insertBefore(dragged, afterElement);
+      if (dragged.dataset.listTaskOrder == newOrder) return;
+    }
+    throttledSendOrderUpdate(dragged, newOrder, this.dataset
       .projetId);
-  } else {
-    this.insertBefore(dragged, afterElement);
-    if (dragged.dataset.taskOrder == newOrder) return;
-    throttledSendOrderUpdate(dragged.dataset.taskId, dragged.dataset.taskOrder, newOrder, this.dataset
-      .projetId);
-  }
-});
+  });
+}
 
 // Trouver l'élément après lequel insérer
 function getDragAfterElement(container, x) {
@@ -100,8 +106,9 @@ function throttle(fn, delay) {
 }
 
 // Fonction pour envoyer la mise à jour de l'ordre des tâches
-function sendOrderUpdate(taskId, order, newOrder, projetId) {
-  fetch('/task/update-order', {
+function sendOrderUpdate(dragged, newOrder, projetId) {
+
+  fetch('/listTask/update-order', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -109,15 +116,15 @@ function sendOrderUpdate(taskId, order, newOrder, projetId) {
         'content')
     },
     body: JSON.stringify({
-      taskId: taskId,
-      order: order,
+      listTaskId: dragged.dataset.listTaskId,
+      order: dragged.dataset.listTaskOrder,
       newOrder: newOrder,
       projetId: projetId,
     })
   }).then(response => response.json())
     .then(data => {
-      console.log('Order updated:', data);
+      if (data.message == 'ok') dragged.dataset.listTaskOrder = data.data.order
     }).catch(error => {
       console.error('Error updating order:', error);
     });
-}
+} 

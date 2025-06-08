@@ -1,6 +1,7 @@
 import './bootstrap';
 import './modal-create-table';
-import './tache';
+import './listTask';
+import './task';
 
 import Alpine from 'alpinejs';
 

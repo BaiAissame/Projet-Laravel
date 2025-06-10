@@ -65,6 +65,7 @@ if (taskList) {
     if (afterElement == null) {
       this.appendChild(dragged);
     } else {
+
       this.insertBefore(dragged, afterElement);
       if (dragged.dataset.listTaskOrder == newOrder) return;
     }
@@ -75,7 +76,7 @@ if (taskList) {
 
 // Trouver l'élément après lequel insérer
 function getDragAfterElement(container, x) {
-  const draggableElements = [...container.querySelectorAll('li:not(.opacity-50)')];
+  const draggableElements = [...container.querySelectorAll('li.list-task:not(.opacity-50)')];
   let closest = {
     offset: Number.POSITIVE_INFINITY,
     element: null
@@ -107,7 +108,6 @@ function throttle(fn, delay) {
 
 // Fonction pour envoyer la mise à jour de l'ordre des tâches
 function sendOrderUpdate(dragged, newOrder, projetId) {
-
   fetch('/listTask/update-order', {
     method: 'POST',
     headers: {

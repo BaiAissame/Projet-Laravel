@@ -29,4 +29,15 @@ class TaskController extends Controller
             return response()->json(['error' => true, 'message' => $th]);
         }
     }
+
+    public function delete(Task $task)
+    {
+        try {
+            
+            $task->delete();
+            return response()->json(['error' => false, 'message' => 'Tâche supprimée avec succès']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => true, 'message' => $th]);
+        }
+    }
 }

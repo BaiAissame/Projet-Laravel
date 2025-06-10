@@ -25,7 +25,7 @@
                         class="h-8 rounded-l-lg rounded-r-lg sm:rounded-r-none px-2 py-0 box-border bg-gray-200 border-hidden w-26"
                         type="text" name="search" id="search" placeholder="Rechercher"><!--
                     --><button
-                        class="hidden sm:block border h-8 px-2 border-hidden box-border text-white bg-[#262981] text-sm">Chercher</button>
+                        class="hidden sm:block border h-8 px-2 border-hidden box-border text-white bg-[#262981] text-sm hover:bg-[#1f1f6b] transition-colors duration-200">Chercher</button>
                 </form>
 
                 <!-- Settings Dropdown -->

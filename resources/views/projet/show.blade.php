@@ -14,7 +14,7 @@
             <div class="mt-6 content-card">
                 <input class="bg-white w-[100%] min-h-[40px] rounded-md border-none title-task shadow-lg"
                     placeholder="Saississez un titre" name="title" />
-                <button class="flex items-center rounded-lg px-4 py-2 mt-2 w-full bg-[#262981] text-white">
+                <button class="flex items-center rounded-lg px-4 py-2 mt-2 w-full bg-[#262981] text-white hover:bg-[#1f1f6b] transition-colors duration-200">
                     <p class="ml-6 text-base">Ajouter une liste</p>
                 </button>
             </div>

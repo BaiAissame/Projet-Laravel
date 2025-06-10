@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
 
     // Routes pour les tâches
     Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');
+    Route::delete('/task/delete/{task}', [TaskController::class, 'delete'])->name('task.delete');
+
 });
 
 require __DIR__ . '/auth.php';

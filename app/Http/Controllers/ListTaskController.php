@@ -27,94 +27,26 @@ class ListTaskController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    // public function update(Request $request, Task $task)
-    // {
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'task_column_id' => 'required|exists:task_columns,id',
-    //     ]);
-
-    //     $task->update([
-    //         'title' => $request->title,
-    //         'task_column_id' => $request->task_column_id,
-    //     ]);
-
-    //     return response()->json(['message' => 'Tâche mise à jour avec succès', 'task' => $task]);
-    // }
-
-    // public function destroy(Task $task)
-    // {
-    //     $task->delete();
-    //     return response()->json(['message' => 'Tâche supprimée avec succès']);
-    // }
-
-    // public function move(Request $request, Task $task)
-    // {
-    //     $request->validate([
-    //         'task_column_id' => 'required|exists:task_columns,id',
-    //         'order' => 'required|integer',
-    //     ]);
-
-    //     Task::where('task_column_id', $request->task_column_id)
-    //         ->where('order', '>=', $request->order)
-    //         ->increment('order');
-
-    //     $task->update([
-    //         'task_column_id' => $request->task_column_id,
-    //         'order' => $request->order,
-    //     ]);
-
-    //     return response()->json(['message' => 'Tâche déplacée avec succès']);
-    // }
-
+   
     public function updateOrder(Request $request)
     {
 
         $request->validate([
-            'listTaskId' => 'required|integer:exists:list_tasks,id',
-            'order' => 'required|integer',
-            'newOrder' => 'required|integer',
-            'projetId' => 'required|integer:exists:projects,id',
+            'orderList' => 'required|array',
         ]);
 
-        if ($request->input('newOrder') == 0) response()->json([
-            'message' => 'Ordre invalide',
-            'error' => true
-        ]);
 
-        if ($request->input('order') == $request->input('newOrder')) {
-            return response()->json([
-                'message' => 'Aucun changement d\'ordre nécessaire',
-                'error' => false
-            ]);
+        $orderData = $request->input('orderList');
+
+        foreach ($orderData as $item) {
+            ListTask::where('id', $item['listTaskId'])
+                ->update(['order' => $item['order']]);
         }
 
-        if ($request->input('order') < $request->input('newOrder')) {
-            ListTask::where('project_id', $request->input('projetId'))
-                ->where('order', $request->input('newOrder'))
-                ->decrement('order');
-
-            ListTask::where('project_id', $request->input('projetId'))
-                ->where('id', $request->input('listTaskId'))
-                ->increment('order');
-        } else {
-            ListTask::where('project_id', $request->input('projetId'))
-                ->where('order', $request->input('newOrder'))
-                ->increment('order');
-
-            ListTask::where('project_id', $request->input('projetId'))
-                ->where('id', $request->input('listTaskId'))
-                ->decrement('order');
-        }
-
-        $listTask = ListTask::where('id', $request->input('listTaskId'))
-            ->where('project_id', $request->input('projetId'))
-            ->firstOrFail();
 
         return response()->json([
-            'message' => "ok", 
-            'newOrder' => $request->input('newOrder'),
-            'data' => $listTask
+            'message' => "ok",
+            // 'newOrder' => $request->input('newOrder'),
         ]);
     }
 }

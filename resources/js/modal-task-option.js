@@ -18,30 +18,30 @@ if (taskList) {
             }
 
             const deleteBtn = containerTask.querySelector('.button-delete-task');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', function () {
-                    fetch(`/task/delete/${deleteBtn.value}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                const taskElement = document.getElementById(`task-${deleteBtn.value}`);
-                                if (taskElement) {
-                                    taskElement.remove();
-                                }
-                            } else {
-                                console.error('Erreur lors de la suppression de la tâche');
-                            }
-                            return response.json();
-                        }).catch(error => {
-                            console.error('Error:', error);
-                        });
+
+
+            deleteBtn.addEventListener('click', function () {
+                fetch(`/task/delete/${this.value}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
                 })
-            }
+                    .then(response => {
+                        if (response.ok) {
+                            const taskElement = document.querySelector(`[data-task-id="${this.value}"]`);
+                            if (taskElement) {
+                                taskElement.remove();
+                            }
+                        } else {
+                            console.error('Erreur lors de la suppression de la tâche');
+                        }
+                        return response.json();
+                    }).catch(error => {
+                        console.error('Error:', error);
+                    });
+            })
         }
 
     });

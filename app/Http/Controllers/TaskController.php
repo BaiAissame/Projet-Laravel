@@ -33,11 +33,34 @@ class TaskController extends Controller
     public function delete(Task $task)
     {
         try {
-            
+
             $task->delete();
             return response()->json(['error' => false, 'message' => 'Tâche supprimée avec succès']);
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'message' => $th]);
         }
+    }
+
+    public function updateOrder(Request $request)
+    {
+
+        $request->validate([
+            'orderTask' => 'required|array'
+        ]);
+
+        $orderData = $request->input('orderTask');
+
+        foreach ($orderData as $item) {
+            Task::where('id', $item['taskId'])
+                ->update([
+                    'order' => $item['order'],
+                    'list_task_id' => $item['listTaskId']
+                ]);
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => "ok",
+        ]);
     }
 }

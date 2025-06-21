@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
         return view('kanban.index');
     })->name('kanban');
 
-    
+
     // Routes pour les listes des tâches
     Route::post('/listTask/create/{projet}', [ListTaskController::class, 'create'])->name('listTask.create');
     Route::post('/listTask/update-order', [ListTaskController::class, 'updateOrder'])->name('listTask.updateOrder');
@@ -56,8 +56,8 @@ Route::middleware('auth')->group(function () {
 
     // Routes pour les tâches
     Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');
+    Route::post('/task/update-order', [TaskController::class, 'updateOrder'])->name('task.updateOrder');
     Route::delete('/task/delete/{task}', [TaskController::class, 'delete'])->name('task.delete');
-
 });
 
 require __DIR__ . '/auth.php';

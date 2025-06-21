@@ -1,7 +1,8 @@
 const fromCreateTask = document.getElementById('form-create-task');
 const taskList = document.getElementById('taskes-list');
+const formCreatTask = document.querySelectorAll('.form-create-task');
 
-if (fromCreateTask) {
+if (taskList) {
   fromCreateTask.addEventListener('submit', function (e) {
     e.preventDefault(); // Prevent the default form submission
     const input = this.querySelector('.title-task');
@@ -20,111 +21,216 @@ if (fromCreateTask) {
     })
       .then(response => response.json())
       .then(data => {
-        document.getElementById('taskes-list').insertAdjacentHTML('beforeend', data
+        taskList.insertAdjacentHTML('beforeend', data
           .html);
         input.value = ''; // Clear the input field after successful submission
-        makeTasksDraggable();
+        initlistTask()
       }).catch(error => {
         console.error('Erreur:', error);
       });
   });
-}
+
+  // Fonction pour envoyer la mise à jour de l'ordre des tâches
+  function sendOrderUpdateList(orderList) {
+    fetch('/listTask/update-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+          'content')
+      },
+      body: JSON.stringify({ orderList: orderList })
+    }).then(response => response.json())
+      .then(data => {
+      }).catch(error => {
+        console.error('Error updating order:', error);
+      });
+  }
 
 
-function makeTasksDraggable() {
-  document.querySelectorAll('#taskes-list > li').forEach(li => {
-    li.setAttribute('draggable', true);
+  let draggedList = null;
+  let draggedTask = null;
+  initlistTask()
+  initTask();
 
-    li.addEventListener('dragstart', function (e) {
-      li.classList.add('opacity-50');
-      window.draggedLi = li;
+  // DRAGSTART pour les listes
+  function initlistTask() {
+    document.querySelectorAll('.list-task').forEach(list => {
+      list.addEventListener('dragstart', function (e) {
+        if (e.target.classList.contains('list-task')) {
+          draggedList = this;
+          draggedTask = null;
+        }
+      });
+
+
+      list.addEventListener('dragover', function (e) {
+        if (draggedTask) {
+          e.preventDefault();
+        }
+      });
+
+
+      list.addEventListener('drop', function (e) {
+        if (draggedTask) {
+          e.preventDefault();
+          const ol = this.querySelector('ol');
+          if (ol && ol.children.length === 0) {
+
+            ol.appendChild(draggedTask);
+            // Optionnel : fetch pour update la liste et l'ordre côté serveur
+          }
+          draggedTask = null;
+          const orderTask = Array.from(this.querySelectorAll('ol > li ')).map((task, idx) => ({
+            taskId: task.dataset.taskId,
+            listTaskId: this.dataset.listTaskId,
+            order: idx + 1
+          }));
+
+          fetch('/task/update-order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                'content')
+            },
+            body: JSON.stringify({ orderTask: orderTask })
+          }).then(response => response.json())
+            .then(data => {
+              console.log(data);
+            }).catch(error => {
+              console.error('Error updating order:', error);
+            });
+        }
+      });
 
     });
+  }
 
-    li.addEventListener('dragend', function () {
-      li.classList.remove('opacity-50');
-      window.draggedLi = null;
+  function initTask() {
+    document.querySelectorAll('.container-task').forEach(task => {
+      task.addEventListener('dragstart', function (e) {
+        if (e.target.classList.contains('container-task')) {
+          draggedTask = this;
+          draggedList = null;
+        }
+      });
     });
-  });
-}
+  }
 
-// Initialiser le drag and drop
-makeTasksDraggable();
+  // DRAGSTART pour les tâches
 
-// Limiter la fréquence d'envoi des mises à jour de l'ordre
-const throttledSendOrderUpdate = throttle(sendOrderUpdate, 100);
-
-// Gérer le dragover sur la liste
-if (taskList) {
+  // DRAGOVER pour les listes (déplacement en live)
   taskList.addEventListener('dragover', function (e) {
-    e.preventDefault();
-    const afterElement = getDragAfterElement(this, e.clientX);
-    const dragged = window.draggedLi;
-    const newOrder = Array.from(this.children).indexOf(dragged) + 1
-    if (!dragged) return;
-    if (afterElement == null) {
-      this.appendChild(dragged);
-    } else {
+    if (draggedList) {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(this, e.clientX);
 
-      this.insertBefore(dragged, afterElement);
-      if (dragged.dataset.listTaskOrder == newOrder) return;
-    }
-    throttledSendOrderUpdate(dragged, newOrder, this.dataset
-      .projetId);
-  });
-}
-
-// Trouver l'élément après lequel insérer
-function getDragAfterElement(container, x) {
-  const draggableElements = [...container.querySelectorAll('li.list-task:not(.opacity-50)')];
-  let closest = {
-    offset: Number.POSITIVE_INFINITY,
-    element: null
-  };
-  draggableElements.forEach(child => {
-    const box = child.getBoundingClientRect();
-    const offset = x - box.left - box.width / 2;
-    if (offset < 0 && Math.abs(offset) < Math.abs(closest.offset)) {
-      closest = {
-        offset: offset,
-        element: child
-      };
+      if (afterElement == null) {
+        this.appendChild(draggedList);
+      } else {
+        this.insertBefore(draggedList, afterElement);
+      }
     }
   });
-  return closest.element;
-}
 
-// Fonction de throttling pour limiter la fréquence d'exécution
-function throttle(fn, delay) {
-  let lastCall = 0;
-  return function (...args) {
-    const now = Date.now();
-    if (now - lastCall >= delay) {
-      lastCall = now;
-      fn.apply(this, args);
-    }
-  };
-}
 
-// Fonction pour envoyer la mise à jour de l'ordre des tâches
-function sendOrderUpdate(dragged, newOrder, projetId) {
-  fetch('/listTask/update-order', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-        'content')
-    },
-    body: JSON.stringify({
-      listTaskId: dragged.dataset.listTaskId,
-      order: dragged.dataset.listTaskOrder,
-      newOrder: newOrder,
-      projetId: projetId,
-    })
-  }).then(response => response.json())
-    .then(data => {
-      if (data.message == 'ok') dragged.dataset.listTaskOrder = data.data.order
-    }).catch(error => {
-      console.error('Error updating order:', error);
+  taskList.addEventListener('drop', function (e) {
+    const order = Array.from(this.children).map((li, idx) => ({
+      listTaskId: li.dataset.listTaskId,
+      order: idx + 1
+    }));
+
+    sendOrderUpdateList(order);
+  })
+
+
+  // DRAGEND pour reset la variable
+  taskList.addEventListener('dragend', function () {
+    draggedList = null;
+  });
+
+  // DRAGOVER pour les tâches (déplacement en live)
+  document.querySelectorAll('.list-task ol').forEach(list => {
+    list.addEventListener('dragover', function (e) {
+      if (draggedTask) {
+        e.preventDefault();
+        const afterElement = getDragAfterElementTask(this, e.clientY);
+        if (afterElement === draggedTask) return;
+        if (afterElement == null) {
+          this.appendChild(draggedTask);
+        } else {
+          this.insertBefore(draggedTask, afterElement);
+        }
+      }
     });
-} 
+
+    list.addEventListener('dragend', function () {
+      draggedTask = null;
+    });
+  });
+
+  // Fonction pour trouver la position d'insertion pour les listes (horizontal)
+  function getDragAfterElement(container, x) {
+    const draggableElements = [...container.querySelectorAll('.list-task:not(.opacity-50)')];
+    let closest = { offset: Number.POSITIVE_INFINITY, element: null };
+    draggableElements.forEach(child => {
+      const box = child.getBoundingClientRect();
+      const offset = x - box.left - box.width / 2;
+      if (offset < 0 && Math.abs(offset) < Math.abs(closest.offset)) {
+        closest = { offset: offset, element: child };
+      }
+    });
+    return closest.element;
+  }
+
+  // Fonction pour trouver la position d'insertion pour les tâches (vertical)
+  function getDragAfterElementTask(container, y) {
+    const draggableElements = [...container.querySelectorAll('.container-task:not(.opacity-50)')];
+    let closest = { offset: Number.POSITIVE_INFINITY, element: null };
+    draggableElements.forEach(child => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && Math.abs(offset) < Math.abs(closest.offset)) {
+        closest = { offset: offset, element: child };
+      }
+    });
+    return closest.element;
+  }
+
+  if (formCreatTask) {
+    formCreatTask.forEach(formTask => {
+      formTask.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let titleTask = this.querySelector('input[name="task-title"]');
+        if (titleTask.value.trim() === '') {
+          alert('Veuillez mettre un titre.');
+          return;
+        }
+        fetch(this.action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+              'content')
+          },
+          body: JSON.stringify({
+            titleTask: titleTask.value,
+            listTaskId: this.dataset.listTaskId
+          })
+        })
+          .then(res => res.json())
+          .then(data => {
+            titleTask.value = '';
+            this.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
+            initTask();
+          })
+      })
+    })
+  }
+
+}
+
+
+
+

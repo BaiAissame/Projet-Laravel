@@ -9,12 +9,8 @@ class TaskCategorySeeder extends Seeder
 {
     public function run()
     {
-        TaskCategory::create([
-            'name' => 'Development',
-        ]);
-
-        TaskCategory::create([
-            'name' => 'Design',
-        ]);
+        TaskCategory::create(['name' => 'marketing']);
+        TaskCategory::create(['name' => 'développement']);
+        TaskCategory::create(['name' => 'communication']);
     }
 }

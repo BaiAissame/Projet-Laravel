@@ -8,7 +8,7 @@
                 @endforeach
             @endif
         </ul>
-        <form id="form-create-task" action="{{ route('listTask.create', $projet) }}" method="POST"
+        <form id="form-create-list-task" action="{{ route('listTask.create', $projet) }}" method="POST"
             class="bg-[#EEEEEE] w-[322px] min-w-[322px] min-h-[146px] rounded-[16px] px-4 py-4 text-[#262981] max-h-max mx-2">
             @csrf
             <div class="mt-6 content-card">

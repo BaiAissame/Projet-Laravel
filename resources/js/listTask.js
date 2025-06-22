@@ -1,9 +1,10 @@
-const fromCreateTask = document.getElementById('form-create-task');
+const formCreateListTask = document.getElementById('form-create-list-task');
 const taskList = document.getElementById('taskes-list');
-const formCreatTask = document.querySelectorAll('.form-create-task');
+
+
 
 if (taskList) {
-  fromCreateTask.addEventListener('submit', function (e) {
+  formCreateListTask.addEventListener('submit', function (e) {
     e.preventDefault(); // Prevent the default form submission
     const input = this.querySelector('.title-task');
     if (input.value.trim() === '') {
@@ -25,6 +26,7 @@ if (taskList) {
           .html);
         input.value = ''; // Clear the input field after successful submission
         initlistTask()
+        initFormCreateTask();
       }).catch(error => {
         console.error('Erreur:', error);
       });
@@ -198,35 +200,43 @@ if (taskList) {
     return closest.element;
   }
 
-  if (formCreatTask) {
-    formCreatTask.forEach(formTask => {
-      formTask.addEventListener('submit', function (e) {
-        e.preventDefault();
-        let titleTask = this.querySelector('input[name="task-title"]');
-        if (titleTask.value.trim() === '') {
-          alert('Veuillez mettre un titre.');
-          return;
-        }
-        fetch(this.action, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-              'content')
-          },
-          body: JSON.stringify({
-            titleTask: titleTask.value,
-            listTaskId: this.dataset.listTaskId
+
+  initFormCreateTask();
+
+  function initFormCreateTask() {
+    const formCreatTask = document.querySelectorAll('.form-create-task');
+    if (formCreatTask) {
+      formCreatTask.forEach(formTask => {
+        // Pour éviter d'ajouter plusieurs fois le même listener :
+        formTask.removeEventListener('submit', formTask._submitListener);
+        formTask._submitListener = function (e) {
+          e.preventDefault();
+          let titleTask = this.querySelector('input[name="task-title"]');
+          if (titleTask.value.trim() === '') {
+            alert('Veuillez mettre un titre.');
+            return;
+          }
+          fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              titleTask: titleTask.value,
+              listTaskId: this.dataset.listTaskId
+            })
           })
-        })
-          .then(res => res.json())
-          .then(data => {
-            titleTask.value = '';
-            this.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
-            initTask();
-          })
-      })
-    })
+            .then(res => res.json())
+            .then(data => {
+              titleTask.value = '';
+              this.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
+              initTask();
+            });
+        };
+        formTask.addEventListener('submit', formTask._submitListener);
+      });
+    }
   }
 
 }

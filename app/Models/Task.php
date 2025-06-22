@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,11 +15,11 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'project_id',
-        'task_category_id',
-        'task_priority_id',
-        'list_task_id',
         'order',
+        'list_task_id',
+        'user_id',
+        'category',
+        'priority',
         'created_at',
         'updated_at',
     ];
@@ -43,9 +44,9 @@ class Task extends Model
     {
         return $this->belongsTo(ListTask::class);
     }
-    public function taskColumn()
-    {
-        return $this->belongsTo(TaskColumn::class);
-    }
 
+    public function taskUsers(): HasMany
+    {
+        return $this->hasMany(TaskUser::class, 'task_id');
+    }
 }

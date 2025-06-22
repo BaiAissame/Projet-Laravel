@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('order')->default(1);
             $table->foreignId('list_task_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('task_category_id')->nullable()->constrained('task_categories')->onDelete('set null');
-            $table->foreignId('task_priority_id')->nullable()->constrained('task_priorities')->onDelete('set null');
+            $table->enum('category', ['marketing', 'développement', 'communication'])->nullable();
+            $table->enum('priority', ['basse', 'moyenne', 'élevée'])->default('basse');
             $table->timestamps();
         });
     }

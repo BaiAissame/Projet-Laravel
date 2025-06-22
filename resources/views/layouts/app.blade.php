@@ -52,7 +52,7 @@
             @include('layouts.navigation')
         </header>
 
-        <main class="flex bg-gray-50 dark:bg-gray-900 flex-1">
+        <main class="flex bg-gray-50 dark:bg-gray-900 flex-1" id="app">
             {{ $slot }}
 
             <x-modal-create-tableau></x-modal-create-tableau>

@@ -5,7 +5,6 @@ use App\Http\Controllers\ListTaskController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
-use App\Http\Controllers\TableauController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WallController;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/tableau/create', [TableauController::class, 'create'])->name('tableau.create');
-    Route::delete('/projet/{projet}', [TableauController::class, 'destroy'])->name('projet.destroy');
+    Route::post('/projet/create', [ProjectController::class, 'create'])->name('tableau.create');
+    Route::delete('/projet/{projet}', [ProjectController::class, 'destroy'])->name('projet.destroy');
     Route::get('/projets/create', [ProjectController::class, 'create'])->name('projet.create');
     Route::post('/projets', [ProjectController::class, 'store'])->name('projet.store');
     Route::get('/projet/{projet}', [ProjectController::class, 'show'])->name('projet.show');
@@ -58,6 +57,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');
     Route::post('/task/update-order', [TaskController::class, 'updateOrder'])->name('task.updateOrder');
     Route::delete('/task/delete/{task}', [TaskController::class, 'delete'])->name('task.delete');
+    Route::post('/task/join/{task}', [TaskController::class, 'join'])->name('task.join');
+    Route::post('/task/leave/{task}', [TaskController::class, 'leave'])->name('task.leave');
+    Route::post('/task/update-category/{task}', [TaskController::class, 'updateCategory'])->name('task.updateCategory');
+    Route::post('/task/update-priority/{task}', [TaskController::class, 'updatePriority'])->name('task.updatePriority');
 });
 
 require __DIR__ . '/auth.php';

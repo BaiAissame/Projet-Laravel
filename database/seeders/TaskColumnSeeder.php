@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\TaskColumn;
+use App\Models\ListTask;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,17 +14,17 @@ class TaskColumnSeeder extends Seeder
      */
     public function run(): void
     {
-        TaskColumn::create([
+        ListTask::create([
             'name' => 'À faire',
             'project_id' => 1,
         ]);
 
-        TaskColumn::create([
+        ListTask::create([
             'name' => 'En cours',
             'project_id' => 1,
         ]);
 
-        TaskColumn::create([
+        ListTask::create([
             'name' => 'Fait',
             'project_id' => 1,
         ]);//

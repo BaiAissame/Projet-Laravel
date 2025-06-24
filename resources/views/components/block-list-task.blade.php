@@ -1,7 +1,8 @@
 <li class="mx-2 max-h-max list-task" draggable="true" data-list-task-id="{{ $listTask->id }}">
     <article class="bg-[#EEEEEE] w-[322px] min-h-[146px] rounded-[16px] px-4 py-4 text-[#262981]">
         <div class="flex justify-between">
-            <h1 class="text-lg font-semibold ml-4">{{ $listTask->title }}</h1>
+            <input class="text-lg font-semibold ml-4 border-none bg-transparent" value="{{ $listTask->title }}"
+                data-list-task-id="{{ $listTask->id }}" name="list-title">
             <i class="fas fa-ellipsis-h text-xl"></i>
         </div>
         <div class="mt-4 ">

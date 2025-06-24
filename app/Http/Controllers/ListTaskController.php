@@ -27,7 +27,7 @@ class ListTaskController extends Controller
         return response()->json(['html' => $html]);
     }
 
-   
+
     public function updateOrder(Request $request)
     {
 
@@ -48,5 +48,27 @@ class ListTaskController extends Controller
             'message' => "ok",
             // 'newOrder' => $request->input('newOrder'),
         ]);
+    }
+
+
+    public function updateTitle(Request $request, ListTask $listTask)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        try {
+            $listTask->update(['title' => $request->input('title')]);
+
+            return response()->json([
+                'message' => "ok",
+                'newTitle' => $listTask->title,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => "Erreur lors de la mise à jour du titre de la liste : " . $e->getMessage(),
+            ]);
+        }
     }
 }

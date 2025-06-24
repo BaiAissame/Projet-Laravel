@@ -126,4 +126,22 @@ class TaskController extends Controller
             return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
         }
     }
+
+    public function updateTitleAndDescription(Request $request, Task $task)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000'
+        ]);
+
+        try {
+            $task->update([
+                'title' => $request->input('title'),
+                'description' => $request->input('description')
+            ]);
+            return response()->json(['error' => false, 'message' => 'Titre et description mis à jour avec succès', 'value' => $task]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
+        }
+    }
 }

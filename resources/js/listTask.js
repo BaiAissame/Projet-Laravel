@@ -1,8 +1,7 @@
 const formCreateListTask = document.getElementById('form-create-list-task');
 const taskList = document.getElementById('taskes-list');
 
-
-
+// Vérifie si le formulaire et la liste des tâches existent avant d'ajouter l'écouteur d'événements
 if (taskList) {
   formCreateListTask.addEventListener('submit', function (e) {
     e.preventDefault(); // Prevent the default form submission
@@ -58,118 +57,164 @@ if (taskList) {
   // DRAGSTART pour les listes
   function initlistTask() {
     document.querySelectorAll('.list-task').forEach(list => {
-      list.addEventListener('dragstart', function (e) {
-        if (e.target.classList.contains('list-task')) {
-          draggedList = this;
-          draggedTask = null;
-        }
-      });
-
-
-      list.addEventListener('dragover', function (e) {
-        if (draggedTask) {
-          e.preventDefault();
-        }
-      });
-
-
-      list.addEventListener('drop', function (e) {
-        if (draggedTask) {
-          e.preventDefault();
-          const ol = this.querySelector('ol');
-          if (ol && ol.children.length === 0) {
-
-            ol.appendChild(draggedTask);
-            // Optionnel : fetch pour update la liste et l'ordre côté serveur
+      if (!list._hasDragStartListener) {
+        list.addEventListener('dragstart', function (e) {
+          if (e.target.classList.contains('list-task')) {
+            draggedList = this;
+            draggedTask = null;
           }
-          draggedTask = null;
-          const orderTask = Array.from(this.querySelectorAll('ol > li ')).map((task, idx) => ({
-            taskId: task.dataset.taskId,
-            listTaskId: this.dataset.listTaskId,
-            order: idx + 1
-          }));
+        });
+        list._hasDragStartListener = true;
+      }
 
-          fetch('/task/update-order', {
+      if (!list._hasDragOverListener) {
+        list.addEventListener('dragover', function (e) {
+          if (draggedTask) {
+            e.preventDefault();
+          }
+        });
+        list._hasDragOverListener = true;
+      }
+
+      if (!list._hasDropListener) {
+        list.addEventListener('drop', function (e) {
+          if (draggedTask) {
+            e.preventDefault();
+            const ol = this.querySelector('ol');
+            if (ol && ol.children.length === 0) {
+
+              ol.appendChild(draggedTask);
+              // Optionnel : fetch pour update la liste et l'ordre côté serveur
+            }
+            draggedTask = null;
+            const orderTask = Array.from(this.querySelectorAll('ol > li ')).map((task, idx) => ({
+              taskId: task.dataset.taskId,
+              listTaskId: this.dataset.listTaskId,
+              order: idx + 1
+            }));
+
+            fetch('/task/update-order', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                  'content')
+              },
+              body: JSON.stringify({ orderTask: orderTask })
+            }).then(response => response.json())
+              .then(data => {
+                console.log(data);
+              }).catch(error => {
+                console.error('Error updating order:', error);
+              });
+          }
+        });
+        list._hasDropListener = true;
+      }
+    });
+
+    document.querySelectorAll('input[name="list-title"]').forEach(input => {
+      if (!input._hasBlurListener) {
+        input.addEventListener('blur', function () {
+          const listTaskId = this.dataset.listTaskId;
+          const title = this.value;
+          fetch(`/listTask/update-title/${listTaskId}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                'content')
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({ orderTask: orderTask })
-          }).then(response => response.json())
+            body: JSON.stringify({ title })
+          })
+            .then(response => response.json())
             .then(data => {
-              console.log(data);
-            }).catch(error => {
-              console.error('Error updating order:', error);
+              if (data.error) {
+                showErrorModal(data.message);
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la mise à jour du titre de la liste:', error);
             });
-        }
-      });
-
+        });
+      }
     });
   }
 
   function initTask() {
     document.querySelectorAll('.container-task').forEach(task => {
-      task.addEventListener('dragstart', function (e) {
-        if (e.target.classList.contains('container-task')) {
-          draggedTask = this;
-          draggedList = null;
-        }
-      });
+      if (!task._hasDragStartListener) {
+        task.addEventListener('dragstart', function (e) {
+          if (e.target.classList.contains('container-task')) {
+            draggedTask = this;
+            draggedList = null;
+          }
+        });
+        task._hasDragStartListener = true;
+      }
     });
   }
 
-  // DRAGSTART pour les tâches
-
   // DRAGOVER pour les listes (déplacement en live)
-  taskList.addEventListener('dragover', function (e) {
-    if (draggedList) {
-      e.preventDefault();
-      const afterElement = getDragAfterElement(this, e.clientX);
-
-      if (afterElement == null) {
-        this.appendChild(draggedList);
-      } else {
-        this.insertBefore(draggedList, afterElement);
-      }
-    }
-  });
-
-
-  taskList.addEventListener('drop', function (e) {
-    const order = Array.from(this.children).map((li, idx) => ({
-      listTaskId: li.dataset.listTaskId,
-      order: idx + 1
-    }));
-
-    sendOrderUpdateList(order);
-  })
-
-
-  // DRAGEND pour reset la variable
-  taskList.addEventListener('dragend', function () {
-    draggedList = null;
-  });
-
-  // DRAGOVER pour les tâches (déplacement en live)
-  document.querySelectorAll('.list-task ol').forEach(list => {
-    list.addEventListener('dragover', function (e) {
-      if (draggedTask) {
+  if (!taskList._hasDragOverListener) {
+    taskList.addEventListener('dragover', function (e) {
+      if (draggedList) {
         e.preventDefault();
-        const afterElement = getDragAfterElementTask(this, e.clientY);
-        if (afterElement === draggedTask) return;
+        const afterElement = getDragAfterElement(this, e.clientX);
+
         if (afterElement == null) {
-          this.appendChild(draggedTask);
+          this.appendChild(draggedList);
         } else {
-          this.insertBefore(draggedTask, afterElement);
+          this.insertBefore(draggedList, afterElement);
         }
       }
     });
+    taskList._hasDragOverListener = true;
+  }
 
-    list.addEventListener('dragend', function () {
-      draggedTask = null;
+  if (!taskList._hasDropListener) {
+    taskList.addEventListener('drop', function (e) {
+      const order = Array.from(this.children).map((li, idx) => ({
+        listTaskId: li.dataset.listTaskId,
+        order: idx + 1
+      }));
+
+      sendOrderUpdateList(order);
+    })
+    taskList._hasDropListener = true;
+  }
+
+  // DRAGEND pour reset la variable
+  if (!taskList._hasDragEndListener) {
+    taskList.addEventListener('dragend', function () {
+      draggedList = null;
     });
+    taskList._hasDragEndListener = true;
+  }
+
+  // DRAGOVER pour les tâches (déplacement en live)
+  document.querySelectorAll('.list-task ol').forEach(list => {
+    if (!list._hasDragOverListener) {
+      list.addEventListener('dragover', function (e) {
+        if (draggedTask) {
+          e.preventDefault();
+          const afterElement = getDragAfterElementTask(this, e.clientY);
+          if (afterElement === draggedTask) return;
+          if (afterElement == null) {
+            this.appendChild(draggedTask);
+          } else {
+            this.insertBefore(draggedTask, afterElement);
+          }
+        }
+      });
+      list._hasDragOverListener = true;
+    }
+
+    if (!list._hasDropListener) {
+      list.addEventListener('dragend', function () {
+        draggedTask = null;
+      });
+      list._hasDropListener = true;
+    }
   });
 
   // Fonction pour trouver la position d'insertion pour les listes (horizontal)
@@ -199,7 +244,6 @@ if (taskList) {
     });
     return closest.element;
   }
-
 
   initFormCreateTask();
 
@@ -238,7 +282,6 @@ if (taskList) {
       });
     }
   }
-
 }
 
 

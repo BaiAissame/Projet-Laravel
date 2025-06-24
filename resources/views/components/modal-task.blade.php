@@ -1,5 +1,6 @@
   <div
       class="container-modal-task-option hidden bg-[rgba(0,0,0,0.6)] w-[100vw] h-[100vh] fixed z-40 top-0 left-0 cursor-default ">
+     
       <form
           class="modal-task-option fixed rounded-xl w-[768px] top-[40%] left-[50%] px-8 pt-4 pb-6 bg-[#F0F0F0] translate-x-[-50%] translate-y-[-50%] z-50">
           @csrf

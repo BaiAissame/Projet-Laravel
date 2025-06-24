@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     // Routes pour les listes des tâches
     Route::post('/listTask/create/{projet}', [ListTaskController::class, 'create'])->name('listTask.create');
     Route::post('/listTask/update-order', [ListTaskController::class, 'updateOrder'])->name('listTask.updateOrder');
-
+    Route::post('/listTask/update-title/{listTask}', [ListTaskController::class, 'updateTitle'])->name('listTask.updateTitle');
 
     // Routes pour les tâches
     Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');
@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/task/leave/{task}', [TaskController::class, 'leave'])->name('task.leave');
     Route::post('/task/update-category/{task}', [TaskController::class, 'updateCategory'])->name('task.updateCategory');
     Route::post('/task/update-priority/{task}', [TaskController::class, 'updatePriority'])->name('task.updatePriority');
+    Route::post('/task/update-content/{task}', [TaskController::class, 'updateTitleAndDescription'])->name('task.updateContent');
 });
 
 require __DIR__ . '/auth.php';

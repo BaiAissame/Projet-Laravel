@@ -22,3 +22,31 @@ export function showErrorModal(message) {
         modal.style.display = 'none';
     }, 3000);
 }
+
+export function saveTaskChanges(modal) {
+    const inputTitle = modal.querySelector('input[name="task-title"]');
+    const p = modal.parentElement.querySelector('.preview-task-title');
+    p.textContent = inputTitle.value;
+    const textareaDesc = modal.querySelector('textarea[name="task-description"]');
+    const taskId = inputTitle.id.replace('task-title-', '');
+    fetch(`/task/update-content/${taskId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            title: inputTitle.value,
+            description: textareaDesc.value
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showErrorModal(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}

@@ -1,9 +1,21 @@
 <li class="mx-2 max-h-max list-task" draggable="true" data-list-task-id="{{ $listTask->id }}">
     <article class="bg-[#EEEEEE] w-[322px] min-h-[146px] rounded-[16px] px-4 py-4 text-[#262981]">
         <div class="flex justify-between">
-            <input class="text-lg font-semibold ml-4 border-none bg-transparent" value="{{ $listTask->title }}"
+            <input class="text-lg font-semibold border-none bg-transparent" value="{{ $listTask->title }}"
                 data-list-task-id="{{ $listTask->id }}" name="list-title">
-            <i class="fas fa-ellipsis-h text-xl"></i>
+            <div class="relative">
+                <i class="fas fa-ellipsis-h text-xl cursor-pointer list-menu-trigger"
+                    data-list-task-id="{{ $listTask->id }}"></i>
+
+                <!-- Menu dropdown -->
+                <div class="list-menu hidden absolute right-50 top-8 bg-white shadow-lg rounded-md py-2 w-48 z-10">
+                    <button class="delete-list-btn w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 font-semibold"
+                        data-list-task-id="{{ $listTask->id }}">
+                        <i class="fas fa-trash mr-2"></i>
+                        Supprimer la liste
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="mt-4 ">
             <ol>

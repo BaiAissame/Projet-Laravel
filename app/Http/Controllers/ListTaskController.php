@@ -71,4 +71,19 @@ class ListTaskController extends Controller
             ]);
         }
     }
+
+
+    public function delete(ListTask $listTask)
+    {
+        try {
+            $listTask->delete();
+            return response()->json(['message' => 'Liste supprimée avec succès']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => "Erreur lors de la suppression de la liste : " . $e->getMessage(),
+            ]);
+        }
+    }
+
 }

@@ -1,11 +1,23 @@
-const formCreateListTask = document.getElementById('form-create-list-task');
+
 const taskList = document.getElementById('taskes-list');
 
 // Vérifie si le formulaire et la liste des tâches existent avant d'ajouter l'écouteur d'événements
 if (taskList) {
+
+  const formCreateListTask = document.getElementById('form-create-list-task');
+
+  // Initialisation des listes pour heriter les événements de drag and drop et creation de tâches
+  initlistTask()
+
+  // Initialisation des tâches pour les evénements de drag and drop
+  initTask();
+
+  //formulaire pour créer une nouvelle liste de tâches 
   formCreateListTask.addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
+
     const input = this.querySelector('.title-task');
+
     if (input.value.trim() === '') {
       alert('Veuillez entrer un titre pour la tâche.');
       return;
@@ -21,15 +33,21 @@ if (taskList) {
     })
       .then(response => response.json())
       .then(data => {
-        taskList.insertAdjacentHTML('beforeend', data
-          .html);
-        input.value = ''; // Clear the input field after successful submission
+
+        // ajouter la nouvelle liste de tâches à la liste existante, composant HTML
+        taskList.insertAdjacentHTML('beforeend', data.html);
+
+        // Réinitialise le champ de saisie après l'ajout de la liste
+        input.value = '';
+
+        // Réinitialise les événements pour les nouvelles listes et tâches
         initlistTask()
-        initFormCreateTask();
+
       }).catch(error => {
         console.error('Erreur:', error);
       });
   });
+
 
   // Fonction pour envoyer la mise à jour de l'ordre des tâches
   function sendOrderUpdateList(orderList) {
@@ -49,15 +67,70 @@ if (taskList) {
   }
 
 
-  let draggedList = null;
-  let draggedTask = null;
-  initlistTask()
-  initTask();
+  // ############## LISTES #######################
 
-  // DRAGSTART pour les listes
+  // Initialisation des listes pour heriter les événements de drag and drop et creation de tâches
   function initlistTask() {
+
+    // Gérer le clic sur le trigger du menu => ... sur la liste
+    document.querySelectorAll('.list-menu-trigger').forEach(trigger => {
+      if (!trigger._hasMenuListener) {
+        trigger.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const menu = this.parentElement.querySelector('.list-menu');
+
+          // Ferme tous les autres menus
+          document.querySelectorAll('.list-menu').forEach(m => {
+            if (m !== menu) m.classList.add('hidden');
+          });
+
+          // Toggle ce menu
+          menu.classList.toggle('hidden');
+        });
+        trigger._hasMenuListener = true;
+      }
+    });
+
+    // Gérer le clic sur "Supprimer"
+    document.querySelectorAll('.delete-list-btn').forEach(btn => {
+      if (!btn._hasDeleteListener) {
+        btn.addEventListener('click', function () {
+          const listTaskId = this.dataset.listTaskId;
+
+          if (confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')) {
+            fetch(`/listTask/delete/${listTaskId}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+              }
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data.error) {
+                  showErrorModal(data.message);
+                } else {
+                  // Supprime la liste du DOM
+                  const listElement = document.querySelector(`[data-list-task-id="${listTaskId}"]`);
+                  if (listElement) {
+                    listElement.remove();
+                  }
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          }
+        });
+        btn._hasDeleteListener = true;
+      }
+    });
+
     document.querySelectorAll('.list-task').forEach(list => {
+
+      // évite d'ajouter plusieurs fois le même listener
       if (!list._hasDragStartListener) {
+
         list.addEventListener('dragstart', function (e) {
           if (e.target.classList.contains('list-task')) {
             draggedList = this;
@@ -65,6 +138,7 @@ if (taskList) {
           }
         });
         list._hasDragStartListener = true;
+
       }
 
       if (!list._hasDragOverListener) {
@@ -103,7 +177,7 @@ if (taskList) {
               body: JSON.stringify({ orderTask: orderTask })
             }).then(response => response.json())
               .then(data => {
-                console.log(data);
+                // console.log(data);
               }).catch(error => {
                 console.error('Error updating order:', error);
               });
@@ -114,6 +188,8 @@ if (taskList) {
     });
 
     document.querySelectorAll('input[name="list-title"]').forEach(input => {
+
+      // évite d'ajouter plusieurs fois le même listener
       if (!input._hasBlurListener) {
         input.addEventListener('blur', function () {
           const listTaskId = this.dataset.listTaskId;
@@ -138,21 +214,47 @@ if (taskList) {
         });
       }
     });
-  }
 
-  function initTask() {
-    document.querySelectorAll('.container-task').forEach(task => {
-      if (!task._hasDragStartListener) {
-        task.addEventListener('dragstart', function (e) {
-          if (e.target.classList.contains('container-task')) {
-            draggedTask = this;
-            draggedList = null;
+    document.querySelectorAll('.form-create-task').forEach(formTask => {
+
+      // évite d'ajouter plusieurs fois le même listener
+      if (!formTask._submitListener) {
+        formTask._submitListener = function (e) {
+          e.preventDefault();
+          let titleTask = this.querySelector('input[name="task-title"]');
+          if (titleTask.value.trim() === '') {
+            alert('Veuillez mettre un titre.');
+            return;
           }
-        });
-        task._hasDragStartListener = true;
+          fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              titleTask: titleTask.value,
+              listTaskId: this.dataset.listTaskId
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              titleTask.value = '';
+              this.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
+              initTask();
+            });
+        };
+        formTask.addEventListener('submit', formTask._submitListener);
+
+        // Marque le formulaire comme ayant un listener pour éviter les doublons
+        formTask._hasSubmitListener = true;
       }
     });
+
   }
+
+  let draggedList = null;
+  let draggedTask = null;
 
   // DRAGOVER pour les listes (déplacement en live)
   if (!taskList._hasDragOverListener) {
@@ -191,31 +293,62 @@ if (taskList) {
     taskList._hasDragEndListener = true;
   }
 
-  // DRAGOVER pour les tâches (déplacement en live)
-  document.querySelectorAll('.list-task ol').forEach(list => {
-    if (!list._hasDragOverListener) {
-      list.addEventListener('dragover', function (e) {
-        if (draggedTask) {
-          e.preventDefault();
-          const afterElement = getDragAfterElementTask(this, e.clientY);
-          if (afterElement === draggedTask) return;
-          if (afterElement == null) {
-            this.appendChild(draggedTask);
-          } else {
-            this.insertBefore(draggedTask, afterElement);
-          }
-        }
+  // Fermer le menu si on clique ailleurs
+  if (!taskList._hasClickListener) {
+    document.addEventListener('click', function () {
+      document.querySelectorAll('.list-menu').forEach(menu => {
+        menu.classList.add('hidden');
       });
-      list._hasDragOverListener = true;
-    }
+    });
+    taskList._hasClickListener = true;
+  }
 
-    if (!list._hasDropListener) {
-      list.addEventListener('dragend', function () {
-        draggedTask = null;
-      });
-      list._hasDropListener = true;
-    }
-  });
+  // ############## FIN PARTIE LISTES #######################
+
+
+  //  ############## TACHES ####################### 
+
+  // Initialisation des tâches pour les evénements de drag and drop
+  function initTask() {
+    document.querySelectorAll('.container-task').forEach(task => {
+      if (!task._hasDragStartListener) {
+        task.addEventListener('dragstart', function (e) {
+          if (e.target.classList.contains('container-task')) {
+            draggedTask = this;
+            draggedList = null;
+          }
+        });
+        task._hasDragStartListener = true;
+      }
+    });
+
+
+    // DRAGOVER pour les tâches (déplacement en live)
+    document.querySelectorAll('.list-task ol').forEach(list => {
+      if (!list._hasDragOverListener) {
+        list.addEventListener('dragover', function (e) {
+          if (draggedTask) {
+            e.preventDefault();
+            const afterElement = getDragAfterElementTask(this, e.clientY);
+            if (afterElement === draggedTask) return;
+            if (afterElement == null) {
+              this.appendChild(draggedTask);
+            } else {
+              this.insertBefore(draggedTask, afterElement);
+            }
+          }
+        });
+        list._hasDragOverListener = true;
+      }
+
+      if (!list._hasDropListener) {
+        list.addEventListener('dragend', function () {
+          draggedTask = null;
+        });
+        list._hasDropListener = true;
+      }
+    });
+  }
 
   // Fonction pour trouver la position d'insertion pour les listes (horizontal)
   function getDragAfterElement(container, x) {
@@ -245,43 +378,7 @@ if (taskList) {
     return closest.element;
   }
 
-  initFormCreateTask();
-
-  function initFormCreateTask() {
-    const formCreatTask = document.querySelectorAll('.form-create-task');
-    if (formCreatTask) {
-      formCreatTask.forEach(formTask => {
-        // Pour éviter d'ajouter plusieurs fois le même listener :
-        formTask.removeEventListener('submit', formTask._submitListener);
-        formTask._submitListener = function (e) {
-          e.preventDefault();
-          let titleTask = this.querySelector('input[name="task-title"]');
-          if (titleTask.value.trim() === '') {
-            alert('Veuillez mettre un titre.');
-            return;
-          }
-          fetch(this.action, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-              titleTask: titleTask.value,
-              listTaskId: this.dataset.listTaskId
-            })
-          })
-            .then(res => res.json())
-            .then(data => {
-              titleTask.value = '';
-              this.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
-              initTask();
-            });
-        };
-        formTask.addEventListener('submit', formTask._submitListener);
-      });
-    }
-  }
+  // ############## FIN PARTIE TACHES #######################
 }
 
 

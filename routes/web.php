@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/listTask/create/{projet}', [ListTaskController::class, 'create'])->name('listTask.create');
     Route::post('/listTask/update-order', [ListTaskController::class, 'updateOrder'])->name('listTask.updateOrder');
     Route::post('/listTask/update-title/{listTask}', [ListTaskController::class, 'updateTitle'])->name('listTask.updateTitle');
+    Route::delete('/listTask/delete/{listTask}', [ListTaskController::class, 'delete'])->name('listTask.delete');
 
     // Routes pour les tâches
     Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');

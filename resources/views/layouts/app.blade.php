@@ -53,7 +53,7 @@
         </header>
 
         <main class="flex bg-gray-50 dark:bg-gray-900 flex-1" id="app">
-            {{ $slot }}
+              @yield('content')
 
             <x-modal-create-tableau></x-modal-create-tableau>
             <x-modal-add-member></x-modal-add-member>

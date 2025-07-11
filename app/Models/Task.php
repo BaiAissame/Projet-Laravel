@@ -20,8 +20,13 @@ class Task extends Model
         'user_id',
         'category',
         'priority',
+        'due_date',
         'created_at',
         'updated_at',
+    ];
+
+    protected $casts = [
+        'due_date' => 'datetime',
     ];
 
     public function users(): BelongsToMany
@@ -40,6 +45,7 @@ class Task extends Model
     {
         return $this->belongsTo(TaskPriority::class, 'task_priority_id');
     }
+    
     public function listTask(): BelongsTo
     {
         return $this->belongsTo(ListTask::class);
@@ -48,5 +54,21 @@ class Task extends Model
     public function taskUsers(): HasMany
     {
         return $this->hasMany(TaskUser::class, 'task_id');
+    }
+
+    // Accessor pour vérifier si la tâche est en retard
+    public function getIsOverdueAttribute()
+    {
+        return $this->due_date && $this->due_date->isPast();
+    }
+
+    // Accessor pour obtenir le nombre de jours restants
+    public function getDaysRemainingAttribute()
+    {
+        if (!$this->due_date) {
+            return null;
+        }
+        
+        return now()->diffInDays($this->due_date, false);
     }
 }

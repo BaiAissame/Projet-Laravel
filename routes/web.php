@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WallController;
+use App\Http\Controllers\TaskViewController;  
 use Illuminate\Support\Facades\Route;
 
 Route::post('/post_message', [WallController::class, 'postMessage'])->name('message.post');
@@ -63,6 +64,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/task/update-category/{task}', [TaskController::class, 'updateCategory'])->name('task.updateCategory');
     Route::post('/task/update-priority/{task}', [TaskController::class, 'updatePriority'])->name('task.updatePriority');
     Route::post('/task/update-content/{task}', [TaskController::class, 'updateTitleAndDescription'])->name('task.updateContent');
+
+
+ // Routes pour les vues des tâches 
+    Route::get('/projet/{projet}/tasks/list', [TaskViewController::class, 'listView'])->name('tasks.list');
+    Route::get('/projet/{projet}/tasks/calendar', [TaskViewController::class, 'calendarView'])->name('tasks.calendar');
+    
+    // Routes pour les détails et mise à jour des tâches
+    Route::get('/task/details/{task}', [TaskController::class, 'details'])->name('task.details');
+    Route::post('/task/update-due-date/{task}', [TaskController::class, 'updateDueDate'])->name('task.updateDueDate');
+    
+    // Routes CRUD classiques pour les tâches (si nécessaire)
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+    Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
+    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 });
 
 require __DIR__ . '/auth.php';

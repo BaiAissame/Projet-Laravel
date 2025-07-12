@@ -170,25 +170,25 @@
                             <p class="text-gray-600 dark:text-gray-400">Dernières actions sur vos projets</p>
                         </div>
                     </div>
-                    <div class="space-y-4">
-                        @foreach($recentActivity as $activity)
+                            <div class="space-y-4">
+                                @foreach($recentActivity as $activity)
                             <div class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
-                                <div class="flex-shrink-0">
+                                        <div class="flex-shrink-0">
                                     <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                                         <i class="fas fa-{{ $activity->icon ?? 'circle' }} text-white text-sm"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-1 min-w-0">
+                                            </div>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
                                     <p class="text-gray-900 dark:text-white font-medium">
-                                        {{ $activity->description }}
-                                    </p>
+                                                {{ $activity->description }}
+                                            </p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                         <i class="fas fa-clock mr-1"></i>
-                                        {{ $activity->created_at->diffForHumans() }}
-                                    </p>
-                                </div>
-                            </div>
-                        @endforeach
+                                                {{ $activity->created_at->diffForHumans() }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endforeach
                     </div>
                 </div>
             @endif

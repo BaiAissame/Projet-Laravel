@@ -75,7 +75,7 @@
                             <option value="moyenne">Moyenne</option>
                             <option value="haute">Haute</option>
                         </select>
-                    </div>
+          </div>
 
                     <!-- Category -->
                     <div class="mb-6">
@@ -85,7 +85,7 @@
                             <option value="marketing">Marketing</option>
                             <option value="développement">Développement</option>
                             <option value="communication">Communication</option>
-                        </select>
+                          </select>
                     </div>
 
                     <!-- Due Date -->
@@ -106,7 +106,7 @@
                                 @foreach($projet->members ?? [] as $membre)
                                     <option value="{{ $membre->id }}">{{ $membre->name }}</option>
                                 @endforeach
-                            </select>
+                          </select>
                             <button id="add-assignee" class="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">+</button>
                         </div>
                     </div>
@@ -118,13 +118,13 @@
                         </button>
                         <button id="delete-task" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
                             Supprimer la tâche
-                        </button>
+                          </button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+          </div>
+  </div>
 
 <script>
 let currentTaskId = null;

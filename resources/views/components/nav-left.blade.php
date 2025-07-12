@@ -1,4 +1,4 @@
-<section class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl h-screen shadow-xl border-r border-white/20 dark:border-gray-700/50 w-64 min-w-64 text-gray-700 dark:text-gray-300 fixed left-0 top-20 z-40">
+<section class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl h-screen shadow-xl border-r border-white/20 dark:border-gray-700/50 w-64 min-w-64 text-gray-700 dark:text-gray-300 fixed left-0 top-20 z-50">
     <div class="p-6">
         <!-- En-tête de la navigation -->
         <div class="mb-8">
@@ -13,8 +13,8 @@
                         <i class="fas fa-table text-white"></i>
                     </div>
                     <span class="font-medium">Tableaux</span>
-                </a>
-            </li>
+            </a>
+        </li>
             <li>
                 @if(isset($projet))
                     <a href="{{ route('projet.members.index', $projet) }}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group">
@@ -31,16 +31,16 @@
                         <span class="font-medium">Membres</span>
                     </button>
                 @endif
-            </li>
+        </li>
             <li>
                 <a href="#" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group">
                     <div class="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
                         <i class="fas fa-cog text-white"></i>
                     </div>
                     <span class="font-medium">Paramètres</span>
-                </a>
-            </li>
-        </ul>
+            </a>
+        </li>
+    </ul>
 
         <!-- Séparateur -->
         <div class="my-8 border-t border-gray-200 dark:border-gray-700"></div>
@@ -54,7 +54,7 @@
             
             @if (isset($data) && count($data) > 0)
                 <ul class="space-y-2">
-                    @foreach ($data as $projet)
+                @foreach ($data as $projet)
                         <li>
                             <a href="{{ route('projet.show', $projet) }}" 
                                class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group">
@@ -70,9 +70,9 @@
                                 <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
                                 </div>
-                            </a>
-                        </li>
-                    @endforeach
+                        </a>
+                    </li>
+                @endforeach
                 </ul>
             @else
                 <div class="text-center py-8">

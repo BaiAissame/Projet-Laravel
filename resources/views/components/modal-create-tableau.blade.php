@@ -2,7 +2,7 @@
 <div id="create-project-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="create-project-content">
         <form action="{{ route('tableau.create') }}" method="POST" class="p-8">
-            @csrf
+    @csrf
             
             <!-- En-tête de la modal -->
             <div class="flex items-center mb-8">
@@ -56,7 +56,7 @@
                         <p class="text-red-600 dark:text-red-400 text-sm">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
+    </div>
 
             <!-- Boutons d'action -->
             <div class="flex space-x-4 mt-8">
@@ -68,9 +68,9 @@
                 <button type="submit" 
                         class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
                     <i class="fas fa-plus mr-2"></i> Créer le projet
-                </button>
-            </div>
-        </form>
+        </button>
+    </div>
+</form>
     </div>
 </div>
 

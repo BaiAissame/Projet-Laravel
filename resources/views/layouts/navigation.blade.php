@@ -32,7 +32,7 @@
                 <!-- Barre de recherche moderne -->
                 <form action="" class="flex items-center">
                     <div class="relative">
-                        <input
+                    <input
                             class="h-10 w-64 pl-10 pr-4 rounded-xl bg-gray-100/80 dark:bg-gray-800/80 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-all duration-200 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
                             type="text" name="search" id="search" placeholder="Rechercher...">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

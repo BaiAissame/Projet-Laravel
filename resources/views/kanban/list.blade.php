@@ -31,7 +31,7 @@
           <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
-          <input type="text" id="search-tasks" placeholder="Rechercher des tâches..."
+        <input type="text" id="search-tasks" placeholder="Rechercher des tâches..."
             class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         </div>
       </div>
@@ -41,8 +41,8 @@
         class="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         <option value="">Tous les statuts</option>
         @foreach($colonnes as $colonne)
-          <option value="{{ $colonne->id }}">{{ $colonne->nom }}</option>
-        @endforeach
+      <option value="{{ $colonne->id }}">{{ $colonne->nom }}</option>
+    @endforeach
       </select>
 
       <select id="filter-priority"
@@ -57,8 +57,8 @@
         class="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         <option value="">Tous les assignés</option>
         @foreach($projet->membres as $membre)
-          <option value="{{ $membre->id }}">{{ $membre->name }}</option>
-        @endforeach
+      <option value="{{ $membre->id }}">{{ $membre->name }}</option>
+    @endforeach
       </select>
     </div>
 
@@ -177,116 +177,116 @@
     <div id="table-view" class="hidden">
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-gray-50 dark:bg-gray-700">
-              <tr>
+    <table class="w-full">
+      <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr>
                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Tâche
-                </th>
+            Tâche
+          </th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Statut
-                </th>
+            Statut
+          </th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Priorité
-                </th>
+            Priorité
+          </th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Assigné à
-                </th>
+            Assigné à
+          </th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Date limite
-                </th>
+            Date limite
+          </th>
                 <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="tasks-table-body">
-              @foreach($tasks as $task)
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="tasks-table-body">
+        @foreach($tasks as $task)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 task-row transition-colors" 
                     data-task-id="{{ $task->id }}"
                     data-status="{{ $task->colonne_id }}" 
                     data-priority="{{ $task->priorite }}"
-                    data-assignees="{{ $task->assignes->pluck('id')->implode(',') }}">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                      <div>
+          data-assignees="{{ $task->assignes->pluck('id')->implode(',') }}">
+          <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex items-center">
+            <div>
                         <div class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer hover:text-blue-600" onclick="openTaskModal({{ $task->id }})">
-                          {{ $task->titre }}
-                        </div>
-                        @if($task->description)
-                          <div class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ Str::limit($task->description, 60) }}
-                          </div>
-                        @endif
-                        @if($task->categorie)
+              {{ $task->titre }}
+            </div>
+            @if($task->description)
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+          {{ Str::limit($task->description, 60) }}
+          </div>
+        @endif
+            @if($task->categorie)
                           <span class="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs mt-1">
-                            {{ $task->categorie }}
-                          </span>
-                        @endif
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+          {{ $task->categorie }}
+          </span>
+        @endif
+            </div>
+          </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
                     <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $task->colonne->couleur ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200' }}">
-                      {{ $task->colonne->nom }}
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    @if($task->priorite)
+            {{ $task->colonne->nom }}
+          </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+          @if($task->priorite)
                       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                        {{ $task->priorite === 'haute' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
-                        {{ $task->priorite === 'moyenne' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
-                        {{ $task->priorite === 'basse' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}">
-                        {{ ucfirst($task->priorite) }}
-                      </span>
-                    @else
-                      <span class="text-gray-400">-</span>
-                    @endif
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex -space-x-1">
-                      @forelse($task->assignes->take(3) as $assigne)
-                        <img src="{{ $assigne->avatar ?? '/default-avatar.png' }}" alt="{{ $assigne->name }}"
-                          class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-700" title="{{ $assigne->name }}">
-                      @empty
-                        <span class="text-gray-400 text-sm">Non assigné</span>
-                      @endforelse
-                      @if($task->assignes->count() > 3)
+          {{ $task->priorite === 'haute' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
+          {{ $task->priorite === 'moyenne' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
+          {{ $task->priorite === 'basse' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}">
+          {{ ucfirst($task->priorite) }}
+        </span>
+        @else
+        <span class="text-gray-400">-</span>
+        @endif
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+          <div class="flex -space-x-1">
+            @forelse($task->assignes->take(3) as $assigne)
+          <img src="{{ $assigne->avatar ?? '/default-avatar.png' }}" alt="{{ $assigne->name }}"
+          class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-700" title="{{ $assigne->name }}">
+        @empty
+          <span class="text-gray-400 text-sm">Non assigné</span>
+        @endforelse
+            @if($task->assignes->count() > 3)
                         <span class="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full border-2 border-white dark:border-gray-700 flex items-center justify-center text-xs">
-                          +{{ $task->assignes->count() - 3 }}
-                        </span>
-                      @endif
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    @if($task->date_limite)
-                      <span class="{{ $task->date_limite < now() ? 'text-red-500' : 'text-gray-900 dark:text-white' }}">
-                        {{ \Carbon\Carbon::parse($task->date_limite)->format('d/m/Y') }}
-                      </span>
-                    @else
-                      <span class="text-gray-400">-</span>
-                    @endif
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+          +{{ $task->assignes->count() - 3 }}
+          </span>
+        @endif
+          </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+          @if($task->date_limite)
+        <span class="{{ $task->date_limite < now() ? 'text-red-500' : 'text-gray-900 dark:text-white' }}">
+          {{ \Carbon\Carbon::parse($task->date_limite)->format('d/m/Y') }}
+        </span>
+        @else
+        <span class="text-gray-400">-</span>
+        @endif
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div class="flex items-center gap-2">
                       <button onclick="openTaskModal({{ $task->id }})" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
-                      </button>
+          </button>
                       <button onclick="deleteTask({{ $task->id }})" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
-                      </button>
+          </button>
                     </div>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
+          </td>
+        </tr>
+    @endforeach
+      </tbody>
+    </table>
+  </div>
       </div>
     </div>
   </div>
@@ -314,13 +314,13 @@
 <script>
 let currentView = 'card'; // 'card' ou 'table'
 
-// Filtrage en temps réel
-document.getElementById('search-tasks').addEventListener('input', filterTasks);
-document.getElementById('filter-status').addEventListener('change', filterTasks);
-document.getElementById('filter-priority').addEventListener('change', filterTasks);
-document.getElementById('filter-assignee').addEventListener('change', filterTasks);
+  // Filtrage en temps réel
+  document.getElementById('search-tasks').addEventListener('input', filterTasks);
+  document.getElementById('filter-status').addEventListener('change', filterTasks);
+  document.getElementById('filter-priority').addEventListener('change', filterTasks);
+  document.getElementById('filter-assignee').addEventListener('change', filterTasks);
 
-function filterTasks() {
+  function filterTasks() {
     const searchTerm = document.getElementById('search-tasks').value.toLowerCase();
     const statusFilter = document.getElementById('filter-status').value;
     const priorityFilter = document.getElementById('filter-priority').value;
@@ -336,18 +336,18 @@ function filterTasks() {
         const priority = element.dataset.priority;
         const assignees = element.dataset.assignees.split(',');
 
-        const matchesSearch = title.includes(searchTerm);
-        const matchesStatus = !statusFilter || status === statusFilter;
-        const matchesPriority = !priorityFilter || priority === priorityFilter;
-        const matchesAssignee = !assigneeFilter || assignees.includes(assigneeFilter);
+      const matchesSearch = title.includes(searchTerm);
+      const matchesStatus = !statusFilter || status === statusFilter;
+      const matchesPriority = !priorityFilter || priority === priorityFilter;
+      const matchesAssignee = !assigneeFilter || assignees.includes(assigneeFilter);
 
-        if (matchesSearch && matchesStatus && matchesPriority && matchesAssignee) {
+      if (matchesSearch && matchesStatus && matchesPriority && matchesAssignee) {
             element.style.display = '';
-        } else {
+      } else {
             element.style.display = 'none';
-        }
+      }
     });
-}
+  }
 
 function toggleViewMode() {
     const cardView = document.getElementById('card-view');
@@ -375,28 +375,28 @@ function toggleViewMode() {
     }
 }
 
-function deleteTask(taskId) {
+  function deleteTask(taskId) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
-        fetch(`/api/tasks/${taskId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
+      fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+      })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+          if (data.success) {
                 const element = document.querySelector(`[data-task-id="${taskId}"]`);
                 if (element) {
                     element.remove();
-                    showNotification('Succès', 'Tâche supprimée avec succès', 'success');
+            showNotification('Succès', 'Tâche supprimée avec succès', 'success');
                 }
-            } else {
-                showNotification('Erreur', 'Erreur lors de la suppression', 'error');
-            }
+          } else {
+            showNotification('Erreur', 'Erreur lors de la suppression', 'error');
+          }
         });
     }
-}
+  }
 
 function openCreateTaskModal() {
     // Cette fonction sera implémentée pour ouvrir une modal de création de tâche

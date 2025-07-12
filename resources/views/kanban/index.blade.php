@@ -10,12 +10,12 @@
                             <i class="fas fa-project-diagram text-white text-xl"></i>
                         </div>
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $projet->nom }}</h1>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $projet->nom }}</h1>
                             @if($projet->statut)
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-200">
                                     <i class="fas fa-circle text-xs mr-2"></i>
-                                    {{ $projet->statut }}
-                                </span>
+                        {{ $projet->statut }}
+                    </span>
                             @endif
                         </div>
                     </div>
@@ -62,116 +62,108 @@
                 <div class="h-full">
                     <div class="flex gap-6 h-full overflow-x-auto pb-6" id="kanban-board">
                         @foreach($colonnes as $colonne)
-                            <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col relative"
-                                 data-colonne-id="{{ $colonne->id }}">
+                            <div class="kanban-column bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col relative {{ $colonne->color ? 'border-' . $colonne->color . '-400 dark:border-' . $colonne->color . '-500 bg-' . $colonne->color . '-50/50 dark:bg-' . $colonne->color . '-900/10' : '' }}"
+                                 data-colonne-id="{{ $colonne->id }}" data-color="{{ $colonne->color }}">
                                 <!-- En-tête de colonne -->
                                 <div class="flex items-center justify-between mb-6">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center flex-1">
                                         <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-3">
                                             <i class="fas fa-columns text-white"></i>
                                         </div>
-                                        <div>
-                                            <h3 class="font-bold text-gray-900 dark:text-white">
-                                                {{ $colonne->nom }}
+                                        <div class="flex-1">
+                                            <h3 class="font-bold text-gray-900 dark:text-white text-lg">
+                                        {{ $colonne->nom }}
                                             </h3>
                                             <span class="text-sm text-gray-500 dark:text-gray-400">
                                                 {{ $colonne->tasks->count() }} tâche(s)
-                                            </span>
+                                        </span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center space-x-2 relative">
-                                        <button onclick="addTask('{{ $colonne->id }}')"
-                                                class="w-8 h-8 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg flex items-center justify-center transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                                    <div class="flex items-center space-x-1">
+                                        <!-- Bouton ajouter tâche rapide -->
+                                        <button onclick="quickAddTask('{{ $colonne->id }}')"
+                                                class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                                             <i class="fas fa-plus text-sm"></i>
                                         </button>
-                                        <button onclick="editColumn('{{ $colonne->id }}')"
-                                                class="w-8 h-8 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg flex items-center justify-center transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                                            <i class="fas fa-edit text-sm"></i>
-                                        </button>
+                                        
                                         <!-- Menu d'options -->
                                         <div class="relative">
-                                            <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden');">
+                                            <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200" data-column-id="{{ $colonne->id }}">
                                                 <i class="fas fa-ellipsis-h"></i>
                                             </button>
-                                            <div class="list-menu hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700">
-                                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 font-semibold delete-list-btn" data-list-task-id="{{ $colonne->id }}">
-                                                    <i class="fas fa-trash mr-2"></i>Supprimer la colonne
+                                            <div class="column-menu hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700">
+                                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium color-btn" data-column-id="{{ $colonne->id }}">
+                                                    <i class="fas fa-palette mr-2"></i>Changer la couleur
                                                 </button>
+                                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium" onclick="editColumnName('{{ $colonne->id }}')">
+                                                    <i class="fas fa-edit mr-2"></i>Renommer
+                                                </button>
+                                                <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 font-semibold delete-btn" data-column-id="{{ $colonne->id }}">
+                                                    <i class="fas fa-trash mr-2"></i>Supprimer
+                                        </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Zone de tâches -->
-                                <div class="flex-1 space-y-4 droppable-zone overflow-y-auto" data-colonne="{{ $colonne->id }}">
-                                    @foreach($colonne->tasks->sortBy('ordre')->take(4) as $task)
-                                        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                                <div class="flex-1 space-y-3 droppable-zone overflow-y-auto" data-colonne="{{ $colonne->id }}">
+                                    @foreach($colonne->tasks->sortBy('ordre') as $task)
+                                        <div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group"
                                              data-task-id="{{ $task->id }}"
-                                             onclick="openTaskModal('{{ $task->id }}')">
+                                            onclick="openTaskModal('{{ $task->id }}')">
 
                                             <!-- En-tête de la tâche -->
                                             <div class="flex items-start justify-between mb-3">
-                                                <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 flex-1">
+                                                <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 flex-1 pr-2">
                                                     {{ $task->titre }}
                                                 </h4>
+                                                <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 @if($task->priorite)
-                                                    <span class="priority-badge priority-{{ $task->priorite }} ml-2">
+                                                        <span class="priority-badge priority-{{ $task->priorite }}">
                                                         @switch($task->priorite)
                                                             @case('haute')
-                                                                <div class="w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
-                                                                    <i class="fas fa-exclamation text-white text-xs"></i>
-                                                                </div>
+                                                                    <div class="w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
+                                                                        <i class="fas fa-exclamation text-white text-xs"></i>
+                                                                    </div>
                                                                 @break
                                                             @case('moyenne')
-                                                                <div class="w-6 h-6 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                                                                    <i class="fas fa-exclamation-triangle text-white text-xs"></i>
-                                                                </div>
+                                                                    <div class="w-5 h-5 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                                                                        <i class="fas fa-exclamation-triangle text-white text-xs"></i>
+                                                                    </div>
                                                                 @break
                                                             @case('basse')
-                                                                <div class="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-                                                                    <i class="fas fa-minus text-white text-xs"></i>
-                                                                </div>
+                                                                    <div class="w-5 h-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                                                                        <i class="fas fa-minus text-white text-xs"></i>
+                                                                    </div>
                                                                 @break
                                                         @endswitch
                                                     </span>
                                                 @endif
+                                                    <button onclick="event.stopPropagation(); quickEditTask('{{ $task->id }}')" 
+                                                            class="w-5 h-5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                                                        <i class="fas fa-edit text-xs"></i>
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             <!-- Description -->
                                             @if($task->description)
-                                                <p class="text-gray-600 dark:text-gray-400 text-xs mb-4 line-clamp-2 leading-relaxed">
+                                                <p class="text-gray-600 dark:text-gray-400 text-xs mb-3 line-clamp-2 leading-relaxed">
                                                     {{ Str::limit($task->description, 80) }}
                                                 </p>
                                             @endif
 
-                                            <!-- Catégorie -->
+                                            <!-- Tags et métadonnées -->
+                                            <div class="flex items-center justify-between mb-3">
                                             @if($task->categorie)
-                                                <div class="mb-4">
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-200">
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-200">
                                                         <i class="fas fa-tag mr-1"></i>
-                                                        {{ $task->categorie }}
-                                                    </span>
-                                                </div>
+                                                    {{ $task->categorie }}
+                                                </span>
                                             @endif
 
-                                            <!-- Pied de carte -->
-                                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
-                                                <!-- Assignés -->
-                                                <div class="flex -space-x-2">
-                                                    @foreach($task->assignes->take(3) as $assigne)
-                                                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold" 
-                                                             title="{{ $assigne->name }}">
-                                                            {{ strtoupper(substr($assigne->name, 0, 1)) }}
-                                                        </div>
-                                                    @endforeach
-                                                    @if($task->assignes->count() > 3)
-                                                        <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-400">
-                                                            +{{ $task->assignes->count() - 3 }}
-                                                        </div>
-                                                    @endif
-                                                </div>
-
-                                                <!-- Date limite -->
                                                 @if($task->date_limite)
                                                     <span class="text-xs {{ $task->date_limite < now() ? 'text-red-500' : 'text-gray-500 dark:text-gray-400' }} flex items-center">
                                                         <i class="fas fa-clock mr-1"></i>
@@ -179,21 +171,56 @@
                                                     </span>
                                                 @endif
                                             </div>
+
+                                            <!-- Pied de carte -->
+                                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                                                <!-- Assignés -->
+                                                <div class="flex -space-x-2">
+                                                    @foreach($task->assignes->take(3) as $assigne)
+                                                        <div class="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold" 
+                                                             title="{{ $assigne->name }}">
+                                                            {{ strtoupper(substr($assigne->name, 0, 1)) }}
+                                                        </div>
+                                                    @endforeach
+                                                    @if($task->assignes->count() > 3)
+                                                        <div class="w-7 h-7 bg-gray-200 dark:bg-gray-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-400">
+                                                            +{{ $task->assignes->count() - 3 }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                <!-- Actions rapides -->
+                                                <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')" 
+                                                            class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                                                        <i class="fas fa-copy text-xs"></i>
+                                                    </button>
+                                                    <button onclick="event.stopPropagation(); deleteTask('{{ $task->id }}')" 
+                                                            class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400">
+                                                        <i class="fas fa-trash text-xs"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endforeach
                                     
-                                    @if($colonne->tasks->count() > 4)
-                                        <div class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
-                                            <i class="fas fa-ellipsis-h mr-2"></i>
-                                            {{ $colonne->tasks->count() - 4 }} tâche(s) supplémentaire(s)
+                                    @if($colonne->tasks->count() == 0)
+                                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                                            <i class="fas fa-inbox text-2xl mb-2"></i>
+                                            <p class="text-sm">Aucune tâche</p>
+                                            <button onclick="quickAddTask('{{ $colonne->id }}')" 
+                                                    class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                                                Ajouter une tâche
+                                            </button>
                                         </div>
                                     @endif
                                 </div>
 
                                 <!-- Bouton ajouter tâche -->
-                                <button onclick="addTask('{{ $colonne->id }}')"
-                                        class="w-full mt-4 p-4 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center">
-                                    <i class="fas fa-plus mr-2"></i> Ajouter une tâche
+                                <button onclick="quickAddTask('{{ $colonne->id }}')"
+                                        class="w-full mt-4 p-4 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center group">
+                                    <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform"></i> 
+                                    <span class="group-hover:font-medium">Ajouter une tâche</span>
                                 </button>
                             </div>
                         @endforeach
@@ -201,8 +228,8 @@
                         <!-- Colonne pour ajouter une nouvelle colonne -->
                         <div class="bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 min-w-80 max-w-80 flex flex-col items-center justify-center hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20">
                             <button onclick="addColumn()"
-                                    class="w-full h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 min-h-32">
-                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+                                    class="w-full h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 min-h-32 group">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                                     <i class="fas fa-plus text-white text-2xl"></i>
                                 </div>
                                 <span class="font-medium">Ajouter une colonne</span>
@@ -227,6 +254,54 @@
     @include('projets.partials.task-modal')
     @include('projets.partials.column-modal')
 
+    <!-- Modal de sélection de couleur -->
+    <div id="color-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Choisir une couleur</h3>
+                <button id="close-color-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <button class="color-option w-16 h-16 bg-blue-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="blue">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-green-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="green">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-purple-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="purple">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-orange-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="orange">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-pink-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="pink">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-red-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="red">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-yellow-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="yellow">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+                <button class="color-option w-16 h-16 bg-gray-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="gray">
+                    <i class="fas fa-check text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-color-btn" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors font-medium">
+                    Annuler
+                </button>
+                <button id="apply-color-btn" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium">
+                    Appliquer
+                </button>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
@@ -236,7 +311,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeDragAndDrop();
             initializeViewButtons();
-            initializeDeleteColumnButton();
+            initializeColumnMenus();
+            initializeColorModal();
+            initializeQuickActions();
         });
 
         function initializeDragAndDrop() {
@@ -338,44 +415,368 @@
                 });
         }
 
+        function quickAddTask(columnId) {
+            const taskTitle = prompt('Nom de la tâche :');
+            if (taskTitle && taskTitle.trim()) {
+                // Créer la tâche rapidement
+                createQuickTask(columnId, taskTitle.trim());
+            }
+        }
+
+        function createQuickTask(columnId, title) {
+            fetch(`/task/create/${columnId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    titleTask: title
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showNotification('Erreur', data.message, 'error');
+                } else {
+                    showNotification('Succès', 'Tâche créée avec succès', 'success');
+                    // Recharger la page pour afficher la nouvelle tâche
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Erreur', 'Erreur lors de la création', 'error');
+            });
+        }
+
+        function quickEditTask(taskId) {
+            const newTitle = prompt('Nouveau nom de la tâche :');
+            if (newTitle && newTitle.trim()) {
+                updateTaskTitle(taskId, newTitle.trim());
+            }
+        }
+
+        function updateTaskTitle(taskId, title) {
+            fetch(`/api/tasks/${taskId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    title: title
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Succès', 'Tâche mise à jour', 'success');
+                    location.reload();
+                } else {
+                    showNotification('Erreur', 'Erreur lors de la mise à jour', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Erreur', 'Erreur lors de la mise à jour', 'error');
+            });
+        }
+
+        function duplicateTask(taskId) {
+            if (confirm('Dupliquer cette tâche ?')) {
+                // Logique de duplication
+                showNotification('Info', 'Fonctionnalité de duplication à implémenter', 'info');
+            }
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Supprimer cette tâche ?')) {
+                fetch(`/task/delete/${taskId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showNotification('Erreur', data.message, 'error');
+                    } else {
+                        showNotification('Succès', 'Tâche supprimée', 'success');
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    showNotification('Erreur', 'Erreur lors de la suppression', 'error');
+                });
+            }
+        }
+
+        function editColumnName(columnId) {
+            const newName = prompt('Nouveau nom de la colonne :');
+            if (newName && newName.trim()) {
+                updateColumnName(columnId, newName.trim());
+            }
+        }
+
+        function updateColumnName(columnId, name) {
+            fetch(`/listTask/update-title/${columnId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    title: name
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showNotification('Erreur', data.message, 'error');
+                } else {
+                    showNotification('Succès', 'Colonne renommée', 'success');
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Erreur', 'Erreur lors du renommage', 'error');
+            });
+        }
+
         function addTask(columnId) {
-            // Logique pour ajouter une tâche
-            console.log('Ajouter une tâche à la colonne:', columnId);
+            quickAddTask(columnId);
         }
 
         function editColumn(columnId) {
-            // Logique pour éditer une colonne
-            console.log('Éditer la colonne:', columnId);
+            editColumnName(columnId);
         }
 
         function addColumn() {
-            // Logique pour ajouter une colonne
-            console.log('Ajouter une colonne');
+            const columnName = prompt('Nom de la nouvelle colonne :');
+            if (columnName && columnName.trim()) {
+                createColumn(columnName.trim());
+            }
+        }
+
+        function createColumn(name) {
+            fetch(`/listTask/create/{{ $projet->slug }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    title: name
+                })
+            })
+                .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showNotification('Erreur', data.message, 'error');
+                } else {
+                    showNotification('Succès', 'Colonne créée', 'success');
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Erreur', 'Erreur lors de la création', 'error');
+            });
         }
 
         function openCreateTaskModal() {
-            // Logique pour ouvrir le modal de création de tâche
-            console.log('Ouvrir modal création tâche');
+            showNotification('Info', 'Modal de création de tâche à implémenter', 'info');
         }
 
         function openAddMemberModal() {
-            // Logique pour ouvrir le modal d'ajout de membre
-            console.log('Ouvrir modal ajout membre');
+            showNotification('Info', 'Modal d\'ajout de membre à implémenter', 'info');
         }
 
-        function initializeDeleteColumnButton() {
-            document.querySelectorAll('.delete-list-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const columnId = this.dataset.listTaskId;
+        function initializeColumnMenus() {
+            // Gestion des boutons de menu
+            document.querySelectorAll('.column-menu-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const menu = this.nextElementSibling;
+                    
+                    // Ferme tous les autres menus
+                    document.querySelectorAll('.column-menu').forEach(m => {
+                        if (m !== menu) m.classList.add('hidden');
+                    });
+                    
+                    // Toggle ce menu
+                    menu.classList.toggle('hidden');
+                });
+            });
+
+            // Gestion des boutons de couleur
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const columnId = this.dataset.columnId;
+                    openColorModal(columnId);
+                });
+            });
+
+            // Gestion des boutons de suppression
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const columnId = this.dataset.columnId;
+                    
                     if (confirm('Êtes-vous sûr de vouloir supprimer cette colonne ? Cette action est irréversible.')) {
                         deleteColumn(columnId);
                     }
                 });
             });
+
+            // Fermer les menus quand on clique ailleurs
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.column-menu-btn') && !e.target.closest('.column-menu')) {
+                    document.querySelectorAll('.column-menu').forEach(menu => {
+                        menu.classList.add('hidden');
+                    });
+                }
+            });
+        }
+
+        // Initialisation des gestionnaires d'événements pour le modal de couleur
+        function initializeColorModal() {
+            // Fermer le modal
+            document.getElementById('close-color-modal').addEventListener('click', closeColorModal);
+            document.getElementById('cancel-color-btn').addEventListener('click', closeColorModal);
+            
+            // Clic à l'extérieur pour fermer
+            document.getElementById('color-modal').addEventListener('click', function(e) {
+                if (e.target.id === 'color-modal') {
+                    closeColorModal();
+                }
+            });
+
+            // Sélection de couleur
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Retirer la sélection précédente
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('ring-4', 'ring-blue-300');
+                    });
+                    
+                    // Sélectionner la nouvelle couleur
+                    this.classList.add('ring-4', 'ring-blue-300');
+                    selectedColor = this.getAttribute('data-color');
+                });
+            });
+
+            // Appliquer la couleur
+            document.getElementById('apply-color-btn').addEventListener('click', function() {
+                if (selectedColor && currentColumnId) {
+                    applyColumnColor(currentColumnId, selectedColor);
+                }
+            });
+
+            // Touche Escape pour fermer
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeColorModal();
+                }
+            });
+        }
+
+        function initializeQuickActions() {
+            // Actions rapides pour les tâches
+            document.querySelectorAll('.task-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.querySelectorAll('.opacity-0').forEach(el => {
+                        el.classList.remove('opacity-0');
+                    });
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.querySelectorAll('.group-hover\\:opacity-100').forEach(el => {
+                        if (!el.closest('.group:hover')) {
+                            el.classList.add('opacity-0');
+                        }
+                    });
+                });
+            });
+        }
+
+        function openColorModal(columnId) {
+            document.getElementById('color-modal').classList.remove('hidden');
+            currentColumnId = columnId;
+            selectedColor = null;
+            
+            // Retirer toute sélection précédente
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('ring-4', 'ring-blue-300');
+            });
+        }
+
+        function closeColorModal() {
+            document.getElementById('color-modal').classList.add('hidden');
+            currentColumnId = null;
+            selectedColor = null;
+            
+            // Fermer tous les menus de colonne
+            document.querySelectorAll('.column-menu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+
+        function applyColumnColor(columnId, color) {
+            const columnElement = document.querySelector(`[data-colonne-id="${columnId}"]`);
+            if (columnElement) {
+                // Supprimer les anciennes classes de couleur
+                columnElement.className = columnElement.className.replace(/border-\w+-\d+/g, '');
+                columnElement.className = columnElement.className.replace(/bg-\w+-\d+/g, '');
+                columnElement.className = columnElement.className.replace(/dark:border-\w+-\d+/g, '');
+                columnElement.className = columnElement.className.replace(/dark:bg-\w+-\d+/g, '');
+                
+                // Ajouter la nouvelle couleur
+                columnElement.classList.add(`border-${color}-400`, `dark:border-${color}-500`);
+                columnElement.classList.add(`bg-${color}-50`, `dark:bg-${color}-900/20`);
+                
+                // Mettre à jour l'attribut data-color
+                columnElement.setAttribute('data-color', color);
+                
+                // Sauvegarder en base de données
+                fetch(`/listTask/update-color/${columnId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ color: color })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        showNotification('Succès', 'Couleur de la colonne mise à jour', 'success');
+                    } else {
+                        showNotification('Erreur', data.message || 'Erreur lors de la mise à jour', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    showNotification('Erreur', 'Erreur lors de la mise à jour de la couleur', 'error');
+                });
+            }
+            
+            // Fermer le modal
+            closeColorModal();
         }
 
         function deleteColumn(columnId) {
-            fetch(`/api/columns/${columnId}`, {
+            fetch(`/listTask/delete/${columnId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -384,12 +785,19 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    showNotification('Succès', 'Colonne supprimée avec succès', 'success');
-                    // Recharger la page pour refléter le changement
-                    location.reload();
+                if (data.error) {
+                    showNotification('Erreur', data.message || 'Erreur lors de la suppression', 'error');
                 } else {
-                    showNotification('Erreur', 'Erreur lors de la suppression de la colonne', 'error');
+                    showNotification('Succès', 'Colonne supprimée avec succès', 'success');
+                    // Supprimer la colonne du DOM
+                    const columnElement = document.querySelector(`[data-colonne-id="${columnId}"]`);
+                    if (columnElement) {
+                        columnElement.remove();
+                    }
+                    // Fermer tous les menus
+                    document.querySelectorAll('.column-menu').forEach(menu => {
+                        menu.classList.add('hidden');
+                    });
                 }
             })
             .catch(error => {
@@ -403,22 +811,28 @@
         .sortable-ghost {
             opacity: 0.5;
             transform: rotate(5deg) scale(1.05);
+            background: rgba(59, 130, 246, 0.1) !important;
+            border: 2px dashed #3b82f6 !important;
         }
         
         .sortable-chosen {
             transform: rotate(5deg) scale(1.05);
+            background: rgba(59, 130, 246, 0.2) !important;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
         }
         
         .sortable-drag {
             transform: rotate(5deg) scale(1.05);
-        }
+            background: rgba(59, 130, 246, 0.2) !important;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+            }
 
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+            .line-clamp-2 {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
 
         /* Scrollbar personnalisée */
         .overflow-y-auto::-webkit-scrollbar {
@@ -439,11 +853,11 @@
         }
 
         /* Animation des cartes */
-        .draggable-task {
+        .task-card {
             transition: all 0.3s ease;
         }
 
-        .draggable-task:hover {
+        .task-card:hover {
             transform: translateY(-2px);
         }
 
@@ -494,7 +908,19 @@
             }
         }
 
+        /* Animations pour les actions rapides */
+        .group:hover .opacity-0 {
+            opacity: 1 !important;
+        }
 
+        /* Style pour les colonnes vides */
+        .kanban-column:empty::after {
+            content: "Aucune tâche";
+            display: block;
+            text-align: center;
+            color: #9ca3af;
+            padding: 2rem;
+        }
     </style>
     @endpush
 </x-app-layout>

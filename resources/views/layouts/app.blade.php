@@ -15,9 +15,6 @@
     <meta property="og:type" content="website">
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
     <title>{{ config('app.name', 'Kanboard') }}</title>
 
@@ -34,7 +31,7 @@
 <body class="font-sans antialiased bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
     <div class="min-h-screen flex flex-col">
         <!-- Header moderne avec effet de verre -->
-        <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-white/20 dark:border-gray-700/50 shadow-lg fixed top-0 left-0 right-0 z-40">
+        <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-white/20 dark:border-gray-700/50 shadow-lg fixed top-0 left-0 right-0 z-50">
             @include('layouts.navigation')
         </header>
 

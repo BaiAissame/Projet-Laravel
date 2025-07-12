@@ -57,6 +57,14 @@ class ProjectController extends Controller
             return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
         }
 
+        // Charger les relations nécessaires
+        $projet->load([
+            'listTasks.tasks.assignes',
+            'listTasks.tasks.comments.user',
+            'listTasks.tasks.tags',
+            'members'
+        ]);
+
         //pour navbar left
         $projets = Project::where('user_id', Auth::user()->id)->get();
         return view('projet.show', compact('projets', 'projet'));

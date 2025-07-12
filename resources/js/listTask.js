@@ -114,6 +114,11 @@ if (taskList) {
                   const listElement = document.querySelector(`[data-list-task-id="${listTaskId}"]`);
                   if (listElement) {
                     listElement.remove();
+                    // Ferme tous les menus d'options
+                    document.querySelectorAll('.list-menu').forEach(m => m.classList.add('hidden'));
+                    if (typeof showNotification === 'function') {
+                      showNotification('Succès', 'Liste supprimée avec succès', 'success');
+                    }
                   }
                 }
               })
@@ -255,6 +260,9 @@ if (taskList) {
 
   let draggedList = null;
   let draggedTask = null;
+  let originalListIndex = null;
+  let originalTaskIndex = null;
+  let originalTaskParent = null;
 
   // DRAGOVER pour les listes (déplacement en live)
   if (!taskList._hasDragOverListener) {
@@ -380,6 +388,144 @@ if (taskList) {
 
   // ############## FIN PARTIE TACHES #######################
 }
+
+// Drag & drop des listes (colonnes)
+const board = document.querySelector('#kanban-board .flex');
+if (board && window.Sortable) {
+  new Sortable(board, {
+    animation: 200,
+    handle: '.list-handle',
+    draggable: '[data-list-id]',
+    onStart: function (evt) {
+      draggedList = evt.item;
+      originalListIndex = evt.oldIndex;
+      evt.item.classList.add('dragging-list');
+    },
+    onEnd: function (evt) {
+      evt.item.classList.remove('dragging-list');
+      // Rollback si drop en dehors du board
+      if (evt.to !== board) {
+        if (originalListIndex !== null) {
+          board.insertBefore(evt.item, board.children[originalListIndex]);
+        }
+      } else {
+        // Met à jour l'ordre côté serveur
+        const orderList = Array.from(board.querySelectorAll('[data-list-id]')).map((el, idx) => ({
+          listTaskId: el.getAttribute('data-list-id'),
+          order: idx + 1
+        }));
+        fetch('/listTask/update-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          },
+          body: JSON.stringify({ orderList })
+        });
+      }
+      draggedList = null;
+      originalListIndex = null;
+    },
+    onMove: function (evt) {
+      evt.related.classList.add('drop-highlight');
+    }
+  });
+}
+
+// Drag & drop des tâches dans chaque colonne
+Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => {
+  if (window.Sortable) {
+    new Sortable(list, {
+      group: 'tasks',
+      animation: 200,
+      draggable: '.bg-blue-50, .dark\\:bg-blue-900',
+      onStart: function (evt) {
+        draggedTask = evt.item;
+        originalTaskIndex = evt.oldIndex;
+        originalTaskParent = evt.from;
+        evt.item.classList.add('dragging-task');
+      },
+      onEnd: function (evt) {
+        evt.item.classList.remove('dragging-task');
+        // Rollback si drop en dehors d'une zone valide
+        if (!evt.to || !evt.to.closest('[data-list-id]')) {
+          if (originalTaskParent && originalTaskIndex !== null) {
+            originalTaskParent.insertBefore(evt.item, originalTaskParent.children[originalTaskIndex]);
+          }
+        } else {
+          // Met à jour l'ordre côté serveur
+          const parentListId = evt.to.closest('[data-list-id]').getAttribute('data-list-id');
+          const orderTask = Array.from(evt.to.children).map((el, idx) => ({
+            taskId: el.getAttribute('onclick').match(/openTaskModal\((\d+)\)/)[1],
+            order: idx + 1,
+            listTaskId: parentListId
+          }));
+          fetch('/task/update-order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ orderTask })
+          });
+        }
+        draggedTask = null;
+        originalTaskIndex = null;
+        originalTaskParent = null;
+      },
+      onMove: function (evt) {
+        evt.related.classList.add('drop-highlight');
+      }
+    });
+  }
+});
+
+// Feedback visuel CSS
+const style = document.createElement('style');
+style.innerHTML = `
+.dragging-list { opacity: 0.7; box-shadow: 0 0 0 2px #3b82f6; }
+.dragging-task { opacity: 0.7; box-shadow: 0 0 0 2px #6366f1; }
+.drop-highlight { background: #e0e7ff !important; }
+`;
+document.head.appendChild(style);
+
+// Ajout d'un message 'Aucune tâche' si une colonne devient vide
+function updateEmptyMessage(listElement) {
+  const taskContainer = listElement.querySelector('.flex-1.space-y-3');
+  if (taskContainer && taskContainer.children.length === 0) {
+    if (!taskContainer.querySelector('.empty-message')) {
+      const msg = document.createElement('div');
+      msg.className = 'empty-message text-center text-gray-400 py-4';
+      msg.textContent = 'Aucune tâche';
+      taskContainer.appendChild(msg);
+    }
+  } else {
+    const msg = taskContainer.querySelector('.empty-message');
+    if (msg) msg.remove();
+  }
+}
+// Appelle updateEmptyMessage après chaque suppression de tâche ou de liste
+
+// Ajoute un effet de survol sur la zone de drop valide
+const style2 = document.createElement('style');
+style2.innerHTML = `
+[data-list-id].drop-hover { box-shadow: 0 0 0 3px #a5b4fc; }
+`;
+document.head.appendChild(style2);
+// Ajoute les listeners de survol
+Array.from(document.querySelectorAll('[data-list-id]')).forEach(list => {
+  list.addEventListener('dragenter', function() { this.classList.add('drop-hover'); });
+  list.addEventListener('dragleave', function() { this.classList.remove('drop-hover'); });
+  list.addEventListener('drop', function() { this.classList.remove('drop-hover'); });
+});
+// Nettoie les variables JS après chaque drag & drop (déjà fait dans onEnd, mais on s'assure)
+document.addEventListener('dragend', function() {
+  draggedList = null;
+  draggedTask = null;
+  originalListIndex = null;
+  originalTaskIndex = null;
+  originalTaskParent = null;
+});
 
 
 

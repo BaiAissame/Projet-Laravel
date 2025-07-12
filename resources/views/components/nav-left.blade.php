@@ -1,4 +1,4 @@
-<section class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl h-screen shadow-xl border-r border-white/20 dark:border-gray-700/50 w-64 min-w-64 text-gray-700 dark:text-gray-300">
+<section class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl h-screen shadow-xl border-r border-white/20 dark:border-gray-700/50 w-64 min-w-64 text-gray-700 dark:text-gray-300 fixed left-0 top-20 z-40">
     <div class="p-6">
         <!-- En-tête de la navigation -->
         <div class="mb-8">

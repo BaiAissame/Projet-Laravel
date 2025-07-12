@@ -1,6 +1,6 @@
 <x-app-layout>
     {{-- Navigation latérale --}}
-    <x-nav-left :data="$userProjects" />
+    <x-nav-left :data="$userProjects" :projet="$projet" />
 
     <div class="flex-1 flex flex-col">
         <!-- Header moderne -->

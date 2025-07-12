@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-nav-left :data="$projets"></x-nav-left>
+    <x-nav-left :data="$projets" :projet="$projet"></x-nav-left>
     <section class="mt-[6rem] md:mt-[8rem] pl-4 lg:pl-6 flex overflow-auto">
         <ul class="flex" id="taskes-list" data-projet-id="{{ $projet->id }}">
             @if (count($projet->listTasks) > 0)

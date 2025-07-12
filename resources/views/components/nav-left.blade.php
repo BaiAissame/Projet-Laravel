@@ -16,7 +16,7 @@
                 </a>
             </li>
             <li>
-                @if(request()->routeIs('projet.show') && isset($projet))
+                @if(isset($projet))
                     <a href="{{ route('projet.members.index', $projet) }}" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group">
                         <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
                             <i class="fas fa-users text-white"></i>

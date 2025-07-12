@@ -12,4 +12,6 @@ class ProjectUser extends Pivot
         'project_id',
         'user_id'
     ];
+
+    public $timestamps = true;
 }

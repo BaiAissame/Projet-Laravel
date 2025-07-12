@@ -38,8 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/projets', [ProjectController::class, 'store'])->name('projet.store');
     Route::get('/projet/{projet}', [ProjectController::class, 'show'])->name('projet.show');
 
-
     // Gestion des membres de projet
+    Route::get('/projet/{projet}/members', [ProjectMemberController::class, 'index'])->name('projet.members.index');
     Route::post('/projet/{projet}/members', [ProjectMemberController::class, 'addMember'])->name('projet.members.add');
     Route::delete('/projet/{projet}/members/{user}', [ProjectMemberController::class, 'removeMember'])->name('projet.members.remove');
 

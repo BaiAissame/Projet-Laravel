@@ -57,8 +57,28 @@ class ProjectController extends Controller
             return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
         }
 
-        //pour navbar left
-        $projets = Project::where('user_id', Auth::user()->id)->get();
+        // Charger les relations nécessaires avec eager loading optimisé
+        $projet->load([
+            'listTasks' => function($query) {
+                $query->orderBy('order');
+            },
+            'listTasks.tasks' => function($query) {
+                $query->orderBy('order');
+            },
+            'listTasks.tasks.assignes',
+            'listTasks.tasks.comments' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'listTasks.tasks.comments.user',
+            'listTasks.tasks.tags',
+            'members'
+        ]);
+
+        //pour navbar left - optimisé avec eager loading
+        $projets = Project::where('user_id', Auth::user()->id)
+            ->select('id', 'name', 'slug')
+            ->get();
+            
         return view('projet.show', compact('projets', 'projet'));
     }
 

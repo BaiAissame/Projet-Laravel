@@ -10,6 +10,29 @@ use Illuminate\Support\Facades\Auth;
 class ProjectMemberController extends Controller
 {
     /**
+     * Afficher la page de gestion des membres du projet
+     */
+    public function index(Project $projet)
+    {
+        // Vérifier que l'utilisateur est membre du projet ou créateur
+        if (!$projet->members->contains(Auth::id()) && $projet->user_id !== Auth::id()) {
+            return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
+        }
+
+        // Récupérer tous les membres du projet (créateur + membres)
+        $members = $projet->members;
+        $creator = $projet->user;
+        
+        // Vérifier si l'utilisateur actuel est le créateur du projet
+        $isCreator = $projet->user_id === Auth::id();
+
+        // Récupérer tous les projets de l'utilisateur pour la navigation
+        $userProjects = Project::where('user_id', Auth::id())->get();
+
+        return view('projet.members.index', compact('projet', 'members', 'creator', 'isCreator', 'userProjects'));
+    }
+
+    /**
      * Ajout un membre a un projet
      */
     public function addMember(Request $request, Project $projet)
@@ -29,7 +52,7 @@ class ProjectMemberController extends Controller
         
         // Si l'utilisateur n'existe pas
         if (!$user) {
-            return redirect()->back()->with('error', 'Cet utilisateur n\'est pas inscrit.');
+            return redirect()->back()->with('error', 'Cet utilisateur n\'est pas inscrit sur la plateforme.');
         }
         
         // Vérifier que l'utilisateur n'est pas déjà membre du projet
@@ -39,9 +62,12 @@ class ProjectMemberController extends Controller
         }
         
         // Ajouter l'utilisateur comme membre du projet
+        try {
         $projet->members()->attach($user->id);
-        
-        return redirect()->back()->with('success', 'Membre ajouté avec succès au projet.');
+            return redirect()->back()->with('success', $user->name . ' a été ajouté avec succès au projet.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout du membre.');
+        }
     }
     
     /**

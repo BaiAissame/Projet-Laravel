@@ -158,10 +158,13 @@ class TaskController extends Controller
     {
         try {
             $task->load([
-                'assignes',
-                'listTask',
-                'comments.user',
-                'tags'
+                'assignes:id,name,email',
+                'listTask:id,title,project_id',
+                'comments' => function($query) {
+                    $query->orderBy('created_at', 'desc');
+                },
+                'comments.user:id,name',
+                'tags:id,name'
             ]);
 
             return response()->json([

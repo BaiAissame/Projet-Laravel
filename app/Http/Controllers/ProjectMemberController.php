@@ -63,7 +63,7 @@ class ProjectMemberController extends Controller
         
         // Ajouter l'utilisateur comme membre du projet
         try {
-            $projet->members()->attach($user->id);
+        $projet->members()->attach($user->id);
             return redirect()->back()->with('success', $user->name . ' a été ajouté avec succès au projet.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout du membre.');

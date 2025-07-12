@@ -34,6 +34,24 @@ class Project extends Model
             ->withTimestamps();
     }
 
+    // Méthode optimisée pour récupérer les projets avec leurs tâches
+    public function scopeWithTasks($query)
+    {
+        return $query->with([
+            'listTasks.tasks' => function($q) {
+                $q->orderBy('order');
+            },
+            'listTasks.tasks.assignes:id,name',
+            'listTasks.tasks.comments:id,task_id,content,created_at'
+        ]);
+    }
+
+    // Méthode pour compter les tâches sans les charger
+    public function getTasksCountAttribute()
+    {
+        return $this->listTasks()->withCount('tasks')->get()->sum('tasks_count');
+    }
+
     public function getNomAttribute()
     {
         return $this->name;

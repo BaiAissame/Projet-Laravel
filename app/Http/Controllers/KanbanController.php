@@ -36,23 +36,31 @@ class KanbanController extends Controller
             return redirect()->route('dashboard')->with('error', 'Aucun projet trouvé.');
         }
 
-        // Récupérer les colonnes avec leurs tâches
-        $colonnes = TaskColumn::with(['tasks' => function($query) use ($projet) {
-            $query->whereHas('listTask', function($q) use ($projet) {
-                $q->where('project_id', $projet->id);
-            })->with(['assignes', 'listTask']);
-        }])->get();
+        // Récupérer les colonnes avec leurs tâches - optimisé
+        $colonnes = TaskColumn::with([
+            'tasks' => function($query) use ($projet) {
+                $query->whereHas('listTask', function($q) use ($projet) {
+                    $q->where('project_id', $projet->id);
+                })
+                ->with(['assignes', 'listTask'])
+                ->orderBy('order');
+            }
+        ])->get();
 
-        // Récupérer toutes les tâches du projet pour la vue liste
+        // Récupérer toutes les tâches du projet pour la vue liste - optimisé
         $tasks = Task::whereHas('listTask', function($query) use ($projet) {
             $query->where('project_id', $projet->id);
-        })->with(['assignes', 'colonne', 'listTask'])->get();
+        })
+        ->with(['assignes', 'colonne', 'listTask'])
+        ->orderBy('order')
+        ->get();
 
-        // Récupérer tous les projets de l'utilisateur pour la navigation
+        // Récupérer tous les projets de l'utilisateur pour la navigation - optimisé
         $projets = Project::where('user_id', Auth::id())
             ->orWhereHas('members', function($query) {
                 $query->where('user_id', Auth::id());
             })
+            ->select('id', 'name', 'slug')
             ->get();
 
         return view('kanban.index', compact('projet', 'colonnes', 'tasks', 'projets'));

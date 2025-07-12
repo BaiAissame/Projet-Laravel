@@ -34,30 +34,30 @@
             <!-- Formulaire -->
             <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50 p-8">
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
-                    @csrf
+                @csrf
 
-                    <!-- Email -->
+                <!-- Email -->
                     <div class="space-y-2">
                         <x-input-label for="email" :value="__('Email')" class="text-gray-700 dark:text-gray-300 font-medium" />
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
-                            <x-text-input id="email" type="email" name="email" required autofocus 
+                    <x-text-input id="email" type="email" name="email" required autofocus 
                                 class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
                                 placeholder="votre@email.com" />
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-1" />
-                    </div>
+                </div>
 
-                    <!-- Mot de passe -->
+                <!-- Mot de passe -->
                     <div class="space-y-2">
                         <x-input-label for="password" :value="__('Mot de passe')" class="text-gray-700 dark:text-gray-300 font-medium" />
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
-                            <x-text-input id="password" type="password" name="password" required 
+                    <x-text-input id="password" type="password" name="password" required 
                                 class="w-full pl-12 pr-12 py-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
                                 placeholder="••••••••" />
                             <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center">
@@ -76,12 +76,12 @@
                         <a href="{{ route('password.request') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors">
                             {{ __('Mot de passe oublié?') }}
                         </a>
-                    </div>
+                </div>
 
                     <!-- Bouton de connexion -->
                     <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center">
                         <i class="fas fa-sign-in-alt mr-3"></i>
-                        {{ __('Se connecter') }}
+                    {{ __('Se connecter') }}
                     </button>
 
                     <!-- Lien d'inscription -->
@@ -89,8 +89,8 @@
                         <p class="text-gray-600 dark:text-gray-400">
                             Pas encore de compte? 
                             <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors">
-                                Créer un compte
-                            </a>
+                        Créer un compte
+                    </a>
                         </p>
                     </div>
                 </form>
@@ -116,6 +116,8 @@
                     </div>
                 </div>
             @endif
+
+
         </div>
     </div>
 

@@ -15,8 +15,8 @@
                 </div>
                 <button type="button" onclick="closeAddMemberModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200">
                     <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
+            </button>
+        </div>
 
             <!-- Champs du formulaire -->
             <div class="space-y-6">

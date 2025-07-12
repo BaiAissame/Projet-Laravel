@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     @if (isset($data) && count($data) > 0)
-        @foreach ($data as $projet)
+            @foreach ($data as $projet)
             <div class="group">
                 <a href="{{ route('projet.show', $projet) }}" class="block">
                     <article class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 h-48 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:bg-white dark:hover:bg-gray-800">
@@ -17,26 +17,26 @@
                                 @endif
                             </div>
                             
-                            @if ($projet->user_id == auth()->id())
+                                    @if ($projet->user_id == auth()->id())
                                 <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    <button type="button"
+                                        <button type="button"
                                         class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
                                         onclick="event.preventDefault(); openAddMemberModal('{{ $projet->slug }}', '{{ $projet->name }}')"
                                         title="Ajouter un membre">
                                         <i class="fas fa-user-plus text-sm"></i>
-                                    </button>
-                                    <form action="{{ route('projet.destroy', $projet) }}" method="POST"
-                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?')"
+                                        </button>
+                                        <form action="{{ route('projet.destroy', $projet) }}" method="POST"
+                                            onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?')"
                                         class="flex items-center">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
                                             class="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg flex items-center justify-center transition-all duration-200 transform hover:scale-110 shadow-lg"
                                             onclick="event.preventDefault(); this.closest('form').submit();"
                                             title="Supprimer le projet">
                                             <i class="fas fa-trash-alt text-sm"></i>
-                                        </button>
-                                    </form>
+                                            </button>
+                                        </form>
                                 </div>
                             @endif
                         </div>
@@ -53,7 +53,7 @@
                                     <i class="fas fa-calendar mr-1"></i>
                                     {{ $projet->created_at->format('d/m/Y') }}
                                 </span>
-                            @endif
+                                    @endif
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -91,10 +91,10 @@
                                 </div>
                             </div>
                         @endif
-                    </article>
-                </a>
+                        </article>
+                    </a>
             </div>
-        @endforeach
+            @endforeach
     @else
         <div class="col-span-full">
             <div class="text-center py-12">
@@ -105,5 +105,5 @@
                 <p class="text-gray-500 dark:text-gray-400">Commencez par créer votre premier projet</p>
             </div>
         </div>
-    @endif
+        @endif
 </div>

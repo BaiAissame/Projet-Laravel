@@ -29,49 +29,49 @@
                     Inscription
                 </h1>
                 <p class="text-gray-600 dark:text-gray-400">Commencez votre essai gratuit sur Kanboard</p>
-            </div>
+        </div>
 
             <!-- Formulaire -->
             <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50 p-8">
                 <form method="POST" action="{{ route('register') }}" class="space-y-6">
-                    @csrf
+            @csrf
 
-                    <!-- Nom -->
+            <!-- Nom -->
                     <div class="space-y-2">
                         <x-input-label for="name" :value="__('Nom')" class="text-gray-700 dark:text-gray-300 font-medium" />
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fas fa-user text-gray-400"></i>
                             </div>
-                            <x-text-input id="name" type="text" name="name" required 
+                <x-text-input id="name" type="text" name="name" required 
                                 class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
                                 placeholder="Votre nom complet" />
                         </div>
                         <x-input-error :messages="$errors->get('name')" class="mt-1" />
-                    </div>
+            </div>
 
-                    <!-- Email -->
+            <!-- Email -->
                     <div class="space-y-2">
                         <x-input-label for="email" :value="__('Email')" class="text-gray-700 dark:text-gray-300 font-medium" />
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
-                            <x-text-input id="email" type="email" name="email" required 
+                <x-text-input id="email" type="email" name="email" required 
                                 class="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
                                 placeholder="votre@email.com" />
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-1" />
-                    </div>
+            </div>
 
-                    <!-- Mot de passe -->
+            <!-- Mot de passe -->
                     <div class="space-y-2">
                         <x-input-label for="password" :value="__('Mot de passe')" class="text-gray-700 dark:text-gray-300 font-medium" />
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
-                            <x-text-input id="password" type="password" name="password" required 
+                <x-text-input id="password" type="password" name="password" required 
                                 class="w-full pl-12 pr-12 py-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
                                 placeholder="••••••••" />
                             <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-4 flex items-center">
@@ -79,16 +79,16 @@
                             </button>
                         </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-1" />
-                    </div>
+            </div>
 
-                    <!-- Confirmation du mot de passe -->
+            <!-- Confirmation du mot de passe -->
                     <div class="space-y-2">
                         <x-input-label for="password_confirmation" :value="__('Confirmation du mot de passe')" class="text-gray-700 dark:text-gray-300 font-medium" />
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
-                            <x-text-input id="password_confirmation" type="password" name="password_confirmation" required 
+                <x-text-input id="password_confirmation" type="password" name="password_confirmation" required 
                                 class="w-full pl-12 pr-12 py-4 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" 
                                 placeholder="••••••••" />
                             <button type="button" onclick="togglePassword('password_confirmation')" class="absolute inset-y-0 right-0 pr-4 flex items-center">

@@ -403,6 +403,10 @@ if (board && window.Sortable) {
     },
     onEnd: function (evt) {
       evt.item.classList.remove('dragging-list');
+      // Nettoyer toutes les classes drop-highlight
+      document.querySelectorAll('.drop-highlight').forEach(el => {
+        el.classList.remove('drop-highlight');
+      });
       // Rollback si drop en dehors du board
       if (evt.to !== board) {
         if (originalListIndex !== null) {
@@ -427,7 +431,7 @@ if (board && window.Sortable) {
       originalListIndex = null;
     },
     onMove: function (evt) {
-      evt.related.classList.add('drop-highlight');
+      // Pas de changement de couleur pour les listes
     }
   });
 }
@@ -447,6 +451,10 @@ Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => 
       },
       onEnd: function (evt) {
         evt.item.classList.remove('dragging-task');
+        // Nettoyer toutes les classes drop-highlight
+        document.querySelectorAll('.drop-highlight').forEach(el => {
+          el.classList.remove('drop-highlight');
+        });
         // Rollback si drop en dehors d'une zone valide
         if (!evt.to || !evt.to.closest('[data-list-id]')) {
           if (originalTaskParent && originalTaskIndex !== null) {
@@ -474,7 +482,7 @@ Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => 
         originalTaskParent = null;
       },
       onMove: function (evt) {
-        evt.related.classList.add('drop-highlight');
+        // Pas de changement de couleur pour les tâches
       }
     });
   }
@@ -485,7 +493,6 @@ const style = document.createElement('style');
 style.innerHTML = `
 .dragging-list { opacity: 0.7; box-shadow: 0 0 0 2px #3b82f6; }
 .dragging-task { opacity: 0.7; box-shadow: 0 0 0 2px #6366f1; }
-.drop-highlight { background: #e0e7ff !important; }
 `;
 document.head.appendChild(style);
 
@@ -520,6 +527,10 @@ Array.from(document.querySelectorAll('[data-list-id]')).forEach(list => {
 });
 // Nettoie les variables JS après chaque drag & drop (déjà fait dans onEnd, mais on s'assure)
 document.addEventListener('dragend', function() {
+  // Nettoyer toutes les classes drop-highlight
+  document.querySelectorAll('.drop-highlight').forEach(el => {
+    el.classList.remove('drop-highlight');
+  });
   draggedList = null;
   draggedTask = null;
   originalListIndex = null;

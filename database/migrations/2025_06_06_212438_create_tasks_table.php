@@ -21,6 +21,12 @@ return new class extends Migration
             $table->enum('category', ['marketing', 'développement', 'communication'])->nullable();
             $table->enum('priority', ['basse', 'moyenne', 'élevée'])->default('basse');
             $table->timestamps();
+            
+            // Index pour améliorer les performances
+            $table->index(['list_task_id', 'order']);
+            $table->index('user_id');
+            $table->index('category');
+            $table->index('priority');
         });
     }
 

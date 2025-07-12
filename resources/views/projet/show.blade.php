@@ -61,31 +61,49 @@
                         </div>
                         <div class="flex-1 space-y-3 droppable-zone" data-colonne="{{ $listTask->id }}">
                             @foreach($listTask->tasks as $task)
-                                <div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group"
+                                <div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group relative overflow-hidden"
                                      data-task-id="{{ $task->id }}"
                                      onclick="openTaskModal({{ $task->id }})">
 
+                                    <!-- Indicateur de priorité -->
+                                    @if($task->priorite)
+                                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r 
+                                            @switch($task->priorite)
+                                                @case('haute') from-red-500 to-red-600 @break
+                                                @case('moyenne') from-yellow-500 to-orange-600 @break
+                                                @case('basse') from-green-500 to-emerald-600 @break
+                                            @endswitch">
+                                        </div>
+                                    @endif
+
                                     <!-- En-tête de la tâche -->
-                                    <div class="flex items-start justify-between mb-3">
-                                        <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 flex-1 pr-2">
-                                            {{ $task->title }}
-                                        </h4>
+                                    <div class="flex items-start justify-between mb-3 @if($task->priorite) mt-1 @endif">
+                                        <div class="flex-1 pr-2">
+                                            <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 mb-1">
+                                                {{ $task->title }}
+                                            </h4>
+                                            @if($task->description)
+                                                <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+                                                    {{ Str::limit($task->description, 80) }}
+                                                </p>
+                                            @endif
+                                        </div>
                                         <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                             @if($task->priorite)
-                                                <span class="priority-badge priority-{{ $task->priorite }}">
+                                                <span class="priority-badge priority-{{ $task->priorite }}" title="Priorité {{ ucfirst($task->priorite) }}">
                                                     @switch($task->priorite)
                                                         @case('haute')
-                                                            <div class="w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
+                                                            <div class="w-4 h-4 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
                                                                 <i class="fas fa-exclamation text-white text-xs"></i>
                                                             </div>
                                                             @break
                                                         @case('moyenne')
-                                                            <div class="w-5 h-5 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                                                            <div class="w-4 h-4 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
                                                                 <i class="fas fa-exclamation-triangle text-white text-xs"></i>
                                                             </div>
                                                             @break
                                                         @case('basse')
-                                                            <div class="w-5 h-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                                                            <div class="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
                                                                 <i class="fas fa-minus text-white text-xs"></i>
                                                             </div>
                                                             @break
@@ -93,23 +111,88 @@
                                                 </span>
                                             @endif
                                             <button onclick="event.stopPropagation(); quickEditTask('{{ $task->id }}')" 
-                                                    class="w-5 h-5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                                                    class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                                                    title="Modifier rapidement">
                                                 <i class="fas fa-edit text-xs"></i>
                                             </button>
                                         </div>
                                     </div>
 
+                                    <!-- Métadonnées de la tâche -->
+                                    <div class="flex items-center justify-between mb-3 text-xs text-gray-500 dark:text-gray-400">
+                                        <div class="flex items-center space-x-3">
+                                            @if($task->date_limite)
+                                                <div class="flex items-center space-x-1">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <span>{{ \Carbon\Carbon::parse($task->date_limite)->format('d/m/Y') }}</span>
+                                                </div>
+                                            @endif
+                                            @if($task->assignes && $task->assignes->count() > 0)
+                                                <div class="flex items-center space-x-1">
+                                                    <i class="fas fa-users"></i>
+                                                    <span>{{ $task->assignes->count() }}</span>
+                                                </div>
+                                            @endif
+                                            @if($task->comments && $task->comments->count() > 0)
+                                                <div class="flex items-center space-x-1">
+                                                    <i class="fas fa-comment"></i>
+                                                    <span>{{ $task->comments->count() }}</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        @if($task->categorie)
+                                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs">
+                                                {{ $task->categorie }}
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Tags -->
+                                    @if($task->tags && count($task->tags) > 0)
+                                        <div class="flex flex-wrap gap-1 mb-3">
+                                            @foreach(array_slice($task->tags, 0, 3) as $tag)
+                                                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full text-xs">
+                                                    {{ $tag }}
+                                                </span>
+                                            @endforeach
+                                            @if(count($task->tags) > 3)
+                                                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs">
+                                                    +{{ count($task->tags) - 3 }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
+
                                     <!-- Actions rapides -->
                                     <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                                         <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')" 
-                                                    class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                                                    class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                                                    title="Dupliquer">
                                                 <i class="fas fa-copy text-xs"></i>
                                             </button>
                                             <button onclick="event.stopPropagation(); deleteTask('{{ $task->id }}')" 
-                                                    class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400">
+                                                    class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
+                                                    title="Supprimer">
                                                 <i class="fas fa-trash text-xs"></i>
                                             </button>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            @if($task->assignes && $task->assignes->count() > 0)
+                                                <div class="flex -space-x-1">
+                                                    @foreach($task->assignes->take(3) as $assignee)
+                                                        <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white dark:border-gray-800"
+                                                             title="{{ $assignee->name }}">
+                                                            {{ strtoupper(substr($assignee->name, 0, 1)) }}
+                                                        </div>
+                                                    @endforeach
+                                                    @if($task->assignes->count() > 3)
+                                                        <div class="w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 text-xs font-bold border-2 border-white dark:border-gray-800">
+                                                            +{{ $task->assignes->count() - 3 }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -126,10 +209,6 @@
                                 </div>
                             @endif
                         </div>
-                        <form class="mt-4 flex" onsubmit="return createTask(event, {{ $listTask->id }})">
-                            <input type="text" class="flex-1 rounded-l-lg border px-2 py-1" placeholder="Nouvelle tâche..." required>
-                            <button class="bg-blue-500 text-white px-3 rounded-r-lg">+</button>
-                        </form>
                     </div>
                 @endforeach
             </div>
@@ -172,64 +251,87 @@
     </div>
 
     <!-- Modal moderne des tâches -->
-    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+    <div id="task-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50">
+        <div class="flex items-center justify-center min-h-screen p-2">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden transform transition-all duration-300 scale-100 opacity-100" id="task-modal-content">
                 <!-- Header -->
-                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800">
                     <div class="flex items-center space-x-3">
-                        <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Détails de la tâche</h2>
+                        <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Détails de la tâche</h2>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Modifiez et gérez votre tâche</p>
+                        </div>
                     </div>
-                    <button id="close-task-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="close-task-modal" class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
 
                 <!-- Content -->
-                <div class="flex h-[calc(90vh-120px)]">
+                <div class="flex h-[calc(80vh-80px)] gap-4 p-4">
                     <!-- Main Content -->
-                    <div class="flex-1 p-6 overflow-y-auto">
+                    <div class="flex-1 pr-2 overflow-y-auto">
                         <!-- Title -->
-                        <div class="mb-6">
-                            <input type="text" id="task-title" class="w-full text-2xl font-bold bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder-gray-400" placeholder="Titre de la tâche">
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-heading text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Titre</label>
+                            </div>
+                            <input type="text" id="task-title" class="w-full text-lg font-bold bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg px-2 py-1 transition-all duration-200" placeholder="Titre de la tâche">
                         </div>
 
                         <!-- Description -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
-                            <textarea id="task-description" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ajouter une description..."></textarea>
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-align-left text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            </div>
+                            <textarea id="task-description" rows="3" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm" placeholder="Décrivez votre tâche en détail..."></textarea>
                         </div>
 
                         <!-- Tags -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
-                            <div class="flex flex-wrap gap-2 mb-2" id="tags-container"></div>
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-tags text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Tags</label>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl min-h-[32px]" id="tags-container"><div class="text-gray-400 dark:text-gray-500 text-xs">Aucun tag ajouté</div></div>
                             <div class="flex gap-2">
-                                <input type="text" id="new-tag" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" placeholder="Ajouter un tag...">
-                                <button id="add-tag" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">Ajouter</button>
+                                <input type="text" id="new-tag" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" placeholder="Ajouter un tag...">
+                                <button id="add-tag" class="px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
+                                    <i class="fas fa-plus mr-1"></i>Ajouter
+                                </button>
                             </div>
                         </div>
 
                         <!-- Comments -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Commentaires</label>
-                            <div id="comments-container" class="space-y-3 mb-3 max-h-48 overflow-y-auto"></div>
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-comments text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Commentaires</label>
+                            </div>
+                            <div id="comments-container" class="space-y-2 mb-2 max-h-32 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><div class="text-gray-400 dark:text-gray-500 text-xs text-center py-2">Aucun commentaire</div></div>
                             <div class="flex gap-2">
-                                <textarea id="new-comment" rows="2" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-sm" placeholder="Ajouter un commentaire..."></textarea>
-                                <button id="add-comment" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm self-end">Envoyer</button>
+                                <textarea id="new-comment" rows="1" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" placeholder="Ajouter un commentaire..."></textarea>
+                                <button id="add-comment" class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 self-end text-xs">
+                                    <i class="fas fa-paper-plane mr-1"></i>Envoyer
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Sidebar -->
-                    <div class="w-80 border-l border-gray-200 dark:border-gray-700 p-6 overflow-y-auto">
+                    <div class="w-56 border-l border-gray-200 dark:border-gray-700 pl-4 overflow-y-auto bg-gray-50 dark:bg-gray-900/50 flex-shrink-0">
                         <!-- Status -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Statut</label>
-                            <select id="task-status" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-columns text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Statut</label>
+                            </div>
+                            <select id="task-status" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
                                 @foreach($projet->listTasks as $listTask)
                                     <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
                                 @endforeach
@@ -237,55 +339,71 @@
                         </div>
 
                         <!-- Priority -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Priorité</label>
-                            <select id="task-priority" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-flag text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Priorité</label>
+                            </div>
+                            <select id="task-priority" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
                                 <option value="">Aucune</option>
-                                <option value="basse">Basse</option>
-                                <option value="moyenne">Moyenne</option>
-                                <option value="haute">Haute</option>
+                                <option value="basse">🟢 Basse</option>
+                                <option value="moyenne">🟡 Moyenne</option>
+                                <option value="haute">🔴 Haute</option>
                             </select>
                         </div>
 
                         <!-- Category -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
-                            <select id="task-category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-folder text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Catégorie</label>
+                            </div>
+                            <select id="task-category" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
                                 <option value="">Aucune</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="développement">Développement</option>
-                                <option value="communication">Communication</option>
+                                <option value="marketing">📢 Marketing</option>
+                                <option value="développement">💻 Développement</option>
+                                <option value="communication">💬 Communication</option>
+                                <option value="design">🎨 Design</option>
+                                <option value="test">🧪 Test</option>
                             </select>
                         </div>
 
                         <!-- Due Date -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date limite</label>
-                            <input type="date" id="task-due-date" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-calendar-alt text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Date limite</label>
+                            </div>
+                            <input type="date" id="task-due-date" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
                         </div>
 
                         <!-- Assignees -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assignés</label>
-                            <div id="assignees-container" class="space-y-2 mb-2"></div>
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fas fa-users text-blue-500 text-xs"></i>
+                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Assignés</label>
+                            </div>
+                            <div id="assignees-container" class="space-y-1 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl min-h-[32px]"><div class="text-gray-400 dark:text-gray-500 text-xs">Aucun assigné</div></div>
                             <div class="flex gap-2">
-                                <select id="assignee-select" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                                <select id="assignee-select" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
                                     <option value="">Sélectionner un membre...</option>
                                     @foreach($projet->members as $membre)
                                         <option value="{{ $membre->id }}">{{ $membre->name }}</option>
                                     @endforeach
                                 </select>
-                                <button id="add-assignee" class="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">+</button>
+                                <button id="add-assignee" class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
 
                         <!-- Actions -->
-                        <div class="space-y-3">
-                            <button id="save-task" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                                Sauvegarder
+                        <div class="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                            <button id="save-task" class="w-full px-2 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
+                                <i class="fas fa-save mr-1"></i>Sauvegarder
                             </button>
-                            <button id="delete-task" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                                Supprimer la tâche
+                            <button id="delete-task" class="w-full px-2 py-2 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl hover:from-red-600 hover:to-pink-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
+                                <i class="fas fa-trash mr-1"></i>Supprimer la tâche
                             </button>
                         </div>
                     </div>
@@ -339,6 +457,83 @@
         </div>
     </div>
 
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .task-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .task-card:hover::before {
+            opacity: 1;
+        }
+        
+        .priority-badge {
+            position: relative;
+        }
+        
+        .priority-badge::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.8;
+        }
+        
+        /* Animation pour les cartes */
+        .task-card {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Styles pour les conteneurs vides */
+        .empty-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #9ca3af;
+        }
+        
+        .empty-container i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -354,7 +549,16 @@
             .then(data => {
                 currentTask = data.task;
                 populateModal(data.task);
-                document.getElementById('task-modal').classList.remove('hidden');
+                
+                // Show modal with animation
+                const modal = document.getElementById('task-modal');
+                const modalContent = document.getElementById('task-modal-content');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
             })
             .catch(error => {
                 console.error('Error fetching task:', error);
@@ -383,20 +587,37 @@
 
     function populateTags(tags) {
         const container = document.getElementById('tags-container');
+        if (!container) {
+            console.error('Container tags non trouvé');
+            return;
+        }
+        
         container.innerHTML = '';
+        
+        if (!tags || tags.length === 0) {
+            container.innerHTML = '<div class="text-gray-400 dark:text-gray-500 text-sm">Aucun tag ajouté</div>';
+            return;
+        }
         
         tags.forEach(tag => {
             const tagElement = createTagElement(tag);
-            container.appendChild(tagElement);
+            if (tagElement) {
+                container.appendChild(tagElement);
+            }
         });
     }
 
     function createTagElement(tag) {
+        if (!tag || typeof tag !== 'string') {
+            console.error('Tag invalide:', tag);
+            return null;
+        }
+
         const div = document.createElement('div');
-        div.className = 'inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm';
+        div.className = 'inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105';
         div.innerHTML = `
             <span>${tag}</span>
-            <button onclick="removeTag(this)" class="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-100">
+            <button onclick="removeTag(this)" class="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-100 hover:bg-blue-200 dark:hover:bg-blue-800/50 rounded-full p-1 transition-all duration-200">
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                 </svg>
@@ -407,47 +628,101 @@
 
     function populateComments(comments) {
         const container = document.getElementById('comments-container');
+        if (!container) {
+            console.error('Container comments non trouvé');
+            return;
+        }
+        
         container.innerHTML = '';
+        
+        if (!comments || comments.length === 0) {
+            container.innerHTML = '<div class="text-gray-400 dark:text-gray-500 text-sm text-center py-6">Aucun commentaire</div>';
+            return;
+        }
         
         comments.forEach(comment => {
             const commentElement = createCommentElement(comment);
-            container.appendChild(commentElement);
+            if (commentElement) {
+                container.appendChild(commentElement);
+            }
         });
     }
 
     function createCommentElement(comment) {
+        if (!comment) {
+            console.error('Commentaire invalide:', comment);
+            return null;
+        }
+
         const div = document.createElement('div');
-        div.className = 'bg-gray-50 dark:bg-gray-700 rounded-lg p-3';
+        div.className = 'bg-white dark:bg-gray-700 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-600 hover:shadow-md transition-all duration-200';
+        
+        const userName = comment.user?.name || 'Utilisateur';
+        const userInitial = userName.charAt(0).toUpperCase();
+        const commentDate = comment.created_at ? new Date(comment.created_at).toLocaleDateString('fr-FR', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }) : 'Date inconnue';
+        const commentContent = comment.content || 'Contenu vide';
+
         div.innerHTML = `
-            <div class="flex items-center gap-2 mb-2">
-                <img src="${comment.user.avatar || '/default-avatar.png'}" alt="${comment.user.name}" class="w-6 h-6 rounded-full">
-                <span class="text-sm font-medium text-gray-900 dark:text-white">${comment.user.name}</span>
-                <span class="text-xs text-gray-500">${new Date(comment.created_at).toLocaleDateString()}</span>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                    ${userInitial}
+                </div>
+                <div class="flex-1">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">${userName}</span>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">${commentDate}</div>
+                </div>
             </div>
-            <p class="text-sm text-gray-700 dark:text-gray-300">${comment.content}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${commentContent}</p>
         `;
         return div;
     }
 
     function populateAssignees(assignees) {
         const container = document.getElementById('assignees-container');
+        if (!container) {
+            console.error('Container assignees non trouvé');
+            return;
+        }
+        
         container.innerHTML = '';
+        
+        if (!assignees || assignees.length === 0) {
+            container.innerHTML = '<div class="text-gray-400 dark:text-gray-500 text-sm">Aucun assigné</div>';
+            return;
+        }
         
         assignees.forEach(assignee => {
             const assigneeElement = createAssigneeElement(assignee);
-            container.appendChild(assigneeElement);
+            if (assigneeElement) {
+                container.appendChild(assigneeElement);
+            }
         });
     }
 
     function createAssigneeElement(assignee) {
+        // Vérifier que assignee existe et a les propriétés nécessaires
+        if (!assignee || !assignee.id) {
+            console.error('Assignee invalide:', assignee);
+            return null;
+        }
+
         const div = document.createElement('div');
-        div.className = 'flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded-lg';
+        div.className = 'flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-gray-100 dark:border-gray-600 hover:shadow-md transition-all duration-200';
+        div.setAttribute('data-assignee-id', assignee.id);
         div.innerHTML = `
-            <div class="flex items-center gap-2">
-                <img src="${assignee.avatar || '/default-avatar.png'}" alt="${assignee.name}" class="w-6 h-6 rounded-full">
-                <span class="text-sm text-gray-900 dark:text-white">${assignee.name}</span>
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                    ${assignee.name ? assignee.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">${assignee.name || 'Utilisateur'}</span>
             </div>
-            <button onclick="removeAssignee(${assignee.id})" class="text-red-500 hover:text-red-700">
+            <button onclick="removeAssignee(${assignee.id})" class="w-6 h-6 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full flex items-center justify-center transition-all duration-200">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                 </svg>
@@ -458,8 +733,20 @@
 
     // Event listeners
     document.getElementById('close-task-modal').addEventListener('click', () => {
-        document.getElementById('task-modal').classList.add('hidden');
+        closeTaskModal();
     });
+
+    function closeTaskModal() {
+        const modal = document.getElementById('task-modal');
+        const modalContent = document.getElementById('task-modal-content');
+        
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
 
     document.getElementById('add-tag').addEventListener('click', () => {
         const input = document.getElementById('new-tag');
@@ -559,8 +846,12 @@
             if (data.success) {
                 const container = document.getElementById('assignees-container');
                 const assigneeElement = createAssigneeElement(data.assignee);
-                container.appendChild(assigneeElement);
-                showNotification('Succès', 'Assigné ajouté avec succès', 'success');
+                if (assigneeElement && container) {
+                    container.appendChild(assigneeElement);
+                    showNotification('Succès', 'Assigné ajouté avec succès', 'success');
+                } else {
+                    showNotification('Erreur', 'Erreur lors de la création de l\'élément assigné', 'error');
+                }
             } else {
                 showNotification('Erreur', data.message || 'Erreur lors de l\'ajout', 'error');
             }
@@ -568,14 +859,20 @@
     }
 
     function saveTask() {
+        const tagsContainer = document.getElementById('tags-container');
+        const tags = tagsContainer ? Array.from(tagsContainer.children)
+            .filter(tag => tag.querySelector && tag.querySelector('span'))
+            .map(tag => tag.querySelector('span').textContent)
+            .filter(text => text && text.trim() !== '') : [];
+
         const formData = {
-            title: document.getElementById('task-title').value,
-            description: document.getElementById('task-description').value,
-            status: document.getElementById('task-status').value,
-            priority: document.getElementById('task-priority').value,
-            category: document.getElementById('task-category').value,
-            due_date: document.getElementById('task-due-date').value,
-            tags: Array.from(document.getElementById('tags-container').children).map(tag => tag.querySelector('span').textContent)
+            title: document.getElementById('task-title')?.value || '',
+            description: document.getElementById('task-description')?.value || '',
+            status: document.getElementById('task-status')?.value || '',
+            priority: document.getElementById('task-priority')?.value || '',
+            category: document.getElementById('task-category')?.value || '',
+            due_date: document.getElementById('task-due-date')?.value || '',
+            tags: tags
         };
 
         fetch(`/api/tasks/${currentTaskId}`, {
@@ -611,11 +908,15 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    document.getElementById('task-modal').classList.add('hidden');
+                    closeTaskModal();
                     showNotification('Succès', 'Tâche supprimée avec succès', 'success');
                     // Remove from UI
                     const taskRow = document.querySelector(`[data-task-id="${currentTaskId}"]`);
-                    if (taskRow) taskRow.remove();
+                    if (taskRow) {
+                        taskRow.style.transform = 'scale(0.8)';
+                        taskRow.style.opacity = '0';
+                        setTimeout(() => taskRow.remove(), 300);
+                    }
                 } else {
                     showNotification('Erreur', data.message || 'Erreur lors de la suppression', 'error');
                 }
@@ -623,10 +924,62 @@
         }
     }
 
+    // Fonction pour afficher les notifications
+    function showNotification(title, message, type = 'info') {
+        // Créer l'élément de notification
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-2xl transform transition-all duration-300 translate-x-full`;
+        
+        const bgColor = type === 'success' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
+                       type === 'error' ? 'bg-gradient-to-r from-red-500 to-pink-600' :
+                       type === 'warning' ? 'bg-gradient-to-r from-yellow-500 to-orange-600' :
+                       'bg-gradient-to-r from-blue-500 to-purple-600';
+        
+        notification.className += ` ${bgColor} text-white`;
+        
+        notification.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                                   type === 'error' ? 'fa-exclamation-circle' : 
+                                   type === 'warning' ? 'fa-exclamation-triangle' : 
+                                   'fa-info-circle'} text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-semibold">${title}</h4>
+                    <p class="text-sm opacity-90">${message}</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="text-white hover:text-gray-200 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animer l'entrée
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Auto-supprimer après 5 secondes
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !document.getElementById('task-modal').classList.contains('hidden')) {
-            document.getElementById('task-modal').classList.add('hidden');
+            closeTaskModal();
+        }
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('task-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'task-modal') {
+            closeTaskModal();
         }
     });
 

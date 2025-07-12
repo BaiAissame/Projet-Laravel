@@ -80,11 +80,11 @@
                         <i class="fas fa-folder-plus text-2xl text-gray-400"></i>
                     </div>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Aucun tableau</p>
-                    <a href="{{ route('projet.create') }}" 
-                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 text-sm font-medium">
+                    <button onclick="openCreateProjectModal()" 
+                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 text-sm font-medium">
                         <i class="fas fa-plus mr-2"></i>
                         Créer un tableau
-                    </a>
+                    </button>
                 </div>
             @endif
         </div>
@@ -153,11 +153,11 @@
                                 <i class="fas fa-folder-plus text-2xl text-gray-400"></i>
                             </div>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Aucun projet disponible</p>
-                            <a href="{{ route('projet.create') }}" 
-                               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 text-sm font-medium">
+                            <button onclick="openCreateProjectModal()" 
+                                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 text-sm font-medium">
                                 <i class="fas fa-plus mr-2"></i>
                                 Créer un projet
-                            </a>
+                            </button>
                         </div>
                     @endif
                 </div>

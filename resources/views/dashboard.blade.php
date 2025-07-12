@@ -111,10 +111,10 @@
                                 <p class="text-gray-600 dark:text-gray-400">{{ count($projets) }} projet(s)</p>
                             </div>
                         </div>
-                        <a href="{{ route('projet.create') }}" 
-                           class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <button onclick="openCreateProjectModal()" 
+                                class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
                             <i class="fas fa-plus mr-2"></i>Nouveau projet
-                        </a>
+                        </button>
                     </div>
                     <x-block-projet :data="$projets" />
                 </div>
@@ -129,11 +129,11 @@
                         Commencez par créer votre premier projet pour organiser vos tâches et collaborer avec votre équipe
                     </p>
                     <div class="space-y-4">
-                        <a href="{{ route('projet.create') }}"
-                            class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <button onclick="openCreateProjectModal()"
+                                class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
                             <i class="fas fa-plus mr-3"></i>
                             Créer votre premier projet
-                        </a>
+                        </button>
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
                             Les projets vous permettent d'organiser vos tâches en tableaux Kanban

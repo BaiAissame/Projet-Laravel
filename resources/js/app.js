@@ -1,6 +1,5 @@
 import './bootstrap';
 // import './modal';
-import './modal-create-table';
 import './listTask';
 import './modal-task-option';
 

@@ -22,7 +22,7 @@
                     <a href="#" class="px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium">
                         <i class="fas fa-clock mr-2"></i>Récent
                     </a>
-                    <button class="nav-create-table px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium">
+                    <button onclick="openCreateProjectModal()" class="px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium">
                         <i class="fas fa-plus mr-2"></i>Créer
                     </button>
                 </div>
@@ -111,7 +111,7 @@
                     <i class="fas fa-clock mr-3 text-lg"></i>
                     <span class="font-medium">Récent</span>
                 </a>
-                <button class="nav-create-table w-full flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200">
+                <button onclick="openCreateProjectModal()" class="w-full flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200">
                     <i class="fas fa-plus mr-3 text-lg"></i>
                     <span class="font-medium">Créer</span>
                 </button>

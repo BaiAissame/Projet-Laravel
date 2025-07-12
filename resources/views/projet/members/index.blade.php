@@ -2,7 +2,7 @@
     {{-- Navigation latérale --}}
     <x-nav-left :data="$userProjects" :projet="$projet" />
 
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col custom-padding-members">
         <!-- Header moderne -->
         <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-xl border-b border-white/20 dark:border-gray-700/50 p-6">
             <div class="flex items-center justify-between">

@@ -1,7 +1,8 @@
 <x-app-layout>
-    <div class="w-full h-screen flex flex-col">
+    <x-nav-left :data="$projets" :projet="$projet"></x-nav-left>
+    <div class="flex-1 flex flex-col h-screen ml-64">
         <!-- Header moderne du projet -->
-        <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-xl border-b border-white/20 dark:border-gray-700/50 p-6 fixed top-20 left-0 right-0 z-30">
+        <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-xl border-b border-white/20 dark:border-gray-700/50 p-6 z-30">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-6">
                     <div class="flex items-center">
@@ -55,13 +56,13 @@
         </div>
 
         <!-- Contenu principal -->
-        <div class="flex-1 pt-32 pb-8 px-8 overflow-hidden">
+        <div class="flex-1 overflow-hidden">
             <!-- Vue Kanban -->
-            <div id="kanban-view" class="view-content h-full">
+            <div id="kanban-view" class="view-content h-full p-6 pl-8">
                 <div class="h-full">
                     <div class="flex gap-6 h-full overflow-x-auto pb-6" id="kanban-board">
                         @foreach($colonnes as $colonne)
-                            <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col"
+                            <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col relative"
                                  data-colonne-id="{{ $colonne->id }}">
                                 <!-- En-tête de colonne -->
                                 <div class="flex items-center justify-between mb-6">
@@ -78,7 +79,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center space-x-2">
+                                    <div class="flex items-center space-x-2 relative">
                                         <button onclick="addTask('{{ $colonne->id }}')"
                                                 class="w-8 h-8 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg flex items-center justify-center transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20">
                                             <i class="fas fa-plus text-sm"></i>
@@ -87,12 +88,23 @@
                                                 class="w-8 h-8 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg flex items-center justify-center transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20">
                                             <i class="fas fa-edit text-sm"></i>
                                         </button>
+                                        <!-- Menu d'options -->
+                                        <div class="relative">
+                                            <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden');">
+                                                <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                            <div class="list-menu hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700">
+                                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 font-semibold delete-list-btn" data-list-task-id="{{ $colonne->id }}">
+                                                    <i class="fas fa-trash mr-2"></i>Supprimer la colonne
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Zone de tâches -->
                                 <div class="flex-1 space-y-4 droppable-zone overflow-y-auto" data-colonne="{{ $colonne->id }}">
-                                    @foreach($colonne->tasks->sortBy('ordre') as $task)
+                                    @foreach($colonne->tasks->sortBy('ordre')->take(4) as $task)
                                         <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                                              data-task-id="{{ $task->id }}"
                                              onclick="openTaskModal('{{ $task->id }}')">
@@ -169,6 +181,13 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    
+                                    @if($colonne->tasks->count() > 4)
+                                        <div class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                                            <i class="fas fa-ellipsis-h mr-2"></i>
+                                            {{ $colonne->tasks->count() - 4 }} tâche(s) supplémentaire(s)
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <!-- Bouton ajouter tâche -->
@@ -194,12 +213,12 @@
             </div>
 
             <!-- Vue Liste -->
-            <div id="list-view" class="view-content hidden h-full">
+            <div id="list-view" class="view-content hidden h-full p-6 pl-8">
                 @include('projets.partials.list-view', ['tasks' => $tasks])
             </div>
 
             <!-- Vue Calendrier -->
-            <div id="calendar-view" class="view-content hidden h-full">
+            <div id="calendar-view" class="view-content hidden h-full p-6 pl-8">
                 @include('projets.partials.calendar-view', ['tasks' => $tasks])
             </div>
         </div>
@@ -217,6 +236,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeDragAndDrop();
             initializeViewButtons();
+            initializeDeleteColumnButton();
         });
 
         function initializeDragAndDrop() {
@@ -342,6 +362,41 @@
             // Logique pour ouvrir le modal d'ajout de membre
             console.log('Ouvrir modal ajout membre');
         }
+
+        function initializeDeleteColumnButton() {
+            document.querySelectorAll('.delete-list-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const columnId = this.dataset.listTaskId;
+                    if (confirm('Êtes-vous sûr de vouloir supprimer cette colonne ? Cette action est irréversible.')) {
+                        deleteColumn(columnId);
+                    }
+                });
+            });
+        }
+
+        function deleteColumn(columnId) {
+            fetch(`/api/columns/${columnId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Succès', 'Colonne supprimée avec succès', 'success');
+                    // Recharger la page pour refléter le changement
+                    location.reload();
+                } else {
+                    showNotification('Erreur', 'Erreur lors de la suppression de la colonne', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showNotification('Erreur', 'Erreur lors de la suppression de la colonne', 'error');
+            });
+        }
     </script>
 
     <style>
@@ -391,6 +446,55 @@
         .draggable-task:hover {
             transform: translateY(-2px);
         }
+
+        /* Scrollbar personnalisée pour le scroll horizontal */
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(156, 163, 175, 0.1);
+            border-radius: 4px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.8);
+        }
+
+        /* Amélioration du scroll horizontal */
+        #kanban-board {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(156, 163, 175, 0.5) rgba(156, 163, 175, 0.1);
+        }
+
+        /* Assurer que la navigation reste fixe */
+        .fixed {
+            position: fixed !important;
+        }
+
+        /* Responsive pour la navigation */
+        @media (max-width: 768px) {
+            .ml-64 {
+                margin-left: 0;
+            }
+            
+            section.fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            section.fixed.show {
+                transform: translateX(0);
+            }
+        }
+
+
     </style>
     @endpush
 </x-app-layout>

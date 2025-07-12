@@ -2,7 +2,7 @@
     {{-- Navigation latérale --}}
     <x-nav-left :data="$projets" />
 
-    <div class="flex-1 p-8">
+    <div class="flex-1 p-8-dashboard">
         {{-- En-tête du dashboard --}}
         <div class="mb-8">
             <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">

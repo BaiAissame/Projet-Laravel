@@ -1,23 +1,687 @@
 <x-app-layout>
     <x-nav-left :data="$projets" :projet="$projet"></x-nav-left>
-    <section class="mt-[6rem] md:mt-[8rem] pl-4 lg:pl-6 flex overflow-auto">
-        <ul class="flex" id="taskes-list" data-projet-id="{{ $projet->id }}">
-            @if (count($projet->listTasks) > 0)
-                @foreach ($projet->listTasks as $listTask)
-                    <x-block-list-task :listTask="$listTask" />
+    <div class="custom-padding-projet bg-gray-50 dark:bg-gray-900 min-h-screen">
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $projet->nom }}</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">Gérez vos tâches et suivez leur progression</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openCreateListModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Nouvelle liste
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="overflow-x-auto pb-4" id="kanban-board">
+            <div class="flex gap-6 min-w-max pl-0">
+                @foreach($projet->listTasks as $listTask)
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 w-80 flex-shrink-0 flex flex-col group border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-200 relative" data-list-id="{{ $listTask->id }}" data-list-task-id="{{ $listTask->id }}">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="list-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
+                                <input class="font-bold text-lg bg-transparent border-none w-3/4" value="{{ $listTask->title }}" readonly />
+                            </div>
+                            <div class="relative">
+                                <button class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-1 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400" onclick="toggleListMenu(this)"><i class="fas fa-ellipsis-h"></i></button>
+                                <div class="hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700 list-menu">
+                                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 font-semibold delete-list-btn" data-list-task-id="{{ $listTask->id }}"><i class="fas fa-trash mr-2"></i>Supprimer la liste</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 space-y-3">
+                            @foreach($listTask->tasks as $task)
+                                <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-3 shadow cursor-pointer" onclick="openTaskModal({{ $task->id }})">
+                                    <div class="font-semibold">{{ $task->title }}</div>
+                                    <div class="text-xs text-gray-500">{{ $task->priorite }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <form class="mt-4 flex" onsubmit="return createTask(event, {{ $listTask->id }})">
+                            <input type="text" class="flex-1 rounded-l-lg border px-2 py-1" placeholder="Nouvelle tâche..." required>
+                            <button class="bg-blue-500 text-white px-3 rounded-r-lg">+</button>
+                        </form>
+                    </div>
                 @endforeach
-            @endif
-        </ul>
-        <form id="form-create-list-task" action="{{ route('listTask.create', $projet) }}" method="POST"
-            class="bg-[#EEEEEE] w-[322px] min-w-[322px] min-h-[146px] rounded-[16px] px-4 py-4 text-[#262981] max-h-max mx-2">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de création de liste -->
+    <div id="create-list-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="create-list-content">
+            <form onsubmit="return createListFromModal(event, '{{ $projet->slug }}')" class="p-8">
             @csrf
-            <div class="mt-6 content-card">
-                <input class="bg-white w-[100%] min-h-[40px] rounded-md border-none title-task shadow-lg"
-                    placeholder="Saississez un titre" name="title" />
-                <button class="flex items-center rounded-lg px-4 py-2 mt-2 w-full bg-[#262981] text-white hover:bg-[#1f1f6b] transition-colors duration-200">
-                    <p class="ml-6 text-base">Ajouter une liste</p>
+                <div class="flex items-center mb-8">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fas fa-plus text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Créer une nouvelle liste</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Ajoutez une colonne à votre board Kanban</p>
+                    </div>
+                    <button type="button" onclick="closeCreateListModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="list-title" class="text-sm font-medium text-gray-700 dark:text-gray-300">Nom de la liste</label>
+                        <input type="text" id="list-title" name="title" required class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Ex: À faire, En cours, Terminé...">
+                    </div>
+                </div>
+                <div class="flex space-x-4 mt-8">
+                    <button type="button" onclick="closeCreateListModal()" class="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 font-medium">
+                        Annuler
+                    </button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <i class="fas fa-plus mr-2"></i> Créer la liste
                 </button>
             </div>
         </form>
-    </section>
+        </div>
+    </div>
+
+    <!-- Modal moderne des tâches -->
+    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Détails de la tâche</h2>
+                    </div>
+                    <button id="close-task-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="flex h-[calc(90vh-120px)]">
+                    <!-- Main Content -->
+                    <div class="flex-1 p-6 overflow-y-auto">
+                        <!-- Title -->
+                        <div class="mb-6">
+                            <input type="text" id="task-title" class="w-full text-2xl font-bold bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder-gray-400" placeholder="Titre de la tâche">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                            <textarea id="task-description" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ajouter une description..."></textarea>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
+                            <div class="flex flex-wrap gap-2 mb-2" id="tags-container"></div>
+                            <div class="flex gap-2">
+                                <input type="text" id="new-tag" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" placeholder="Ajouter un tag...">
+                                <button id="add-tag" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">Ajouter</button>
+                            </div>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Commentaires</label>
+                            <div id="comments-container" class="space-y-3 mb-3 max-h-48 overflow-y-auto"></div>
+                            <div class="flex gap-2">
+                                <textarea id="new-comment" rows="2" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-sm" placeholder="Ajouter un commentaire..."></textarea>
+                                <button id="add-comment" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm self-end">Envoyer</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="w-80 border-l border-gray-200 dark:border-gray-700 p-6 overflow-y-auto">
+                        <!-- Status -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Statut</label>
+                            <select id="task-status" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                @foreach($projet->listTasks as $listTask)
+                                    <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Priorité</label>
+                            <select id="task-priority" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                <option value="">Aucune</option>
+                                <option value="basse">Basse</option>
+                                <option value="moyenne">Moyenne</option>
+                                <option value="haute">Haute</option>
+                            </select>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
+                            <select id="task-category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                <option value="">Aucune</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="développement">Développement</option>
+                                <option value="communication">Communication</option>
+                            </select>
+                        </div>
+
+                        <!-- Due Date -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date limite</label>
+                            <input type="date" id="task-due-date" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
+
+                        <!-- Assignees -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assignés</label>
+                            <div id="assignees-container" class="space-y-2 mb-2"></div>
+                            <div class="flex gap-2">
+                                <select id="assignee-select" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                                    <option value="">Sélectionner un membre...</option>
+                                    @foreach($projet->members as $membre)
+                                        <option value="{{ $membre->id }}">{{ $membre->name }}</option>
+                                    @endforeach
+                                </select>
+                                <button id="add-assignee" class="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="space-y-3">
+                            <button id="save-task" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Sauvegarder
+                            </button>
+                            <button id="delete-task" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                Supprimer la tâche
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let currentTaskId = null;
+    let currentTask = null;
+
+    function openTaskModal(taskId) {
+        currentTaskId = taskId;
+        
+        // Fetch task data
+        fetch(`/api/tasks/${taskId}`)
+            .then(response => response.json())
+            .then(data => {
+                currentTask = data.task;
+                populateModal(data.task);
+                document.getElementById('task-modal').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error fetching task:', error);
+                showNotification('Erreur', 'Impossible de charger les détails de la tâche', 'error');
+            });
+    }
+
+    function populateModal(task) {
+        // Basic fields
+        document.getElementById('task-title').value = task.title || '';
+        document.getElementById('task-description').value = task.description || '';
+        document.getElementById('task-status').value = task.list_task_id || '';
+        document.getElementById('task-priority').value = task.priorite || '';
+        document.getElementById('task-category').value = task.categorie || '';
+        document.getElementById('task-due-date').value = task.date_limite ? task.date_limite.split('T')[0] : '';
+        
+        // Tags
+        populateTags(task.tags || []);
+        
+        // Comments
+        populateComments(task.comments || []);
+        
+        // Assignees
+        populateAssignees(task.assignes || []);
+    }
+
+    function populateTags(tags) {
+        const container = document.getElementById('tags-container');
+        container.innerHTML = '';
+        
+        tags.forEach(tag => {
+            const tagElement = createTagElement(tag);
+            container.appendChild(tagElement);
+        });
+    }
+
+    function createTagElement(tag) {
+        const div = document.createElement('div');
+        div.className = 'inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm';
+        div.innerHTML = `
+            <span>${tag}</span>
+            <button onclick="removeTag(this)" class="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-100">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        `;
+        return div;
+    }
+
+    function populateComments(comments) {
+        const container = document.getElementById('comments-container');
+        container.innerHTML = '';
+        
+        comments.forEach(comment => {
+            const commentElement = createCommentElement(comment);
+            container.appendChild(commentElement);
+        });
+    }
+
+    function createCommentElement(comment) {
+        const div = document.createElement('div');
+        div.className = 'bg-gray-50 dark:bg-gray-700 rounded-lg p-3';
+        div.innerHTML = `
+            <div class="flex items-center gap-2 mb-2">
+                <img src="${comment.user.avatar || '/default-avatar.png'}" alt="${comment.user.name}" class="w-6 h-6 rounded-full">
+                <span class="text-sm font-medium text-gray-900 dark:text-white">${comment.user.name}</span>
+                <span class="text-xs text-gray-500">${new Date(comment.created_at).toLocaleDateString()}</span>
+            </div>
+            <p class="text-sm text-gray-700 dark:text-gray-300">${comment.content}</p>
+        `;
+        return div;
+    }
+
+    function populateAssignees(assignees) {
+        const container = document.getElementById('assignees-container');
+        container.innerHTML = '';
+        
+        assignees.forEach(assignee => {
+            const assigneeElement = createAssigneeElement(assignee);
+            container.appendChild(assigneeElement);
+        });
+    }
+
+    function createAssigneeElement(assignee) {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded-lg';
+        div.innerHTML = `
+            <div class="flex items-center gap-2">
+                <img src="${assignee.avatar || '/default-avatar.png'}" alt="${assignee.name}" class="w-6 h-6 rounded-full">
+                <span class="text-sm text-gray-900 dark:text-white">${assignee.name}</span>
+            </div>
+            <button onclick="removeAssignee(${assignee.id})" class="text-red-500 hover:text-red-700">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        `;
+        return div;
+    }
+
+    // Event listeners
+    document.getElementById('close-task-modal').addEventListener('click', () => {
+        document.getElementById('task-modal').classList.add('hidden');
+    });
+
+    document.getElementById('add-tag').addEventListener('click', () => {
+        const input = document.getElementById('new-tag');
+        const tag = input.value.trim();
+        
+        if (tag) {
+            const container = document.getElementById('tags-container');
+            const tagElement = createTagElement(tag);
+            container.appendChild(tagElement);
+            input.value = '';
+        }
+    });
+
+    document.getElementById('add-comment').addEventListener('click', () => {
+        const textarea = document.getElementById('new-comment');
+        const content = textarea.value.trim();
+        
+        if (content) {
+            addComment(content);
+            textarea.value = '';
+        }
+    });
+
+    document.getElementById('add-assignee').addEventListener('click', () => {
+        const select = document.getElementById('assignee-select');
+        const assigneeId = select.value;
+        
+        if (assigneeId) {
+            addAssignee(assigneeId);
+            select.value = '';
+        }
+    });
+
+    document.getElementById('save-task').addEventListener('click', saveTask);
+    document.getElementById('delete-task').addEventListener('click', deleteCurrentTask);
+
+    // Helper functions
+    function removeTag(button) {
+        button.parentElement.remove();
+    }
+
+    function removeAssignee(assigneeId) {
+        if (confirm('Êtes-vous sûr de vouloir retirer cet assigné ?')) {
+            fetch(`/api/tasks/${currentTaskId}/assignees/${assigneeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove from UI
+                    const assigneeElements = document.querySelectorAll(`[data-assignee-id="${assigneeId}"]`);
+                    assigneeElements.forEach(el => el.remove());
+                    showNotification('Succès', 'Assigné retiré avec succès', 'success');
+                } else {
+                    showNotification('Erreur', data.message || 'Erreur lors du retrait', 'error');
+                }
+            });
+        }
+    }
+
+    function addComment(content) {
+        fetch(`/api/tasks/${currentTaskId}/comments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ content })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const container = document.getElementById('comments-container');
+                const commentElement = createCommentElement(data.comment);
+                container.appendChild(commentElement);
+                showNotification('Succès', 'Commentaire ajouté', 'success');
+            } else {
+                showNotification('Erreur', data.message || 'Erreur lors de l\'ajout du commentaire', 'error');
+            }
+        });
+    }
+
+    function addAssignee(assigneeId) {
+        fetch(`/api/tasks/${currentTaskId}/assignees`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ user_id: assigneeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const container = document.getElementById('assignees-container');
+                const assigneeElement = createAssigneeElement(data.assignee);
+                container.appendChild(assigneeElement);
+                showNotification('Succès', 'Assigné ajouté avec succès', 'success');
+            } else {
+                showNotification('Erreur', data.message || 'Erreur lors de l\'ajout', 'error');
+            }
+        });
+    }
+
+    function saveTask() {
+        const formData = {
+            title: document.getElementById('task-title').value,
+            description: document.getElementById('task-description').value,
+            status: document.getElementById('task-status').value,
+            priority: document.getElementById('task-priority').value,
+            category: document.getElementById('task-category').value,
+            due_date: document.getElementById('task-due-date').value,
+            tags: Array.from(document.getElementById('tags-container').children).map(tag => tag.querySelector('span').textContent)
+        };
+
+        fetch(`/api/tasks/${currentTaskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Succès', 'Tâche mise à jour avec succès', 'success');
+                // Refresh the task list if needed
+                if (typeof refreshTaskList === 'function') {
+                    refreshTaskList();
+                }
+            } else {
+                showNotification('Erreur', data.message || 'Erreur lors de la sauvegarde', 'error');
+            }
+        });
+    }
+
+    function deleteCurrentTask() {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.')) {
+            fetch(`/api/tasks/${currentTaskId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('task-modal').classList.add('hidden');
+                    showNotification('Succès', 'Tâche supprimée avec succès', 'success');
+                    // Remove from UI
+                    const taskRow = document.querySelector(`[data-task-id="${currentTaskId}"]`);
+                    if (taskRow) taskRow.remove();
+                } else {
+                    showNotification('Erreur', data.message || 'Erreur lors de la suppression', 'error');
+                }
+            });
+        }
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !document.getElementById('task-modal').classList.contains('hidden')) {
+            document.getElementById('task-modal').classList.add('hidden');
+        }
+    });
+
+    function openCreateListModal() {
+        const modal = document.getElementById('create-list-modal');
+        const content = document.getElementById('create-list-content');
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function closeCreateListModal() {
+        const modal = document.getElementById('create-list-modal');
+        const content = document.getElementById('create-list-content');
+        
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    function createListFromModal(e, projetSlug) {
+        e.preventDefault();
+        console.log('Creating list for project:', projetSlug);
+        
+        const form = e.target;
+        const input = form.querySelector('#list-title');
+        const title = input.value.trim();
+        
+        if (!title) {
+            alert('Veuillez entrer un titre pour la liste');
+            return false;
+        }
+        
+        console.log('Sending request with title:', title);
+        
+        fetch(`/listTask/create/${projetSlug}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title })
+        })
+        .then(async response => {
+            const text = await response.text();
+            console.log('RAW RESPONSE:', text);
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                alert('Erreur serveur : ' + text.substring(0, 300));
+                throw e;
+            }
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data && data.html) {
+                const board = document.querySelector('#kanban-board .flex');
+                board.insertAdjacentHTML('beforeend', data.html);
+                input.value = '';
+                closeCreateListModal();
+                console.log('List created successfully');
+            } else if (data && data.error) {
+                alert('Erreur lors de la création de la liste : ' + (data.message || 'Erreur inconnue'));
+            }
+        })
+        .catch(error => {
+            console.error('Error creating list:', error);
+            // L'alerte est déjà affichée dans le catch JSON
+        });
+        
+        return false;
+    }
+
+    function createTask(e, listTaskId) {
+        e.preventDefault();
+        const form = e.target;
+        const input = form.querySelector('input');
+        const titleTask = input.value.trim();
+        if (!titleTask) return;
+        fetch(`/task/create/${listTaskId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ titleTask })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.html) {
+                form.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
+                input.value = '';
+            }
+        });
+        return false;
+    }
+    function deleteList(listTaskId) {
+        if (!confirm('Supprimer cette liste ?')) return;
+        fetch(`/listTask/delete/${listTaskId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.error) {
+                document.querySelector(`[data-list-id='${listTaskId}']`).remove();
+            }
+        });
+    }
+    // Drag & drop des listes (colonnes)
+    new Sortable(document.querySelector('#kanban-board .flex'), {
+        animation: 200,
+        handle: '.list-handle',
+        draggable: '[data-list-id]',
+        onEnd: function (evt) {
+            const orderList = Array.from(document.querySelectorAll('[data-list-id]')).map((el, idx) => ({
+                listTaskId: el.getAttribute('data-list-id'),
+                order: idx + 1
+            }));
+            fetch('/listTask/update-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ orderList })
+            });
+        }
+    });
+    // Drag & drop des tâches dans chaque colonne
+    Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => {
+        new Sortable(list, {
+            group: 'tasks',
+            animation: 200,
+            draggable: '.bg-blue-50, .dark\\:bg-blue-900',
+            onEnd: function (evt) {
+                const parentListId = list.closest('[data-list-id]').getAttribute('data-list-id');
+                const orderTask = Array.from(list.children).map((el, idx) => ({
+                    taskId: el.getAttribute('onclick').match(/openTaskModal\((\d+)\)/)[1],
+                    order: idx + 1,
+                    listTaskId: parentListId
+                }));
+                            fetch('/task/update-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ orderTask })
+            });
+            }
+        });
+    });
+    // Edition inline du titre de liste
+    Array.from(document.querySelectorAll('[data-list-id] input[readonly]')).forEach(input => {
+        input.addEventListener('dblclick', function() {
+            this.removeAttribute('readonly');
+            this.focus();
+            this.select();
+        });
+        input.addEventListener('blur', function() {
+            this.setAttribute('readonly', true);
+            const listTaskId = this.closest('[data-list-id]').getAttribute('data-list-id');
+            fetch(`/listTask/update-title/${listTaskId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ title: this.value })
+            });
+        });
+        this.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                this.blur();
+            }
+        });
+    });
+    </script>
 </x-app-layout>

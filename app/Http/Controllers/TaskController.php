@@ -29,10 +29,46 @@ class TaskController extends Controller
                 'list_task_id' => $listTask->id,
             ]);
             
-            // Retourner le HTML de la nouvelle tâche au format Kanban
-            $html = '<div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-3 shadow cursor-pointer" onclick="openTaskModal(' . $task->id . ')">
-                <div class="font-semibold">' . $task->title . '</div>
-                <div class="text-xs text-gray-500">' . ($task->priorite ?? '') . '</div>
+            // Retourner le HTML de la nouvelle tâche au format moderne
+            $html = '<div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group relative overflow-hidden" data-task-id="' . $task->id . '" onclick="openTaskModal(' . $task->id . ')">
+
+                <!-- Indicateur de priorité -->
+                
+                <!-- En-tête de la tâche -->
+                <div class="flex items-start justify-between mb-3 ">
+                    <div class="flex-1 pr-2">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 mb-1">
+                            ' . $task->title . '
+                        </h4>
+                    </div>
+                    <div class="flex items-center space-x-1 group-hover:opacity-100 transition-opacity opacity-0">
+                        <button onclick="event.stopPropagation(); quickEditTask(\'' . $task->id . '\')" class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200" title="Modifier rapidement">
+                            <i class="fas fa-edit text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Métadonnées de la tâche -->
+                <div class="flex items-center justify-between mb-3 text-xs text-gray-500 dark:text-gray-400">
+                    <div class="flex items-center space-x-3">
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                
+                <!-- Actions rapides -->
+                <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center space-x-1 group-hover:opacity-100 transition-opacity opacity-0">
+                        <button onclick="event.stopPropagation(); duplicateTask(\'' . $task->id . '\')" class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200" title="Dupliquer">
+                            <i class="fas fa-copy text-xs"></i>
+                        </button>
+                        <button onclick="event.stopPropagation(); deleteTask(\'' . $task->id . '\')" class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200" title="Supprimer">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                    </div>
+                </div>
             </div>';
             
             return response()->json(['error' => false, 'message' => 'Tâche créée avec succès', 'html' => $html]);

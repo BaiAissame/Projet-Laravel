@@ -148,16 +148,16 @@
                                     </div>
 
                                     <!-- Tags -->
-                                    @if($task->tags && count($task->tags) > 0)
+                                    @if($task->tags && $task->tags->count() > 0)
                                         <div class="flex flex-wrap gap-1 mb-3">
-                                            @foreach(array_slice($task->tags, 0, 3) as $tag)
+                                            @foreach($task->tags->take(3) as $tag)
                                                 <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full text-xs">
-                                                    {{ $tag }}
+                                                    {{ $tag->name }}
                                                 </span>
                                             @endforeach
-                                            @if(count($task->tags) > 3)
+                                            @if($task->tags->count() > 3)
                                                 <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-xs">
-                                                    +{{ count($task->tags) - 3 }}
+                                                    +{{ $task->tags->count() - 3 }}
                                                 </span>
                                             @endif
                                         </div>
@@ -251,9 +251,9 @@
     </div>
 
     <!-- Modal moderne des tâches -->
-    <div id="task-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50">
+    <div id="task-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden">
         <div class="flex items-center justify-center min-h-screen p-2">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden transform transition-all duration-300 scale-100 opacity-100" id="task-modal-content">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="task-modal-content">
                 <!-- Header -->
                 <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800">
                     <div class="flex items-center space-x-3">
@@ -981,6 +981,11 @@
         if (e.target.id === 'task-modal') {
             closeTaskModal();
         }
+    });
+
+    // Close modal with close button
+    document.getElementById('close-task-modal').addEventListener('click', () => {
+        closeTaskModal();
     });
 
     function openCreateListModal() {

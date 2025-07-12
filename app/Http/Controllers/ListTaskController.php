@@ -23,25 +23,48 @@ class ListTaskController extends Controller
             'project_id' => $projet->id,
         ]);
 
-        // Retourner le HTML de la nouvelle colonne Kanban
-        $html = '<div class="kanban-list bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 w-80 flex-shrink-0 flex flex-col group border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-200" data-list-id="' . $listTask->id . '">
+        // Retourner le HTML de la nouvelle colonne Kanban avec la structure moderne
+        $html = '<div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 w-80 flex-shrink-0 flex flex-col group border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-200 relative" data-list-id="' . $listTask->id . '" data-list-task-id="' . $listTask->id . '" data-color="">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2">
-                    <span class="drag-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
-                    <input class="font-bold text-lg bg-transparent border-none w-40 focus:ring-2 focus:ring-blue-400 rounded px-1 transition-all" value="' . $listTask->title . '" readonly onfocus="this.select()" />
+                    <span class="list-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
+                    <input class="font-bold text-lg bg-transparent border-none w-3/4" value="' . $listTask->title . '" readonly="">
                 </div>
-                <div class="relative">
-                    <button class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-1 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400" onclick="toggleListMenu(this)"><i class="fas fa-ellipsis-h"></i></button>
-                    <div class="hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700 list-menu">
-                        <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 font-semibold" onclick="deleteList(' . $listTask->id . ')"><i class="fas fa-trash mr-2"></i>Supprimer la liste</button>
+                <div class="flex items-center space-x-1">
+                    <!-- Bouton ajouter tâche rapide -->
+                    <button onclick="quickAddTask(\'' . $listTask->id . '\')" class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
+                        <i class="fas fa-plus text-sm"></i>
+                    </button>
+                    
+                    <!-- Menu d\'options -->
+                    <div class="relative">
+                        <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200" data-column-id="' . $listTask->id . '">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <div class="column-menu hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700">
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium color-btn" data-column-id="' . $listTask->id . '">
+                                <i class="fas fa-palette mr-2"></i>Changer la couleur
+                            </button>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium" onclick="editColumnName(\'' . $listTask->id . '\')">
+                                <i class="fas fa-edit mr-2"></i>Renommer
+                            </button>
+                            <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 font-semibold delete-btn" data-column-id="' . $listTask->id . '">
+                                <i class="fas fa-trash mr-2"></i>Supprimer
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="flex-1 space-y-3 min-h-[40px] task-list" style="min-height:40px;"></div>
-            <form class="mt-4 flex" onsubmit="return createTask(event, ' . $listTask->id . ')">
-                <input type="text" class="flex-1 rounded-l-lg border px-2 py-1 focus:ring-2 focus:ring-blue-400" placeholder="Nouvelle tâche..." required>
-                <button class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 rounded-r-lg hover:from-blue-600 hover:to-purple-700 transition-all">+</button>
-            </form>
+            <div class="flex-1 space-y-3 droppable-zone" data-colonne="' . $listTask->id . '">
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-inbox text-2xl mb-2"></i>
+                    <p class="text-sm">Aucune tâche</p>
+                    <button onclick="quickAddTask(\'' . $listTask->id . '\')" class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                        Ajouter une tâche
+                    </button>
+                </div>
+            </div>
         </div>';
         
         return response()->json(['html' => $html]);

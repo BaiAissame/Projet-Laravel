@@ -358,13 +358,15 @@ if (taskList) {
     });
   }
 
-  // Fonction pour trouver la position d'insertion pour les listes (horizontal)
-  function getDragAfterElement(container, x) {
-    const draggableElements = [...container.querySelectorAll('.list-task:not(.opacity-50)')];
+  // Fusion des fonctions getDragAfterElement et getDragAfterElementTask en une seule fonction générique
+  function getDragAfterElementGeneric(container, coord, axis = 'x', selector) {
+    const draggableElements = [...container.querySelectorAll(selector)];
     let closest = { offset: Number.POSITIVE_INFINITY, element: null };
     draggableElements.forEach(child => {
       const box = child.getBoundingClientRect();
-      const offset = x - box.left - box.width / 2;
+      const offset = axis === 'x'
+        ? coord - box.left - box.width / 2
+        : coord - box.top - box.height / 2;
       if (offset < 0 && Math.abs(offset) < Math.abs(closest.offset)) {
         closest = { offset: offset, element: child };
       }
@@ -372,18 +374,14 @@ if (taskList) {
     return closest.element;
   }
 
-  // Fonction pour trouver la position d'insertion pour les tâches (vertical)
+  // Remplacement des anciennes fonctions par la nouvelle
+  // Pour les listes (horizontal)
+  function getDragAfterElement(container, x) {
+    return getDragAfterElementGeneric(container, x, 'x', '.list-task:not(.opacity-50)');
+  }
+  // Pour les tâches (vertical)
   function getDragAfterElementTask(container, y) {
-    const draggableElements = [...container.querySelectorAll('.container-task:not(.opacity-50)')];
-    let closest = { offset: Number.POSITIVE_INFINITY, element: null };
-    draggableElements.forEach(child => {
-      const box = child.getBoundingClientRect();
-      const offset = y - box.top - box.height / 2;
-      if (offset < 0 && Math.abs(offset) < Math.abs(closest.offset)) {
-        closest = { offset: offset, element: child };
-      }
-    });
-    return closest.element;
+    return getDragAfterElementGeneric(container, y, 'y', '.container-task:not(.opacity-50)');
   }
 
   // ############## FIN PARTIE TACHES #######################
@@ -496,21 +494,7 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// Ajout d'un message 'Aucune tâche' si une colonne devient vide
-function updateEmptyMessage(listElement) {
-  const taskContainer = listElement.querySelector('.flex-1.space-y-3');
-  if (taskContainer && taskContainer.children.length === 0) {
-    if (!taskContainer.querySelector('.empty-message')) {
-      const msg = document.createElement('div');
-      msg.className = 'empty-message text-center text-gray-400 py-4';
-      msg.textContent = 'Aucune tâche';
-      taskContainer.appendChild(msg);
-    }
-  } else {
-    const msg = taskContainer.querySelector('.empty-message');
-    if (msg) msg.remove();
-  }
-}
+// SUPPRESSION DE updateEmptyMessage (fonction jamais utilisée)
 // Appelle updateEmptyMessage après chaque suppression de tâche ou de liste
 
 // Ajoute un effet de survol sur la zone de drop valide

@@ -15,6 +15,7 @@ class ListTask extends Model
         'title',
         'project_id',
         'order',
+        'color',
         'created_at',
         'updated_at',
     ];

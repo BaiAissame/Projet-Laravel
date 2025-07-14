@@ -36,6 +36,13 @@ class Task extends Model
             ->withTimestamps();
     }
 
+    public function assignes(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'task_user')
+            ->using(TaskUser::class)
+            ->withTimestamps();
+    }
+
     public function taskCategory()
     {
         return $this->belongsTo(TaskCategory::class, 'task_category_id');
@@ -46,6 +53,7 @@ class Task extends Model
         return $this->belongsTo(TaskPriority::class, 'task_priority_id');
     }
     
+
     public function listTask(): BelongsTo
     {
         return $this->belongsTo(ListTask::class);
@@ -54,6 +62,21 @@ class Task extends Model
     public function taskUsers(): HasMany
     {
         return $this->hasMany(TaskUser::class, 'task_id');
+    }
+
+    public function colonne(): BelongsTo
+    {
+        return $this->belongsTo(TaskColumn::class, 'colonne_id');
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TaskComment::class);
+    }
+
+    public function tags(): HasMany
+    {
+        return $this->hasMany(TaskTag::class);
     }
 
     // Accessor pour vérifier si la tâche est en retard

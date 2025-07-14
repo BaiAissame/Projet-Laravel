@@ -55,10 +55,13 @@ return [
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
             'prefix' => '',
             'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
+            'strict' => false, // Désactivé pour les performances
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::ATTR_PERSISTENT => true, // Connexions persistantes
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false, // Requêtes non bufferisées
+                PDO::ATTR_EMULATE_PREPARES => false, // Préparations natives
             ]) : [],
         ],
 

@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Project extends Model
 {
@@ -21,7 +22,7 @@ class Project extends Model
         return $this->hasMany(ListTask::class)->orderBy('order');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -31,6 +32,35 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_user')
             ->using(ProjectUser::class)
             ->withTimestamps();
+    }
+
+    // Méthode optimisée pour récupérer les projets avec leurs tâches
+    public function scopeWithTasks($query)
+    {
+        return $query->with([
+            'listTasks.tasks' => function($q) {
+                $q->orderBy('order');
+            },
+            'listTasks.tasks.assignes:id,name',
+            'listTasks.tasks.comments:id,task_id,content,created_at'
+        ]);
+    }
+
+    // Méthode pour compter les tâches sans les charger
+    public function getTasksCountAttribute()
+    {
+        return $this->listTasks()->withCount('tasks')->get()->sum('tasks_count');
+    }
+
+    public function getNomAttribute()
+    {
+        return $this->name;
+    }
+
+    public function getStatutAttribute()
+    {
+        // Vous pouvez ajouter une logique pour déterminer le statut du projet
+        return 'En cours';
     }
 
     protected static function boot()

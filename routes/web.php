@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\ListTaskController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -39,20 +40,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/projets', [ProjectController::class, 'store'])->name('projet.store');
     Route::get('/projet/{projet}', [ProjectController::class, 'show'])->name('projet.show');
 
-
     // Gestion des membres de projet
+    Route::get('/projet/{projet}/members', [ProjectMemberController::class, 'index'])->name('projet.members.index');
     Route::post('/projet/{projet}/members', [ProjectMemberController::class, 'addMember'])->name('projet.members.add');
     Route::delete('/projet/{projet}/members/{user}', [ProjectMemberController::class, 'removeMember'])->name('projet.members.remove');
 
-    Route::get('/kanban', function () {
-        return view('kanban.index');
-    })->name('kanban');
+    Route::get('/kanban', [App\Http\Controllers\KanbanController::class, 'index'])->name('kanban');
 
 
     // Routes pour les listes des tâches
-    Route::post('/listTask/create/{projet}', [ListTaskController::class, 'create'])->name('listTask.create');
+    Route::post('/listTask/create/{projet:slug}', [ListTaskController::class, 'create'])->name('listTask.create');
     Route::post('/listTask/update-order', [ListTaskController::class, 'updateOrder'])->name('listTask.updateOrder');
     Route::post('/listTask/update-title/{listTask}', [ListTaskController::class, 'updateTitle'])->name('listTask.updateTitle');
+    Route::post('/listTask/change-color', [ListTaskController::class, 'changeColor'])->name('listTask.changeColor');
+    Route::post('/listTask/update-color/{listTask}', [ListTaskController::class, 'updateColor'])->name('listTask.updateColor');
     Route::delete('/listTask/delete/{listTask}', [ListTaskController::class, 'delete'])->name('listTask.delete');
 
     // Routes pour les tâches
@@ -82,6 +83,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+    // Nouvelles routes API pour la modal moderne des tâches
+    Route::prefix('api')->group(function () {
+        // Récupérer les détails d'une tâche
+        Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('api.tasks.show');
+        
+        // Mettre à jour une tâche complète
+        Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('api.tasks.update');
+        
+        // Gestion des assignés
+        Route::post('/tasks/{task}/assignees', [TaskController::class, 'addAssignee'])->name('api.tasks.assignees.add');
+        Route::delete('/tasks/{task}/assignees/{user}', [TaskController::class, 'removeAssignee'])->name('api.tasks.assignees.remove');
+        
+        // Gestion des commentaires
+        Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('api.tasks.comments.add');
+        Route::delete('/tasks/{task}/comments/{comment}', [TaskController::class, 'removeComment'])->name('api.tasks.comments.remove');
+        
+        // Gestion des tags
+        Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag'])->name('api.tasks.tags.add');
+        Route::delete('/tasks/{task}/tags/{tag}', [TaskController::class, 'removeTag'])->name('api.tasks.tags.remove');
+    });
 });
 
 require __DIR__ . '/auth.php';

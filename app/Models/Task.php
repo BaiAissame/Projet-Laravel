@@ -56,7 +56,7 @@ class Task extends Model
 
     public function listTask(): BelongsTo
     {
-        return $this->belongsTo(ListTask::class);
+        return $this->belongsTo(ListTask::class, 'list_task_id');
     }
 
     public function taskUsers(): HasMany

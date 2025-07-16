@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-padding-projet {
+    padding-top: 4rem;
+    padding-left: 272px !important;
+    width: 100% !important;
+}
+
+.p-8-dashboard {
+    padding: 2rem;
+    padding-left: 277px;
+}
+
+.custom-padding-members {
+    padding-left: 256px;
+}

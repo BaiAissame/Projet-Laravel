@@ -17,6 +17,7 @@ git clone https://github.com/Ferolt/projet-esgi-final-laravel.git
 cd projet-final-esgi
 ```
 
+
 ### 2️⃣ **Copier le fichier d'environnement et configurer**
 ```bash
 cp .env.example .env

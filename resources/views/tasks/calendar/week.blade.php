@@ -1,11 +1,42 @@
-<!-- Vue hebdomadaire du calendrier -->
+<!-- Vue hebdomadaire du calendrier avec navigation séparée -->
+
+@php
+    $startOfWeek = $currentDate->copy()->startOfWeek();
+    $endOfWeek = $currentDate->copy()->endOfWeek();
+    $prevWeek = $currentDate->copy()->subWeek()->format('Y-m-d');
+    $nextWeek = $currentDate->copy()->addWeek()->format('Y-m-d');
+@endphp
+
 <div class="calendar-week">
-    <div class="row no-gutters">
-        <!-- En-têtes des jours -->
-        <div class="col-1 calendar-header">Heure</div>
+    <!-- Navigation de semaine au-dessus du tableau -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded">
+                <a href="{{ route('tasks.calendar', ['projet' => $projet->slug, 'view' => 'week', 'date' => $prevWeek]) }}" 
+                   class="btn btn-outline-primary">
+                    <i class="fas fa-chevron-left"></i> Semaine précédente
+                </a>
+                
+                <h5 class="mb-0">
+                    Semaine du {{ $startOfWeek->format('j/m/Y') }} au {{ $endOfWeek->format('j/m/Y') }}
+                </h5>
+                
+                <a href="{{ route('tasks.calendar', ['projet' => $projet->slug, 'view' => 'week', 'date' => $nextWeek]) }}" 
+                   class="btn btn-outline-primary">
+                    Semaine suivante <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- En-tête du tableau (jours de la semaine) -->
+    <div class="row no-gutters align-items-center mb-2">
+        <div class="col-1 calendar-header p-0 text-center">
+            <div style="font-size:0.8em;">Heure</div>
+        </div>
         @for($day = 0; $day < 7; $day++)
             @php
-                $currentDay = $startDate->copy()->addDays($day);
+                $currentDay = $startOfWeek->copy()->addDays($day);
                 $isToday = $currentDay->isSameDay(now());
             @endphp
             <div class="col calendar-header {{ $isToday ? 'bg-primary text-white' : '' }}">
@@ -13,6 +44,9 @@
                 <div>{{ $currentDay->format('j/m') }}</div>
             </div>
         @endfor
+        <div class="col-1 calendar-header p-0 text-center">
+            <!-- Espace vide pour équilibrer -->
+        </div>
     </div>
 
     <!-- Grille horaire -->
@@ -23,7 +57,7 @@
             </div>
             @for($day = 0; $day < 7; $day++)
                 @php
-                    $currentDay = $startDate->copy()->addDays($day);
+                    $currentDay = $startOfWeek->copy()->addDays($day);
                     $dateString = $currentDay->format('Y-m-d');
                     $dayTasks = $tasksByDate->get($dateString, collect());
                 @endphp
@@ -34,7 +68,7 @@
                      ondrop="drop(event)" 
                      ondragover="allowDrop(event)">
                     
-                    @if($hour == 8) <!-- Afficher les tâches à 8h pour simplifier -->
+                    @if($hour == 8)
                         @foreach($dayTasks as $task)
                             <div class="task-in-slot priority-{{ $task->priority }}" 
                                  onclick="showTaskDetails({{ $task->id }})"
@@ -47,6 +81,9 @@
                     @endif
                 </div>
             @endfor
+            <div class="col-1">
+                <!-- Espace vide pour équilibrer -->
+            </div>
         </div>
     @endfor
 </div>
@@ -72,21 +109,65 @@ function drop(ev) {
 </script>
 
 <style>
-.time-header {
+.calendar-week .time-header {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     padding: 8px;
     font-size: 0.8rem;
     text-align: center;
+    font-weight: 500;
 }
 
-.time-slot {
+.calendar-week .time-slot {
     border: 1px solid #eee;
     min-height: 40px;
     position: relative;
+    padding: 2px;
 }
 
-.time-slot:hover {
+.calendar-week .time-slot:hover {
     background-color: #f8f9fa;
+}
+
+.calendar-week .task-in-slot {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 2px;
+    background-color: #007bff;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    z-index: 10;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.calendar-week .task-in-slot.priority-elevee {
+    background-color: #dc3545;
+}
+
+.calendar-week .task-in-slot.priority-moyenne {
+    background-color: #fd7e14;
+}
+
+.calendar-week .task-in-slot.priority-basse {
+    background-color: #28a745;
+}
+
+.calendar-week .task-in-slot:hover {
+    opacity: 0.8;
+}
+
+.calendar-week .calendar-header {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.85rem;
 }
 </style>

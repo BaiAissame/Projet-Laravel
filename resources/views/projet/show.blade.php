@@ -2,19 +2,30 @@
     <x-nav-left :data="$projets" :projet="$projet"></x-nav-left>
     <div class="custom-padding-projet bg-gray-50 dark:bg-gray-900 min-h-screen">
         <div class="mb-8">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $projet->nom }}</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">Gérez vos tâches et suivez leur progression</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="openCreateListModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Nouvelle liste
+             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                <!-- Bouton : Nouvelle liste -->
+                <button onclick="openCreateListModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Nouvelle liste
+                </button>
+
+                <!-- Bouton : Liste des tâches -->
+                <a href="{{ route('tasks.list', ['projet' => $projet->slug]) }}">
+                    <button class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
+                        <span class="mr-2">📋</span>
+                        Voir la liste des tâches
                     </button>
-                </div>
+                </a>
+
+                <!-- Bouton : Calendrier -->
+                <a href="{{ route('tasks.calendar', ['projet' => $projet->slug]) }}">
+                    <button class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
+                        <span class="mr-2">📅</span>
+                        Voir le calendrier
+                    </button>
+                </a>
             </div>
         </div>
         <div class="overflow-x-auto pb-4" id="kanban-board">

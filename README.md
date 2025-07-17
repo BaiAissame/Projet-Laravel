@@ -64,7 +64,7 @@ Cela lance les conteneurs en arrière-plan.
 ## 🌍 Accès à l'application
 
 - **Frontend** : [http://localhost](http://localhost)
-- **PHPMyAdmin** (si configuré) : [http://localhost:8080](http://localhost:8080)
+- **PHPMyAdmin** (si configuré) : [http://localhost:8081](http://localhost:8081)
 
 ---
 
@@ -95,10 +95,6 @@ Cela lance les conteneurs en arrière-plan.
 ./vendor/bin/sail npm run build
 ```
 
-**crée un lien symbolique vers le dossier storage/public (photo)**
-```bash
-./vendor/bin/sail artisan storage:link
-```
 ---
 
 ## 🔧 Dépannage
@@ -130,7 +126,3 @@ Vérifier que Docker est bien démarré avant d'exécuter `sail up`.
 ## 📜 Licence
 
 Ce projet est sous licence **MIT**. Voir le fichier `LICENSE` pour plus de détails.
-
-## PHP my admin
-
-Au cas ou votre phpmyadmin ne marche pas essayer cette commande `docker network create sail`

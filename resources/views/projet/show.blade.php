@@ -41,7 +41,7 @@
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="list-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
-                                <input class="font-bold text-lg bg-transparent border-none w-3/4" value="{{ $listTask->title }}" readonly />
+                                <input class="font-bold text-lg bg-transparent border-none w-3/4 text-gray-900 dark:text-white" value="{{ $listTask->title }}" readonly />
                             </div>
                             <div class="flex items-center space-x-1">
                                 <!-- Bouton ajouter tâche rapide -->
@@ -236,7 +236,7 @@
                         <i class="fas fa-plus text-white text-xl"></i>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Créer une nouvelle liste</h3>
+                        <h3 class="font-bold text-gray-900 dark:text-white text-lg">Créer une nouvelle liste</h3>
                         <p class="text-gray-600 dark:text-gray-400">Ajoutez une colonne à votre board Kanban</p>
                     </div>
                     <button type="button" onclick="closeCreateListModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200">

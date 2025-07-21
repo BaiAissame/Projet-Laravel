@@ -62,7 +62,7 @@
                 <div class="h-full">
                     <div class="flex gap-6 h-full overflow-x-auto pb-6" id="kanban-board">
                         @foreach($colonnes as $colonne)
-                            <div class="kanban-column bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col relative {{ $colonne->color ? 'border-' . $colonne->color . '-400 dark:border-' . $colonne->color . '-500 bg-' . $colonne->color . '-50/50 dark:bg-' . $colonne->color . '-900/10' : '' }}"
+                            <div class="kanban-column bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col relative {{ $colonne->color ? 'border-' . $colonne->color . '-400 dark:border-' . $colonne->color . '-500 bg-' . $colonne->color . '-50/50 dark:bg-' . $colonne->color . '-900/20' : '' }}"
                                  data-colonne-id="{{ $colonne->id }}" data-color="{{ $colonne->color }}">
                                 <!-- En-tête de colonne -->
                                 <div class="flex items-center justify-between mb-6">
@@ -82,13 +82,13 @@
                                     <div class="flex items-center space-x-1">
                                         <!-- Bouton ajouter tâche rapide -->
                                         <button onclick="quickAddTask('{{ $colonne->id }}')"
-                                                class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
+                                                class="w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                                             <i class="fas fa-plus text-sm"></i>
                                         </button>
                                         
                                         <!-- Menu d'options -->
                                         <div class="relative">
-                                            <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200" data-column-id="{{ $colonne->id }}">
+                                            <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200" data-column-id="{{ $colonne->id }}">
                                                 <i class="fas fa-ellipsis-h"></i>
                                             </button>
                                             <div class="column-menu hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg z-20 border border-gray-200 dark:border-gray-700">

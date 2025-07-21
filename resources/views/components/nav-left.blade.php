@@ -1,4 +1,4 @@
-<section class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl h-screen shadow-xl border-r border-white/20 dark:border-gray-700/50 w-64 min-w-64 text-gray-700 dark:text-gray-300 fixed left-0 top-20 z-50">
+<section class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl h-screen shadow-xl border-r border-white/20 dark:border-gray-700/50 w-64 min-w-64 text-gray-700 dark:text-gray-300 fixed left-0 top-20 z-10">
     <div class="p-6">
         <!-- En-tête de la navigation -->
         <div class="mb-8">
@@ -108,7 +108,7 @@
     </div>
 
     <!-- Modal de sélection de projet pour les membres -->
-    <div id="projectSelectorModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+    <div id="projectSelectorModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-10 hidden">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
                 <!-- En-tête de la modal -->

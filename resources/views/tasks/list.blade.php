@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class=" bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-white overflow-hidden flex flex-col transition-all duration-300">
+<!-- Sortir complètement du conteneur flex du layout -->
+<div class="fixed inset-0 top-16 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 transition-all duration-300 overflow-auto">
     <!-- Header avec glassmorphism -->
-        <div class="sticky top-0 z-30 backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-700/50 shadow-lg">
+    <div class="sticky top-0 z-30 backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-700/50 shadow-lg">
         <div class="w-full px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                 <!-- Titre -->
@@ -45,8 +46,8 @@
 
 
     <!-- Contenu principal -->
-    <div class="flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 overflow-y-auto">
-        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden h-full flex flex-col">
+    <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden flex flex-col">
             <!-- Filtres et recherche -->
             <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 flex-shrink-0">
                 <form method="GET" action="{{ route('tasks.list', $projet) }}" class="space-y-4">

@@ -3,39 +3,46 @@
 @section('content')
 <div class="h-screen w-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-white overflow-hidden flex flex-col transition-all duration-300">
     <!-- Header avec glassmorphism -->
-    <div class="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 shadow-2xl flex-shrink-0">
-        <div class="w-full px-4 sm:px-6 lg:px-8 py-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="h-12 w-12 bg-white/20 dark:bg-white/30 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                        </svg>
+        <div class="sticky top-0 z-30 backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border-b border-slate-200/50 dark:border-slate-700/50 shadow-lg">
+        <div class="w-full px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <!-- Titre -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-white text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold text-white">{{ $projet->name }}</h1>
-                        <p class="text-blue-100 dark:text-blue-200 mt-1">Gestion des tâches</p>
+                        <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                            {{ $projet->name }}
+                        </h1>
+                        <p class="text-slate-600 dark:text-slate-400">Liste des tâches</p>
                     </div>
                 </div>
-                <div class="flex space-x-2">
+
+                <!-- Boutons de navigation -->
+                <div class="flex items-center space-x-2">
                     <a href="{{ route('tasks.list', $projet) }}" 
-                       class="bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-sm px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 border border-slate-200 dark:border-slate-700">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                        </svg>
-                        <span>Liste</span>
+                       class="inline-flex items-center px-4 py-2 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 shadow-sm">
+                        <i class="fas fa-list mr-2"></i>
+                        Liste
                     </a>
                     <a href="{{ route('tasks.calendar', $projet) }}" 
-                       class="bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 text-white">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <span>Calendrier</span>
+                       class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg">
+                        <i class="fas fa-calendar mr-2"></i>
+                        Calendrier
                     </a>
+
+                        <!-- ✅ Bouton Kanban -->
+                <a href="{{ route('projet.show', ['projet' => $projet->slug]) }}" 
+                   class="inline-flex items-center px-4 py-2 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 shadow-sm">
+                    <i class="fas fa-columns mr-2"></i>
+                    Kanban
+                </a>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Contenu principal -->
     <div class="flex-1 w-full px-4 sm:px-6 lg:px-8 py-8 overflow-hidden">

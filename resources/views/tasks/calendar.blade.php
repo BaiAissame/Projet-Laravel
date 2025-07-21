@@ -32,6 +32,13 @@
                         <i class="fas fa-calendar mr-2"></i>
                         Calendrier
                     </a>
+
+                        <!-- ✅ Bouton Kanban -->
+                <a href="{{ route('projet.show', ['projet' => $projet->slug]) }}" 
+                   class="inline-flex items-center px-4 py-2 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 shadow-sm">
+                    <i class="fas fa-columns mr-2"></i>
+                    Kanban
+                </a>
                 </div>
             </div>
         </div>

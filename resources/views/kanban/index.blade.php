@@ -391,14 +391,19 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showNotification('Succès', 'Tâche déplacée avec succès', 'success');
+                    if (typeof showNotification === 'function') {
+                        showNotification('Succès', 'Tâche déplacée avec succès', 'success');
+                    }
                 } else {
-                    showNotification('Erreur', 'Erreur lors du déplacement', 'error');
+                    if (typeof showNotification === 'function') {
+                        showNotification('Erreur', 'Erreur lors du déplacement', 'error');
+                    }
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
-                showNotification('Erreur', 'Erreur lors du déplacement', 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('Erreur', 'Erreur lors du déplacement', 'error');
+                }
             });
         }
 
@@ -410,8 +415,9 @@
                     document.getElementById('task-modal').classList.remove('hidden');
                 })
                 .catch(error => {
-                    console.error('Erreur:', error);
-                    showNotification('Erreur', 'Impossible de charger la tâche', 'error');
+                    if (typeof showNotification === 'function') {
+                        showNotification('Erreur', 'Impossible de charger la tâche', 'error');
+                    }
                 });
         }
 
@@ -440,12 +446,68 @@
                     showNotification('Erreur', data.message, 'error');
                 } else {
                     showNotification('Succès', 'Tâche créée avec succès', 'success');
-                    // Recharger la page pour afficher la nouvelle tâche
-                    location.reload();
+                    
+                    // Mise à jour dynamique sans rechargement de page
+                    const droppableZone = document.querySelector(`[data-colonne="${columnId}"]`);
+                    if (droppableZone) {
+                        // Supprimer le message "Aucune tâche" s'il existe
+                        const emptyMessage = droppableZone.parentNode.querySelector('.text-center');
+                        if (emptyMessage && emptyMessage.textContent.includes('Aucune tâche')) {
+                            emptyMessage.remove();
+                        }
+                        
+                        // Créer la nouvelle carte de tâche
+                        const newTaskCard = document.createElement('div');
+                        newTaskCard.className = 'task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group';
+                        newTaskCard.setAttribute('data-task-id', data.task.id);
+                        newTaskCard.setAttribute('onclick', `openTaskModal('${data.task.id}')`);
+                        
+                        newTaskCard.innerHTML = `
+                            <div class="flex items-start justify-between mb-3">
+                                <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 flex-1 pr-2">
+                                    ${data.task.titre || data.task.title}
+                                </h4>
+                                <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="event.stopPropagation(); quickEditTask('${data.task.id}')" 
+                                            class="w-5 h-5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                                        <i class="fas fa-edit text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                                <div class="flex -space-x-2"></div>
+                                <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="event.stopPropagation(); duplicateTask('${data.task.id}')" 
+                                            class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                                        <i class="fas fa-copy text-xs"></i>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteTask('${data.task.id}')" 
+                                            class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Ajouter la nouvelle tâche à la zone
+                        droppableZone.appendChild(newTaskCard);
+                        
+                        // Réinitialiser le drag and drop pour la nouvelle tâche
+                        initializeDragAndDrop();
+                        
+                        // Mettre à jour le compteur de tâches dans l'en-tête de colonne
+                        const columnHeader = document.querySelector(`[data-colonne-id="${columnId}"] .text-sm`);
+                        if (columnHeader) {
+                            const currentCount = parseInt(columnHeader.textContent.match(/\d+/)[0]) || 0;
+                            columnHeader.textContent = `${currentCount + 1} tâche(s)`;
+                        }
+                    } else {
+                        // Fallback: rechargement de la page si la mise à jour dynamique échoue
+                        location.reload();
+                    }
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
                 showNotification('Erreur', 'Erreur lors de la création', 'error');
             });
         }
@@ -478,7 +540,6 @@
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
                 showNotification('Erreur', 'Erreur lors de la mise à jour', 'error');
             });
         }
@@ -508,7 +569,6 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Erreur:', error);
                     showNotification('Erreur', 'Erreur lors de la suppression', 'error');
                 });
             }
@@ -542,7 +602,6 @@
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
                 showNotification('Erreur', 'Erreur lors du renommage', 'error');
             });
         }
@@ -583,7 +642,6 @@
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
                 showNotification('Erreur', 'Erreur lors de la création', 'error');
             });
         }
@@ -766,7 +824,6 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Erreur:', error);
                     showNotification('Erreur', 'Erreur lors de la mise à jour de la couleur', 'error');
                 });
             }
@@ -801,7 +858,6 @@
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
                 showNotification('Erreur', 'Erreur lors de la suppression de la colonne', 'error');
             });
         }

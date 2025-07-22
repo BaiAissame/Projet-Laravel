@@ -8,7 +8,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WallController;
-use App\Http\Controllers\TaskViewController;  
+use App\Http\Controllers\TaskViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/post_message', [WallController::class, 'postMessage'])->name('message.post');
@@ -67,14 +67,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/task/update-content/{task}', [TaskController::class, 'updateTitleAndDescription'])->name('task.updateContent');
 
 
- // Routes pour les vues des tâches 
+    // Routes pour les vues des tâches
     Route::get('/projet/{projet}/tasks/list', [TaskViewController::class, 'listView'])->name('tasks.list');
     Route::get('/projet/{projet}/tasks/calendar', [TaskViewController::class, 'calendarView'])->name('tasks.calendar');
-    
+
     // Routes pour les détails et mise à jour des tâches
     Route::get('/task/details/{task}', [TaskController::class, 'details'])->name('task.details');
     Route::post('/task/update-due-date/{task}', [TaskController::class, 'updateDueDate'])->name('task.updateDueDate');
-    
+
     // Routes CRUD classiques pour les tâches (si nécessaire)
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
@@ -88,18 +88,18 @@ Route::middleware('auth')->group(function () {
     Route::prefix('api')->group(function () {
         // Récupérer les détails d'une tâche
         Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('api.tasks.show');
-        
+
         // Mettre à jour une tâche complète
         Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('api.tasks.update');
-        
+
         // Gestion des assignés
         Route::post('/tasks/{task}/assignees', [TaskController::class, 'addAssignee'])->name('api.tasks.assignees.add');
         Route::delete('/tasks/{task}/assignees/{user}', [TaskController::class, 'removeAssignee'])->name('api.tasks.assignees.remove');
-        
+
         // Gestion des commentaires
         Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('api.tasks.comments.add');
         Route::delete('/tasks/{task}/comments/{comment}', [TaskController::class, 'removeComment'])->name('api.tasks.comments.remove');
-        
+
         // Gestion des tags
         Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag'])->name('api.tasks.tags.add');
         Route::delete('/tasks/{task}/tags/{tag}', [TaskController::class, 'removeTag'])->name('api.tasks.tags.remove');

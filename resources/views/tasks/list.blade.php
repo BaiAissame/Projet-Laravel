@@ -352,7 +352,6 @@ function editTask(taskId) {
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
             alert('Erreur lors du chargement de la tâche');
         });
 }
@@ -401,7 +400,6 @@ function saveTask() {
         }
     })
     .catch(error => {
-        console.error('Erreur:', error);
         alert('Erreur lors de la sauvegarde');
     });
 }
@@ -463,7 +461,6 @@ function saveTask() {
         }
     })
     .catch(error => {
-        console.error('Erreur:', error);
         alert('Erreur lors de la sauvegarde');
     });
 }
@@ -486,7 +483,6 @@ function deleteTask(taskId) {
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
             alert('Erreur lors de la suppression');
         });
     }

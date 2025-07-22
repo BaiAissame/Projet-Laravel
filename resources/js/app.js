@@ -16,61 +16,76 @@ window.showNotification = function(title, message, type = 'info') {
 
     // Créer la notification
     const notification = document.createElement('div');
-    notification.className = `notification-toast fixed top-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transform transition-all duration-300 translate-x-full`;
-    
+    notification.className = `notification-toast fixed top-20 z-50 max-w-xs w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transform transition-all duration-300 translate-x-full`;
+
     // Couleurs selon le type
     const colors = {
-        success: 'border-green-500 bg-green-50 dark:bg-green-900/20',
-        error: 'border-red-500 bg-red-50 dark:bg-red-900/20',
-        warning: 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20',
-        info: 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+        success: 'border-green-500 bg-gradient-to-r from-emerald-500 to-green-600 text-white',
+        error: 'border-red-500 bg-gradient-to-r from-red-500 to-pink-600 text-white',
+        warning: 'border-yellow-500 bg-gradient-to-r from-amber-500 to-orange-600 text-white',
+        info: 'border-blue-500 bg-gradient-to-r from-blue-500 to-purple-600 text-white'
     };
 
     const icons = {
-        success: `<svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-        </svg>`,
-        error: `<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-        </svg>`,
-        warning: `<svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-        </svg>`,
-        info: `<svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-        </svg>`
+        success: `<i class="fas fa-check-circle text-sm text-white"></i>`,
+        error: `<i class="fas fa-times-circle text-sm text-white"></i>`,
+        warning: `<i class="fas fa-exclamation-triangle text-sm text-white"></i>`,
+        info: `<i class="fas fa-info-circle text-sm text-white"></i>`
     };
 
     notification.className += ` ${colors[type] || colors.info}`;
-    
+
     notification.innerHTML = `
-        <div class="p-4">
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
+        <div class="p-3">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 mr-2">
                     ${icons[type] || icons.info}
                 </div>
-                <div class="ml-3 w-0 flex-1">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">
-                        ${title}
-                    </p>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        ${message}
-                    </p>
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-xs text-white">${title}</div>
+                    <div class="text-xs text-white/80 mt-0.5 leading-tight">${message}</div>
                 </div>
-                <div class="ml-4 flex-shrink-0 flex">
-                    <button class="bg-white dark:bg-gray-800 rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
-                        <span class="sr-only">Fermer</span>
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </div>
+                <button class="ml-2 text-white/70 hover:text-white transition-colors flex-shrink-0" onclick="this.parentElement.parentElement.parentElement.remove()">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
             </div>
         </div>
     `;
 
     // Ajouter au DOM
-    document.body.appendChild(notification);
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.style.cssText = `
+            position: fixed !important;
+            top: 85px !important;
+            right: 200px !important;
+            z-index: 9999 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            pointer-events: none !important;
+            max-width: 400px !important;
+        `;
+        document.body.appendChild(container);
+    } else {
+        // S'assurer que le container existant est bien positionné
+        container.style.cssText = `
+            position: fixed !important;
+            top: 85px !important;
+            right: 200px !important;
+            z-index: 9999 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            pointer-events: none !important;
+            max-width: 400px !important;
+        `;
+    }
+
+    // Ajouter la notification au container
+    container.appendChild(notification);
 
     // Animation d'entrée
     setTimeout(() => {
@@ -101,12 +116,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const btn = e.target.closest('.column-menu-btn');
             const columnId = btn.getAttribute('data-column-id');
             const menu = btn.nextElementSibling;
-            
+
             // Fermer tous les autres menus
             document.querySelectorAll('.column-menu').forEach(m => {
                 if (m !== menu) m.classList.add('hidden');
             });
-            
+
             // Toggle du menu actuel
             menu.classList.toggle('hidden');
         } else if (!e.target.closest('.column-menu')) {
@@ -161,7 +176,7 @@ function openColorModal(columnId) {
                 </div>
                 <div class="grid grid-cols-5 gap-3">
                     ${colors.map(color => `
-                        <button onclick="changeListColor('${columnId}', '${color.value}')" 
+                        <button onclick="changeListColor('${columnId}', '${color.value}')"
                                 class="w-12 h-12 ${color.class} rounded-lg hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl"
                                 title="${color.name}">
                         </button>
@@ -210,18 +225,18 @@ window.changeListColor = function(columnId, color) {
             const listElement = document.querySelector(`[data-list-id="${columnId}"]`);
             if (listElement) {
                 // Supprimer les anciennes classes de couleur
-                const colorClasses = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-yellow-500', 
-                                     'bg-purple-500', 'bg-pink-500', 'bg-orange-500', 'bg-indigo-500', 
+                const colorClasses = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-yellow-500',
+                                     'bg-purple-500', 'bg-pink-500', 'bg-orange-500', 'bg-indigo-500',
                                      'bg-teal-500', 'bg-gray-500'];
                 colorClasses.forEach(cls => listElement.classList.remove(cls));
-                
+
                 // Ajouter la nouvelle couleur
                 listElement.classList.add(`bg-${color}-500`);
-                
+
                 // Mettre à jour l'attribut data-color
                 listElement.setAttribute('data-color', color);
             }
-            
+
             closeColorModal();
             showNotification('Succès', 'Couleur de la liste mise à jour', 'success');
         } else {
@@ -229,7 +244,6 @@ window.changeListColor = function(columnId, color) {
         }
     })
     .catch(error => {
-        console.error('Erreur:', error);
         showNotification('Erreur', 'Erreur lors du changement de couleur', 'error');
     });
 };
@@ -239,17 +253,17 @@ window.editColumnName = function(columnId) {
     const listElement = document.querySelector(`[data-list-id="${columnId}"]`);
     const input = listElement.querySelector('input[readonly]');
     const currentValue = input.value;
-    
+
     // Rendre l'input éditable
     input.removeAttribute('readonly');
     input.focus();
     input.select();
-    
+
     // Gérer la sauvegarde
     input.addEventListener('blur', function() {
         saveColumnName(columnId, input.value);
     });
-    
+
     input.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             saveColumnName(columnId, input.value);
@@ -281,7 +295,6 @@ function saveColumnName(columnId, newName) {
         }
     })
     .catch(error => {
-        console.error('Erreur:', error);
         showNotification('Erreur', 'Erreur lors de la mise à jour', 'error');
     });
 }

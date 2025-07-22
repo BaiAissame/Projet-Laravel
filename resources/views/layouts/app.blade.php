@@ -33,11 +33,12 @@
 <body class="font-sans antialiased bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
     <div class="min-h-screen flex flex-col">
         <!-- Header moderne avec effet de verre -->
-        <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-white/20 dark:border-gray-700/50 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <header
+            class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-white/20 dark:border-gray-700/50 shadow-lg fixed top-0 left-0 right-0 z-50">
             @include('layouts.navigation')
         </header>
 
-     <main class="flex bg-gray-50 dark:bg-gray-900 flex-1 pt-16" id="app">
+        <main class="flex bg-gray-50 dark:bg-gray-900 flex-1 pt-16" id="app">
             @yield('content')
             {{ $slot ?? '' }}
 
@@ -47,9 +48,11 @@
             <!-- Modal de notification moderne -->
             <div id="notification-modal"
                 class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="notification-content">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0"
+                    id="notification-content">
                     <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
                             <i class="fas fa-bell text-white text-lg"></i>
                         </div>
                         <div>
@@ -71,7 +74,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     @stack('scripts')
 
     <script>
@@ -124,11 +126,10 @@
                 }, 500);
             }, 5000);
         }
-
         function closeNotification() {
             const modal = document.getElementById('notification-modal');
             const content = document.getElementById('notification-content');
-            
+
             content.classList.add('scale-95', 'opacity-0');
             setTimeout(() => {
                 modal.classList.add('hidden');
@@ -154,7 +155,7 @@
         });
 
         // Animation des modals
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const modals = document.querySelectorAll('[id$="-modal"]');
             modals.forEach(modal => {
                 if (!modal.classList.contains('hidden')) {

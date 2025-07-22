@@ -200,7 +200,6 @@ function showTaskDetails(taskId) {
             showTaskModal();
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération des détails:', error);
         });
 }
 
@@ -260,7 +259,6 @@ function updateTaskDueDate(taskId, newDate) {
         }
     })
     .catch(error => {
-        console.error('Erreur:', error);
         showNotification('Erreur', 'Une erreur est survenue', 'error');
     });
 }

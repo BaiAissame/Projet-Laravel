@@ -179,7 +179,6 @@ function openTaskModal(taskId) {
             document.getElementById('task-modal').classList.remove('hidden');
         })
         .catch(error => {
-            console.error('Error fetching task:', error);
             showNotification('Erreur', 'Impossible de charger les détails de la tâche', 'error');
         });
 }

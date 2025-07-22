@@ -28,7 +28,7 @@ class ListTaskController extends Controller
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2">
                     <span class="list-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
-                    <input class="font-bold text-lg bg-transparent border-none w-3/4" value="' . $listTask->title . '" readonly="">
+                    <input class="font-bold text-lg bg-transparent border-none w-3/4 text-gray-900 dark:text-white" value="' . $listTask->title . '" readonly="">
                 </div>
                 <div class="flex items-center space-x-1">
                     <!-- Bouton ajouter tâche rapide -->
@@ -57,7 +57,7 @@ class ListTaskController extends Controller
                 </div>
             </div>
             <div class="flex-1 space-y-3 droppable-zone" data-colonne="' . $listTask->id . '">
-                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400 empty-state">
                     <i class="fas fa-inbox text-2xl mb-2"></i>
                     <p class="text-sm">Aucune tâche</p>
                     <button onclick="quickAddTask(\'' . $listTask->id . '\')" class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">

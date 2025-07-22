@@ -264,17 +264,17 @@
     <!-- Modal moderne des tâches -->
     <div id="task-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden">
         <div class="flex items-center justify-center min-h-screen p-2">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="task-modal-content">
+            <div class="bg-gray-900/95 dark:bg-gray-900/95 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-visible transform transition-all duration-300 scale-95 opacity-0" id="task-modal-content">
                 <!-- Header -->
-                <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-800/60">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Détails de la tâche</h2>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Modifiez et gérez votre tâche</p>
+                            <h2 class="text-lg font-bold text-white tracking-tight">Détails de la tâche</h2>
+                            <p class="text-xs text-gray-400 mt-0.5">Modifiez et gérez votre tâche</p>
                         </div>
                     </div>
-                    <button id="close-task-modal" class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200">
+                    <button id="close-task-modal" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-200 transition-all duration-200 rounded-full hover:bg-gray-800/60">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -282,139 +282,130 @@
                 </div>
 
                 <!-- Content -->
-                <div class="flex h-[calc(80vh-80px)] gap-4 p-4">
+                <div class="flex gap-4 p-6">
                     <!-- Main Content -->
-                    <div class="flex-1 pr-2 overflow-y-auto">
+                    <div class="flex-1 pr-3 space-y-4">
                         <!-- Title -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-heading text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Titre</label>
+                        <div class="bg-gray-800/60 rounded-xl shadow-sm p-4 space-y-4">
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-heading text-blue-400 text-xs"></i> Titre
+                                </label>
+                                <input type="text" id="task-title" class="w-full bg-transparent border border-gray-700 rounded-lg px-3 py-2 text-base text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 shadow-sm" placeholder="Titre de la tâche">
                             </div>
-                            <input type="text" id="task-title" class="w-full text-lg font-bold bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg px-2 py-1 transition-all duration-200" placeholder="Titre de la tâche">
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-align-left text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-align-left text-blue-400 text-xs"></i> Description
+                                </label>
+                                <textarea id="task-description" rows="3" class="w-full bg-transparent border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 shadow-sm resize-none" placeholder="Décrivez votre tâche en détail..."></textarea>
                             </div>
-                            <textarea id="task-description" rows="3" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm" placeholder="Décrivez votre tâche en détail..."></textarea>
-                        </div>
-
-                        <!-- Tags -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-tags text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Tags</label>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-tags text-blue-400 text-xs"></i> Tags
+                                </label>
+                                <div class="flex flex-wrap gap-2 mb-2 min-h-[24px]" id="tags-container">
+                                    <!-- Tags will be added here -->
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="new-tag" class="flex-1 bg-transparent border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Ajouter un tag...">
+                                    <button id="add-tag" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 text-xs flex items-center gap-1 shadow-sm">
+                                        <i class="fas fa-plus"></i>Ajouter
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex flex-wrap gap-1 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl min-h-[32px]" id="tags-container"><div class="text-gray-400 dark:text-gray-500 text-xs">Aucun tag ajouté</div></div>
-                            <div class="flex gap-2">
-                                <input type="text" id="new-tag" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" placeholder="Ajouter un tag...">
-                                <button id="add-tag" class="px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                    <i class="fas fa-plus mr-1"></i>Ajouter
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Comments -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-comments text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Commentaires</label>
-                            </div>
-                            <div id="comments-container" class="space-y-2 mb-2 max-h-32 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><div class="text-gray-400 dark:text-gray-500 text-xs text-center py-2">Aucun commentaire</div></div>
-                            <div class="flex gap-2">
-                                <textarea id="new-comment" rows="1" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" placeholder="Ajouter un commentaire..."></textarea>
-                                <button id="add-comment" class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 self-end text-xs">
-                                    <i class="fas fa-paper-plane mr-1"></i>Envoyer
-                                </button>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-comments text-blue-400 text-xs"></i> Commentaires
+                                </label>
+                                <div id="comments-container" class="space-y-1 mb-2 max-h-32 overflow-y-auto pr-1">
+                                    <!-- Exemple de commentaire compact -->
+                                    <!--
+                                    <div class="flex items-start gap-2 bg-gray-700/80 rounded-lg px-2 py-1 text-xs text-white">
+                                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center font-bold">T</div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-1 font-semibold">TEST <span class="text-gray-400 font-normal ml-1">22 juillet 2025 à 01:59</span></div>
+                                            <div class="text-xs text-gray-200">oui</div>
+                                        </div>
+                                    </div>
+                                    -->
+                                </div>
+                                <div class="flex gap-2 mt-2">
+                                    <textarea id="new-comment" rows="1" class="flex-1 bg-transparent border border-gray-700 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none" placeholder="Ajouter un commentaire..."></textarea>
+                                    <button id="add-comment" class="px-3 py-1 bg-green-600 hover:bg-emerald-700 text-white rounded-lg transition-all duration-200 text-xs flex items-center gap-1 shadow-sm">
+                                        <i class="fas fa-paper-plane"></i>Envoyer
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Sidebar -->
-                    <div class="w-56 border-l border-gray-200 dark:border-gray-700 pl-4 overflow-y-auto bg-gray-50 dark:bg-gray-900/50 flex-shrink-0">
-                        <!-- Status -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-columns text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Statut</label>
-                            </div>
-                            <select id="task-status" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                                @foreach($projet->listTasks as $listTask)
-                                    <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Priority -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-flag text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Priorité</label>
-                            </div>
-                            <select id="task-priority" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                                <option value="">Aucune</option>
-                                <option value="basse">🟢 Basse</option>
-                                <option value="moyenne">🟡 Moyenne</option>
-                                <option value="haute">🔴 Haute</option>
-                            </select>
-                        </div>
-
-                        <!-- Category -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-folder text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Catégorie</label>
-                            </div>
-                            <select id="task-category" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                                <option value="">Aucune</option>
-                                <option value="marketing">📢 Marketing</option>
-                                <option value="développement">💻 Développement</option>
-                                <option value="communication">💬 Communication</option>
-                                <option value="design">🎨 Design</option>
-                                <option value="test">🧪 Test</option>
-                            </select>
-                        </div>
-
-                        <!-- Due Date -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-calendar-alt text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Date limite</label>
-                            </div>
-                            <input type="date" id="task-due-date" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                        </div>
-
-                        <!-- Assignees -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-users text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Assignés</label>
-                            </div>
-                            <div id="assignees-container" class="space-y-1 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl min-h-[32px]"><div class="text-gray-400 dark:text-gray-500 text-xs">Aucun assigné</div></div>
-                            <div class="flex gap-2">
-                                <select id="assignee-select" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                                    <option value="">Sélectionner un membre...</option>
-                                    @foreach($projet->members as $membre)
-                                        <option value="{{ $membre->id }}">{{ $membre->name }}</option>
+                    <div class="w-64 flex-shrink-0 space-y-4">
+                        <div class="bg-gray-800/60 rounded-xl shadow-sm p-4 space-y-3">
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-columns text-blue-400 text-xs"></i> Statut
+                                </label>
+                                <select id="task-status" class="w-full bg-transparent border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    @foreach($projet->listTasks ?? [] as $listTask)
+                                        <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
                                     @endforeach
                                 </select>
-                                <button id="add-assignee" class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-flag text-blue-400 text-xs"></i> Priorité
+                                </label>
+                                <select id="task-priority" class="w-full bg-transparent border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    <option value="">Aucune</option>
+                                    <option value="basse">Basse</option>
+                                    <option value="moyenne">Moyenne</option>
+                                    <option value="haute">Haute</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-folder text-blue-400 text-xs"></i> Catégorie
+                                </label>
+                                <select id="task-category" class="w-full bg-transparent border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    <option value="">Aucune</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="développement">Développement</option>
+                                    <option value="communication">Communication</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-calendar-alt text-blue-400 text-xs"></i> Date limite
+                                </label>
+                                <input type="date" id="task-due-date" class="w-full bg-transparent border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-300 mb-1">
+                                    <i class="fas fa-users text-blue-400 text-xs"></i> Assignés
+                                </label>
+                                <div id="assignees-container" class="space-y-2 mb-2 min-h-[24px]">
+                                    <!-- Current assignees will be shown here -->
+                                </div>
+                                <div class="flex gap-2">
+                                    <select id="assignee-select" class="flex-1 bg-transparent border border-gray-700 rounded-lg px-2 py-1 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                        <option value="">Sélectionner un membre...</option>
+                                        @foreach($projet->members ?? [] as $membre)
+                                            <option value="{{ $membre->id }}">{{ $membre->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button id="add-assignee" class="px-3 py-1 bg-green-600 hover:bg-emerald-700 text-white rounded-lg transition-all duration-200 text-xs flex items-center gap-1 shadow-sm">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Actions -->
-                        <div class="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                            <button id="save-task" class="w-full px-2 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                <i class="fas fa-save mr-1"></i>Sauvegarder
+                        <div class="flex flex-col gap-2 pt-2">
+                            <button id="save-task" class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 font-semibold shadow-sm text-sm flex items-center justify-center gap-1">
+                                <i class="fas fa-save"></i>Sauvegarder
                             </button>
-                            <button id="delete-task" class="w-full px-2 py-2 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl hover:from-red-600 hover:to-pink-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                <i class="fas fa-trash mr-1"></i>Supprimer la tâche
+                            <button id="delete-task" class="w-full px-3 py-2 bg-red-600 hover:bg-pink-700 text-white rounded-lg transition-all duration-200 font-semibold shadow-sm text-sm flex items-center justify-center gap-1">
+                                <i class="fas fa-trash"></i>Supprimer la tâche
                             </button>
                         </div>
                     </div>

@@ -64,6 +64,7 @@
         <!-- Contenu -->
         <main class="dark:bg-gray-900">
             @yield('content')
+            {{ $slot ?? '' }}
         </main>
     </div>
 

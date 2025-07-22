@@ -16,7 +16,7 @@
                 <span class="font-medium text-sm sm:text-base">Membres</span>
             </a>
             @else
-            <button onclick="openProjectSelector()" class="w-full flex items-center px-3 sm:px-4 py-2 sm:py-3 rounded-xl text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group">
+            <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'select-project-modal' }))" class="w-full flex items-center px-3 sm:px-4 py-2 sm:py-3 rounded-xl text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group">
                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded-xl flex items-center justify-center mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-200">
                     <i class="fas fa-users text-gray-400 text-sm sm:text-base"></i>
                 </div>
@@ -99,5 +99,27 @@
         @endif
     </div>
 
-    <!-- Reste du code modal inchangé... -->
+    <!-- Modal de sélection de projet pour gestion des membres -->
+    <x-modal name="select-project-modal" :show="false" maxWidth="md">
+        <div class="p-6">
+            <h2 class="text-lg font-bold mb-4 text-gray-900 dark:text-white">Sélectionner un projet</h2>
+            @if(isset($data) && count($data) > 0)
+                <ul class="space-y-2 max-h-64 overflow-y-auto">
+                    @foreach($data as $projet)
+                        <li>
+                            <a href="{{ route('projet.members.index', $projet) }}"
+                               class="block px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800 transition text-gray-900 dark:text-white font-medium">
+                                <span class="truncate">{{ $projet->name }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-gray-500 dark:text-gray-400">Aucun projet disponible.</p>
+            @endif
+            <div class="mt-6 text-right">
+                <button type="button" onclick="window.dispatchEvent(new CustomEvent('close-modal', { detail: 'select-project-modal' }))" class="inline-flex items-center px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 transition">Fermer</button>
+            </div>
+        </div>
+    </x-modal>
 </section>

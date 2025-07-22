@@ -124,14 +124,11 @@
                 </form>
 
                 <!-- Navigation links mobile -->
-                <a href="#" class="z-10 flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200">
+                <a href="/dashboard" class="z-10 flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200">
                     <i class="fas fa-layer-group mr-3 text-lg"></i>
                     <span class="font-medium">Espaces de travail</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200">
-                    <i class="fas fa-clock mr-3 text-lg"></i>
-                    <span class="font-medium">Récent</span>
-                </a>
+               
                 <button onclick="openCreateProjectModal()" class="w-full flex items-center px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200">
                     <i class="fas fa-plus mr-3 text-lg"></i>
                     <span class="font-medium">Créer</span>

@@ -143,57 +143,65 @@
 
 <script>
 function showTaskDetails(taskId) {
-    // Afficher les détails de la tâche dans le modal
-    fetch(`/task/details/${taskId}`)
+    // Utiliser la route API dédiée
+    fetch(`/api/tasks/${taskId}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('taskModalTitle').textContent = data.title;
-            document.getElementById('taskModalBody').innerHTML = `
-                <div class="space-y-6">
-                    <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
-                        <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Description</h4>
-                        <p class="text-slate-600 dark:text-slate-300">${data.description || 'Aucune description'}</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
+            if (data.success) {
+                const task = data.task;
+                
+                document.getElementById('taskModalTitle').textContent = task.title;
+                document.getElementById('taskModalBody').innerHTML = `
+                    <div class="space-y-6">
                         <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
-                            <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Catégorie</h4>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-                                ${data.category || 'Aucune'}
-                            </span>
+                            <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Description</h4>
+                            <p class="text-slate-600 dark:text-slate-300">${task.description || 'Aucune description'}</p>
                         </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
+                                <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Catégorie</h4>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                                    ${task.category || 'Aucune'}
+                                </span>
+                            </div>
+                            <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
+                                <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Priorité</h4>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${task.priority == 'élevée' ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300' : task.priority == 'moyenne' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'}">
+                                    ${task.priority}
+                                </span>
+                            </div>
+                        </div>
+                        
                         <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
-                            <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Priorité</h4>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${data.priority == 'élevée' ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300' : data.priority == 'moyenne' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' : 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'}">
-                                ${data.priority}
-                            </span>
+                            <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Assigné à</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${task.assignes && task.assignes.length > 0 ? task.assignes.map(user => `<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">${user.name}</span>`).join('') : '<span class="text-slate-500 dark:text-slate-400">Non assigné</span>'}
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
+                            <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Date limite</h4>
+                            <p class="text-slate-600 dark:text-slate-300">
+                                ${task.due_date ? new Date(task.due_date).toLocaleDateString('fr-FR', {
+                                     weekday: 'long',
+                                     year: 'numeric',
+                                     month: 'long',
+                                     day: 'numeric'
+                                 }) : 'Non définie'}
+                            </p>
                         </div>
                     </div>
-                    
-                    <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
-                        <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Assigné à</h4>
-                        <div class="flex flex-wrap gap-2">
-                            ${data.users ? data.users.map(user => `<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">${user.name}</span>`).join('') : '<span class="text-slate-500 dark:text-slate-400">Non assigné</span>'}
-                        </div>
-                    </div>
-                    
-                    <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
-                        <h4 class="font-semibold text-slate-800 dark:text-slate-100 mb-2">Date limite</h4>
-                        <p class="text-slate-600 dark:text-slate-300">
-                            ${data.due_date ? new Date(data.due_date).toLocaleDateString('fr-FR', { 
-                                weekday: 'long', 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                            }) : 'Non définie'}
-                        </p>
-                    </div>
-                </div>
-            `;
-            showTaskModal();
+                `;
+                showTaskModal();
+            } else {
+                console.error('Erreur:', data.message);
+                alert('Erreur lors du chargement de la tâche');
+            }
         })
         .catch(error => {
             console.error('Erreur lors de la récupération des détails:', error);
+            alert('Erreur lors du chargement de la tâche');
         });
 }
 

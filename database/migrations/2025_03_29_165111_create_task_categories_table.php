@@ -10,11 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // Schema::create('task_categories', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->enum('name', ['marketing', 'développement', 'communication']);
-        //     $table->timestamps();
-        // });
+        Schema::create('task_categories', function (Blueprint $table) {
+            $table->id();
+            $table->enum('name', ['marketing', 'développement', 'communication']);
+            $table->timestamps();
+        });
     }
 
     /**

@@ -17,12 +17,6 @@
 
                 <!-- Navigation Links - cachés sur mobile -->
                 <div class="hidden lg:flex space-x-1 ms-6 xl:ms-10">
-                    <a href="#" class="px-3 xl:px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium text-sm xl:text-base">
-                        <i class="fas fa-layer-group mr-2"></i>Espaces
-                    </a>
-                    <a href="#" class="px-3 xl:px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium text-sm xl:text-base">
-                        <i class="fas fa-clock mr-2"></i>Récent
-                    </a>
                     <button onclick="openCreateProjectModal()" class="px-3 xl:px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 font-medium text-sm xl:text-base">
                         <i class="fas fa-plus mr-2"></i>Créer
                     </button>
@@ -35,7 +29,7 @@
                 <form action="" class="hidden md:flex items-center">
                     <div class="relative">
                         <input class="h-8 lg:h-10 w-40 lg:w-64 pl-8 lg:pl-10 pr-3 lg:pr-4 rounded-xl bg-gray-100/80 dark:bg-gray-800/80 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-all duration-200 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 text-sm lg:text-base"
-                               type="text" name="search" id="search" placeholder="Rechercher...">
+                            type="text" name="search" id="search" placeholder="Rechercher...">
                         <div class="absolute inset-y-0 left-0 pl-2 lg:pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400 text-sm lg:text-base"></i>
                         </div>
@@ -84,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Lien Profile -->
                             <x-dropdown-link :href="route('profile.edit')" class="flex items-center px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <i class="fas fa-user mr-3 text-gray-400 text-sm sm:text-base"></i>
@@ -94,8 +88,8 @@
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <x-dropdown-link :href="route('logout')" 
-                                    onclick="event.preventDefault(); this.closest('form').submit();" 
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault(); this.closest('form').submit();"
                                     class="flex items-center px-3 sm:px-4 py-2 sm:py-3 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                     <i class="fas fa-sign-out-alt mr-3 text-sm sm:text-base"></i>
                                     <span class="text-sm sm:text-base">{{ __('Log Out') }}</span>
@@ -122,7 +116,7 @@
                 <form action="" class="md:hidden flex items-center mb-4">
                     <div class="relative flex-1">
                         <input class="w-full h-10 pl-10 pr-4 rounded-xl bg-gray-100/80 dark:bg-gray-800/80 border-0 focus:ring-2 focus:ring-blue-500 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
-                               type="text" name="search" placeholder="Rechercher...">
+                            type="text" name="search" placeholder="Rechercher...">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
@@ -178,13 +172,13 @@
 </nav>
 
 <script>
-function toggleTheme() {
-    if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.theme = 'light';
-    } else {
-        document.documentElement.classList.add('dark');
-        localStorage.theme = 'dark';
+    function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.theme = 'light';
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.theme = 'dark';
+        }
     }
-}
 </script>

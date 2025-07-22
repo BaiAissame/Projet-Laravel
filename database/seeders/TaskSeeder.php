@@ -12,17 +12,31 @@ class TaskSeeder extends Seeder
         Task::create([
             'title' => 'Task 1',
             'description' => 'Task 1 description',
-            'project_id' => 1,
-            'task_category_id' => 1,
-            'task_priority_id' => 1,
+            'list_task_id' => 1,
+            'user_id' => 1,
+            'category' => 'marketing',
+            'priority' => 'élevée',
+            'order' => 1,
         ]);
 
         Task::create([
-            'title' => 'Task 2',
+            'title' => 'Task 2', 
             'description' => 'Task 2 description',
-            'project_id' => 2,
-            'task_category_id' => 2,
-            'task_priority_id' => 2,
+            'list_task_id' => 2,
+            'user_id' => 2,
+            'category' => 'développement',
+            'priority' => 'moyenne',
+            'order' => 1,
+        ]);
+
+        Task::create([
+            'title' => 'Task 3',
+            'description' => 'Task 3 description', 
+            'list_task_id' => 3,
+            'user_id' => 1,
+            'category' => 'communication',
+            'priority' => 'basse',
+            'order' => 1,
         ]);
     }
 }

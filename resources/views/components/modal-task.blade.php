@@ -1,65 +1,88 @@
 <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 hidden">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+    <div class="flex items-center justify-center min-h-screen p-8">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[96vh] overflow-visible">
             <!-- Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center space-x-3">
+            <div class="flex items-center justify-between p-10 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-5">
                     <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Détails de la tâche</h2>
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Détails de la tâche</h2>
+                        <p class="text-base text-gray-400 dark:text-gray-400 mt-1">Modifiez et gérez votre tâche</p>
+                    </div>
                 </div>
                 <button id="close-task-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
 
             <!-- Content -->
-            <div class="flex h-[calc(90vh-120px)]">
+            <div class="flex gap-12 p-10 bg-gray-50 dark:bg-gray-900/80">
                 <!-- Main Content -->
-                <div class="flex-1 p-6 overflow-y-auto">
+                <div class="flex-1 pr-10 space-y-10">
                     <!-- Title -->
-                    <div class="mb-6">
-                        <input type="text" id="task-title" class="w-full text-2xl font-bold bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder-gray-400" placeholder="Titre de la tâche">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-heading text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Titre</label>
+                        </div>
+                        <input type="text" id="task-title" class="w-full text-2xl font-bold bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 outline-none text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 rounded-2xl px-6 py-4 transition-all duration-200 shadow-sm" placeholder="Titre de la tâche">
                     </div>
 
                     <!-- Description -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
-                        <textarea id="task-description" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ajouter une description..."></textarea>
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-align-left text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Description</label>
+                        </div>
+                        <textarea id="task-description" rows="5" class="w-full px-6 py-4 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-lg shadow-sm" placeholder="Décrivez votre tâche en détail..."></textarea>
                     </div>
 
                     <!-- Tags -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
-                        <div class="flex flex-wrap gap-2 mb-2" id="tags-container">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-tags text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Tags</label>
+                        </div>
+                        <div class="flex flex-wrap gap-3 mb-4 p-4 bg-gray-100 dark:bg-gray-700/50 rounded-2xl min-h-[48px]" id="tags-container">
                             <!-- Tags will be added here -->
                         </div>
-                        <div class="flex gap-2">
-                            <input type="text" id="new-tag" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" placeholder="Ajouter un tag...">
-                            <button id="add-tag" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">Ajouter</button>
+                        <div class="flex gap-4">
+                            <input type="text" id="new-tag" class="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="Ajouter un tag...">
+                            <button id="add-tag" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-md text-base flex items-center gap-2">
+                                <i class="fas fa-plus"></i>Ajouter
+                            </button>
                         </div>
                     </div>
 
                     <!-- Comments -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Commentaires</label>
-                        <div id="comments-container" class="space-y-3 mb-3 max-h-48 overflow-y-auto">
-                            <!-- Comments will be added here -->
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-comments text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Commentaires</label>
                         </div>
-                        <div class="flex gap-2">
-                            <textarea id="new-comment" rows="2" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-sm" placeholder="Ajouter un commentaire..."></textarea>
-                            <button id="add-comment" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm self-end">Envoyer</button>
+                        <div id="comments-container" class="space-y-4 mb-4 min-h-[60px] p-4 bg-gray-100 dark:bg-gray-700/50 rounded-2xl">
+                            <!-- Commentaires -->
+                        </div>
+                        <div class="flex gap-4">
+                            <textarea id="new-comment" rows="1" class="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none text-base focus:ring-2 focus:ring-blue-500 transition-all duration-200" placeholder="Ajouter un commentaire..."></textarea>
+                            <button id="add-comment" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-md text-base flex items-center gap-2">
+                                <i class="fas fa-paper-plane"></i>Envoyer
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sidebar -->
-                <div class="w-80 border-l border-gray-200 dark:border-gray-700 p-6 overflow-y-auto">
+                <div class="w-[370px] border-l border-gray-200 dark:border-gray-700 pl-10 bg-white dark:bg-gray-900/70 flex-shrink-0 rounded-2xl shadow-md space-y-10">
                     <!-- Status -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Statut</label>
-                        <select id="task-status" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-columns text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Statut</label>
+                        </div>
+                        <select id="task-status" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-base">
                             @foreach($projet->listTasks ?? [] as $listTask)
                                 <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
                             @endforeach
@@ -67,64 +90,78 @@
                     </div>
 
                     <!-- Priority -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Priorité</label>
-                        <select id="task-priority" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-flag text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Priorité</label>
+                        </div>
+                        <select id="task-priority" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-base">
                             <option value="">Aucune</option>
                             <option value="basse">Basse</option>
                             <option value="moyenne">Moyenne</option>
                             <option value="haute">Haute</option>
                         </select>
-          </div>
+                    </div>
 
                     <!-- Category -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
-                        <select id="task-category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-folder text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Catégorie</label>
+                        </div>
+                        <select id="task-category" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-base">
                             <option value="">Aucune</option>
                             <option value="marketing">Marketing</option>
                             <option value="développement">Développement</option>
                             <option value="communication">Communication</option>
-                          </select>
+                        </select>
                     </div>
 
                     <!-- Due Date -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date limite</label>
-                        <input type="date" id="task-due-date" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-calendar-alt text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Date limite</label>
+                        </div>
+                        <input type="date" id="task-due-date" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-base">
                     </div>
 
                     <!-- Assignees -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assignés</label>
-                        <div id="assignees-container" class="space-y-2 mb-2">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-3">
+                            <i class="fas fa-users text-blue-500 text-lg"></i>
+                            <label class="text-lg font-semibold text-gray-700 dark:text-gray-300">Assignés</label>
+                        </div>
+                        <div id="assignees-container" class="space-y-3 mb-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-2xl min-h-[48px]">
                             <!-- Current assignees will be shown here -->
                         </div>
-                        <div class="flex gap-2">
-                            <select id="assignee-select" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                        <div class="flex gap-3">
+                            <select id="assignee-select" class="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-blue-500 transition-all duration-200">
                                 <option value="">Sélectionner un membre...</option>
                                 @foreach($projet->members ?? [] as $membre)
                                     <option value="{{ $membre->id }}">{{ $membre->name }}</option>
                                 @endforeach
-                          </select>
-                            <button id="add-assignee" class="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">+</button>
+                            </select>
+                            <button id="add-assignee" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-md text-base flex items-center gap-2">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="space-y-3">
-                        <button id="save-task" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                            Sauvegarder
+                    <div class="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <button id="save-task" class="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-bold shadow-lg hover:shadow-xl text-lg flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i>Sauvegarder
                         </button>
-                        <button id="delete-task" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                            Supprimer la tâche
-                          </button>
+                        <button id="delete-task" class="w-full px-6 py-4 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-2xl hover:from-red-600 hover:to-pink-700 transition-all duration-200 font-bold shadow-lg hover:shadow-xl text-lg flex items-center justify-center gap-2">
+                            <i class="fas fa-trash"></i>Supprimer la tâche
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-          </div>
-  </div>
+    </div>
+</div>
 
 <script>
 let currentTaskId = null;
@@ -142,7 +179,6 @@ function openTaskModal(taskId) {
             document.getElementById('task-modal').classList.remove('hidden');
         })
         .catch(error => {
-            console.error('Error fetching task:', error);
             showNotification('Erreur', 'Impossible de charger les détails de la tâche', 'error');
         });
 }

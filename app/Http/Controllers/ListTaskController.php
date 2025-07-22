@@ -28,7 +28,7 @@ class ListTaskController extends Controller
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2">
                     <span class="list-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
-                    <input class="font-bold text-lg bg-transparent border-none w-3/4" value="' . $listTask->title . '" readonly="">
+                    <input class="font-bold text-lg bg-transparent border-none w-3/4 text-gray-900 dark:text-white" value="' . $listTask->title . '" readonly="">
                 </div>
                 <div class="flex items-center space-x-1">
                     <!-- Bouton ajouter tâche rapide -->
@@ -57,7 +57,7 @@ class ListTaskController extends Controller
                 </div>
             </div>
             <div class="flex-1 space-y-3 droppable-zone" data-colonne="' . $listTask->id . '">
-                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400 empty-state">
                     <i class="fas fa-inbox text-2xl mb-2"></i>
                     <p class="text-sm">Aucune tâche</p>
                     <button onclick="quickAddTask(\'' . $listTask->id . '\')" class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">
@@ -133,8 +133,8 @@ class ListTaskController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => "Erreur lors du changement de couleur : " . $e->getMessage(),
+                'error' => true,
+                'message' => "Erreur lors du changement de couleur: " . $e->getMessage(),
             ]);
         }
     }
@@ -142,44 +142,25 @@ class ListTaskController extends Controller
     public function updateColor(Request $request, $listTaskId)
     {
         $request->validate([
-            'color' => 'required|string|max:50',
+            'color' => 'required|string',
         ]);
-
-        $color = $request->input('color');
-        
-        // Validation personnalisée pour les couleurs
-        $validColors = ['blue', 'green', 'red', 'yellow', 'purple', 'pink', 'orange', 'gray'];
-        
-        // Accepter les couleurs prédéfinies ou les codes hexadécimaux
-        if (!in_array($color, $validColors) && !preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Couleur invalide. Utilisez une couleur prédéfinie ou un code hexadécimal valide (ex: #ff0000)',
-            ], 422);
-        }
 
         try {
             $listTask = ListTask::findOrFail($listTaskId);
-            $listTask->update(['color' => $color]);
+            $listTask->update(['color' => $request->input('color')]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Couleur mise à jour avec succès',
+                'message' => "Couleur mise à jour avec succès",
                 'color' => $listTask->color,
             ]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => "Liste de tâches non trouvée",
-            ], 404);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => "Erreur lors de la mise à jour de la couleur : " . $e->getMessage(),
-            ], 500);
+                'error' => true,
+                'message' => "Erreur lors de la mise à jour de la couleur: " . $e->getMessage(),
+            ]);
         }
     }
-
 
     public function delete(ListTask $listTask)
     {

@@ -17,3 +17,15 @@
 .custom-padding-members {
     padding-left: 256px;
 }
+
+html.dark .bg-white {
+    background-color: #1f2937 !important; /* gray-800 Tailwind */
+}
+
+html.dark .bg-white\/80 {
+    background-color: rgba(31,41,55,0.8) !important; /* gray-800 à 80% */
+}
+
+html.dark .bg-white\/70 {
+    background-color: rgba(31,41,55,0.7) !important;
+}

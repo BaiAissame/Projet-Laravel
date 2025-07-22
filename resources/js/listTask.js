@@ -1,4 +1,11 @@
 
+// Global variables for drag and drop functionality
+let draggedList = null;
+let draggedTask = null;
+let originalListIndex = null;
+let originalTaskIndex = null;
+let originalTaskParent = null;
+
 const taskList = document.getElementById('taskes-list');
 
 // Vérifie si le formulaire et la liste des tâches existent avant d'ajouter l'écouteur d'événements
@@ -44,7 +51,6 @@ if (taskList) {
         initlistTask()
 
       }).catch(error => {
-        console.error('Erreur:', error);
       });
   });
 
@@ -62,7 +68,6 @@ if (taskList) {
     }).then(response => response.json())
       .then(data => {
       }).catch(error => {
-        console.error('Error updating order:', error);
       });
   }
 
@@ -123,7 +128,6 @@ if (taskList) {
                 }
               })
               .catch(error => {
-                console.error('Error:', error);
               });
           }
         });
@@ -182,9 +186,7 @@ if (taskList) {
               body: JSON.stringify({ orderTask: orderTask })
             }).then(response => response.json())
               .then(data => {
-                // console.log(data);
               }).catch(error => {
-                console.error('Error updating order:', error);
               });
           }
         });
@@ -214,7 +216,6 @@ if (taskList) {
               }
             })
             .catch(error => {
-              console.error('Erreur lors de la mise à jour du titre de la liste:', error);
             });
         });
       }
@@ -257,12 +258,6 @@ if (taskList) {
     });
 
   }
-
-  let draggedList = null;
-  let draggedTask = null;
-  let originalListIndex = null;
-  let originalTaskIndex = null;
-  let originalTaskParent = null;
 
   // DRAGOVER pour les listes (déplacement en live)
   if (!taskList._hasDragOverListener) {

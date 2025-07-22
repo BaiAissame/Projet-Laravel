@@ -31,9 +31,9 @@
         <div class="overflow-x-auto pb-4" id="kanban-board">
             <div class="flex gap-6 min-w-max pl-0">
                 @foreach($projet->listTasks as $listTask)
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 w-80 flex-shrink-0 flex flex-col group border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-200 relative {{ $listTask->color && !str_starts_with($listTask->color, '#') ? 'border-' . $listTask->color . '-400 dark:border-' . $listTask->color . '-500 bg-' . $listTask->color . '-50 dark:bg-' . $listTask->color . '-900/20' : '' }}" 
-                         data-list-id="{{ $listTask->id }}" 
-                         data-list-task-id="{{ $listTask->id }}" 
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 w-80 flex-shrink-0 flex flex-col group border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-200 relative {{ $listTask->color && !str_starts_with($listTask->color, '#') ? 'border-' . $listTask->color . '-400 dark:border-' . $listTask->color . '-500 bg-' . $listTask->color . '-50 dark:bg-' . $listTask->color . '-900/20' : '' }}"
+                         data-list-id="{{ $listTask->id }}"
+                         data-list-task-id="{{ $listTask->id }}"
                          data-color="{{ $listTask->color }}"
                          @if($listTask->color && str_starts_with($listTask->color, '#'))
                          style="border-color: {{ $listTask->color }}; background-color: {{ $listTask->color }}20;"
@@ -41,7 +41,7 @@
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="list-handle cursor-grab text-gray-400 hover:text-blue-500"><i class="fas fa-grip-vertical"></i></span>
-                                <input class="font-bold text-lg bg-transparent border-none w-3/4" value="{{ $listTask->title }}" readonly />
+                                <input class="font-bold text-lg bg-transparent border-none w-3/4 text-gray-900 dark:text-white" value="{{ $listTask->title }}" readonly />
                             </div>
                             <div class="flex items-center space-x-1">
                                 <!-- Bouton ajouter tâche rapide -->
@@ -49,7 +49,7 @@
                                         class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                                     <i class="fas fa-plus text-sm"></i>
                                 </button>
-                                
+
                                 <!-- Menu d'options -->
                                 <div class="relative">
                                     <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200" data-column-id="{{ $listTask->id }}">
@@ -78,7 +78,7 @@
 
                                     <!-- Indicateur de priorité -->
                                     @if($task->priorite)
-                                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r 
+                                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r
                                             @switch($task->priorite)
                                                 @case('haute') from-red-500 to-red-600 @break
                                                 @case('moyenne') from-yellow-500 to-orange-600 @break
@@ -121,7 +121,7 @@
                                                     @endswitch
                                                 </span>
                                             @endif
-                                            <button onclick="event.stopPropagation(); quickEditTask('{{ $task->id }}')" 
+                                            <button onclick="event.stopPropagation(); quickEditTask('{{ $task->id }}')"
                                                     class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                                                     title="Modifier rapidement">
                                                 <i class="fas fa-edit text-xs"></i>
@@ -177,20 +177,20 @@
                                     <!-- Actions rapides -->
                                     <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                                         <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')" 
+                                            <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')"
                                                     class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                                                     title="Dupliquer">
                                                 <i class="fas fa-copy text-xs"></i>
                                             </button>
-                                            <button onclick="event.stopPropagation(); deleteTask('{{ $task->id }}')" 
+                                            <button onclick="event.stopPropagation(); deleteTask('{{ $task->id }}')"
                                                     class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
                                                     title="Supprimer">
                                                 <i class="fas fa-trash text-xs"></i>
                                             </button>
                                         </div>
                                         <div class="flex items-center space-x-1">
-                                            @if($task->assignes && $task->assignes->count() > 0)
-                                                <div class="flex -space-x-1">
+                                            <div class="flex -space-x-1">
+                                                @if($task->assignes && $task->assignes->count() > 0)
                                                     @foreach($task->assignes->take(3) as $assignee)
                                                         <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white dark:border-gray-800"
                                                              title="{{ $assignee->name }}">
@@ -202,18 +202,18 @@
                                                             +{{ $task->assignes->count() - 3 }}
                                                         </div>
                                                     @endif
-                                                </div>
-                                            @endif
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
-                            
+
                             @if($listTask->tasks->count() == 0)
-                                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <div class="text-center py-8 text-gray-500 dark:text-gray-400 empty-state" id="empty-state-{{ $listTask->id }}">
                                     <i class="fas fa-inbox text-2xl mb-2"></i>
                                     <p class="text-sm">Aucune tâche</p>
-                                    <button onclick="quickAddTask('{{ $listTask->id }}')" 
+                                    <button onclick="quickAddTask('{{ $listTask->id }}')"
                                             class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">
                                         Ajouter une tâche
                                     </button>
@@ -236,7 +236,7 @@
                         <i class="fas fa-plus text-white text-xl"></i>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Créer une nouvelle liste</h3>
+                        <h3 class="font-bold text-gray-900 dark:text-white text-lg">Créer une nouvelle liste</h3>
                         <p class="text-gray-600 dark:text-gray-400">Ajoutez une colonne à votre board Kanban</p>
                     </div>
                     <button type="button" onclick="closeCreateListModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200">
@@ -264,17 +264,17 @@
     <!-- Modal moderne des tâches -->
     <div id="task-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden">
         <div class="flex items-center justify-center min-h-screen p-2">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="task-modal-content">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-visible transform transition-all duration-300 scale-95 opacity-0" id="task-modal-content">
                 <!-- Header -->
-                <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Détails de la tâche</h2>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Modifiez et gérez votre tâche</p>
+                            <h2 class="text-lg font-bold text-gray-900 dark:text-white tracking-tight">Détails de la tâche</h2>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Modifiez et gérez votre tâche</p>
                         </div>
                     </div>
-                    <button id="close-task-modal" class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200">
+                    <button id="close-task-modal" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -282,139 +282,120 @@
                 </div>
 
                 <!-- Content -->
-                <div class="flex h-[calc(80vh-80px)] gap-4 p-4">
+                <div class="flex gap-4 p-6">
                     <!-- Main Content -->
-                    <div class="flex-1 pr-2 overflow-y-auto">
+                    <div class="flex-1 pr-3 space-y-4">
                         <!-- Title -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-heading text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Titre</label>
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm p-4 space-y-4">
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-heading text-blue-400 text-xs"></i> Titre
+                                </label>
+                                <input type="text" id="task-title" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 shadow-sm" placeholder="Titre de la tâche">
                             </div>
-                            <input type="text" id="task-title" class="w-full text-lg font-bold bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg px-2 py-1 transition-all duration-200" placeholder="Titre de la tâche">
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-align-left text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-align-left text-blue-400 text-xs"></i> Description
+                                </label>
+                                <textarea id="task-description" rows="3" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 shadow-sm resize-none" placeholder="Décrivez votre tâche en détail..."></textarea>
                             </div>
-                            <textarea id="task-description" rows="3" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm" placeholder="Décrivez votre tâche en détail..."></textarea>
-                        </div>
-
-                        <!-- Tags -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-tags text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Tags</label>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-tags text-blue-400 text-xs"></i> Tags
+                                </label>
+                                <div class="flex flex-wrap gap-2 mb-2 min-h-[24px]" id="tags-container">
+                                    <!-- Tags will be added here -->
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="new-tag" class="flex-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" placeholder="Ajouter un tag...">
+                                    <button id="add-tag" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 text-xs flex items-center gap-1 shadow-sm">
+                                        <i class="fas fa-plus"></i>Ajouter
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex flex-wrap gap-1 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl min-h-[32px]" id="tags-container"><div class="text-gray-400 dark:text-gray-500 text-xs">Aucun tag ajouté</div></div>
-                            <div class="flex gap-2">
-                                <input type="text" id="new-tag" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" placeholder="Ajouter un tag...">
-                                <button id="add-tag" class="px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                    <i class="fas fa-plus mr-1"></i>Ajouter
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Comments -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-comments text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Commentaires</label>
-                            </div>
-                            <div id="comments-container" class="space-y-2 mb-2 max-h-32 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl"><div class="text-gray-400 dark:text-gray-500 text-xs text-center py-2">Aucun commentaire</div></div>
-                            <div class="flex gap-2">
-                                <textarea id="new-comment" rows="1" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" placeholder="Ajouter un commentaire..."></textarea>
-                                <button id="add-comment" class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 self-end text-xs">
-                                    <i class="fas fa-paper-plane mr-1"></i>Envoyer
-                                </button>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-comments text-blue-400 text-xs"></i> Commentaires
+                                </label>
+                                <div id="comments-container" class="space-y-1 mb-2 max-h-32 overflow-y-auto pr-1">
+                                </div>
+                                <div class="flex gap-2 mt-2">
+                                    <textarea id="new-comment" rows="1" class="flex-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none" placeholder="Ajouter un commentaire..."></textarea>
+                                    <button id="add-comment" class="px-3 py-1 bg-green-600 hover:bg-emerald-700 text-white rounded-lg transition-all duration-200 text-xs flex items-center gap-1 shadow-sm">
+                                        <i class="fas fa-paper-plane"></i>Envoyer
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Sidebar -->
-                    <div class="w-56 border-l border-gray-200 dark:border-gray-700 pl-4 overflow-y-auto bg-gray-50 dark:bg-gray-900/50 flex-shrink-0">
-                        <!-- Status -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-columns text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Statut</label>
-                            </div>
-                            <select id="task-status" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                                @foreach($projet->listTasks as $listTask)
-                                    <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Priority -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-flag text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Priorité</label>
-                            </div>
-                            <select id="task-priority" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                                <option value="">Aucune</option>
-                                <option value="basse">🟢 Basse</option>
-                                <option value="moyenne">🟡 Moyenne</option>
-                                <option value="haute">🔴 Haute</option>
-                            </select>
-                        </div>
-
-                        <!-- Category -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-folder text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Catégorie</label>
-                            </div>
-                            <select id="task-category" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                                <option value="">Aucune</option>
-                                <option value="marketing">📢 Marketing</option>
-                                <option value="développement">💻 Développement</option>
-                                <option value="communication">💬 Communication</option>
-                                <option value="design">🎨 Design</option>
-                                <option value="test">🧪 Test</option>
-                            </select>
-                        </div>
-
-                        <!-- Due Date -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-calendar-alt text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Date limite</label>
-                            </div>
-                            <input type="date" id="task-due-date" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs">
-                        </div>
-
-                        <!-- Assignees -->
-                        <div class="mb-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <i class="fas fa-users text-blue-500 text-xs"></i>
-                                <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Assignés</label>
-                            </div>
-                            <div id="assignees-container" class="space-y-1 mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl min-h-[32px]"><div class="text-gray-400 dark:text-gray-500 text-xs">Aucun assigné</div></div>
-                            <div class="flex gap-2">
-                                <select id="assignee-select" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                                    <option value="">Sélectionner un membre...</option>
-                                    @foreach($projet->members as $membre)
-                                        <option value="{{ $membre->id }}">{{ $membre->name }}</option>
+                    <div class="w-64 flex-shrink-0 space-y-4">
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm p-4 space-y-3">
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-columns text-blue-400 text-xs"></i> Statut
+                                </label>
+                                <select id="task-status" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    @foreach($projet->listTasks ?? [] as $listTask)
+                                        <option value="{{ $listTask->id }}">{{ $listTask->title }}</option>
                                     @endforeach
                                 </select>
-                                <button id="add-assignee" class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-flag text-blue-400 text-xs"></i> Priorité
+                                </label>
+                                <select id="task-priority" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    <option value="">Aucune</option>
+                                    <option value="basse">Basse</option>
+                                    <option value="moyenne">Moyenne</option>
+                                    <option value="haute">Haute</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-folder text-blue-400 text-xs"></i> Catégorie
+                                </label>
+                                <select id="task-category" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                    <option value="">Aucune</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="développement">Développement</option>
+                                    <option value="communication">Communication</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-calendar-alt text-blue-400 text-xs"></i> Date limite
+                                </label>
+                                <input type="date" id="task-due-date" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                            </div>
+                            <div>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                                    <i class="fas fa-users text-blue-400 text-xs"></i> Assignés
+                                </label>
+                                <div id="assignees-container" class="space-y-2 mb-2 min-h-[24px]">
+                                    <!-- Current assignees will be shown here -->
+                                </div>
+                                <div class="flex gap-2">
+                                    <select id="assignee-select" class="flex-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 text-xs text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                        <option value="">Sélectionner un membre...</option>
+                                        @foreach($projet->members ?? [] as $membre)
+                                            <option value="{{ $membre->id }}">{{ $membre->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button id="add-assignee" class="px-3 py-1 bg-green-600 hover:bg-emerald-700 text-white rounded-lg transition-all duration-200 text-xs flex items-center gap-1 shadow-sm">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Actions -->
-                        <div class="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                            <button id="save-task" class="w-full px-2 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                <i class="fas fa-save mr-1"></i>Sauvegarder
+                        <div class="flex flex-col gap-2 pt-2">
+                            <button id="save-task" class="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 font-semibold shadow-sm text-sm flex items-center justify-center gap-1">
+                                <i class="fas fa-save"></i>Sauvegarder
                             </button>
-                            <button id="delete-task" class="w-full px-2 py-2 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl hover:from-red-600 hover:to-pink-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 text-xs">
-                                <i class="fas fa-trash mr-1"></i>Supprimer la tâche
+                            <button id="delete-task" class="w-full px-3 py-2 bg-red-600 hover:bg-pink-700 text-white rounded-lg transition-all duration-200 font-semibold shadow-sm text-sm flex items-center justify-center gap-1">
+                                <i class="fas fa-trash"></i>Supprimer la tâche
                             </button>
                         </div>
                     </div>
@@ -433,7 +414,7 @@
                 </button>
             </div>
 
-            
+
             <!-- Prévisualisation de la couleur sélectionnée -->
             <div id="color-preview" class="mb-6 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hidden">
                 <div class="flex items-center justify-between">
@@ -446,7 +427,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Color picker personnalisé -->
             <div class="mb-6">
                 <div class="flex items-center space-x-3 mb-3">
@@ -472,15 +453,16 @@
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        
+
         .task-card {
             position: relative;
             overflow: hidden;
         }
-        
+
         .task-card::before {
             content: '';
             position: absolute;
@@ -492,15 +474,15 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .task-card:hover::before {
             opacity: 1;
         }
-        
+
         .priority-badge {
             position: relative;
         }
-        
+
         .priority-badge::after {
             content: '';
             position: absolute;
@@ -512,12 +494,12 @@
             background: currentColor;
             opacity: 0.8;
         }
-        
+
         /* Animation pour les cartes */
         .task-card {
             animation: slideIn 0.3s ease-out;
         }
-        
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -528,7 +510,7 @@
                 transform: translateY(0) scale(1);
             }
         }
-        
+
         /* Styles pour les conteneurs vides */
         .empty-container {
             display: flex;
@@ -538,33 +520,45 @@
             padding: 2rem;
             color: #9ca3af;
         }
-        
+
         .empty-container i {
             font-size: 2rem;
             margin-bottom: 0.5rem;
             opacity: 0.5;
         }
+
+        .empty-state {
+            cursor: default !important;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .empty-state button {
+            pointer-events: auto;
+            cursor: pointer;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
     let currentTaskId = null;
     let currentTask = null;
 
     function openTaskModal(taskId) {
         currentTaskId = taskId;
-        
+
         // Fetch task data
         fetch(`/api/tasks/${taskId}`)
             .then(response => response.json())
             .then(data => {
                 currentTask = data.task;
                 populateModal(data.task);
-                
+
                 // Show modal with animation
                 const modal = document.getElementById('task-modal');
                 const modalContent = document.getElementById('task-modal-content');
-                
+
                 modal.classList.remove('hidden');
                 setTimeout(() => {
                     modalContent.classList.remove('scale-95', 'opacity-0');
@@ -572,7 +566,6 @@
                 }, 10);
             })
             .catch(error => {
-                console.error('Error fetching task:', error);
                 showNotification('Erreur', 'Impossible de charger les détails de la tâche', 'error');
             });
     }
@@ -584,14 +577,35 @@
         document.getElementById('task-status').value = task.list_task_id || '';
         document.getElementById('task-priority').value = task.priorite || '';
         document.getElementById('task-category').value = task.categorie || '';
-        document.getElementById('task-due-date').value = task.date_limite ? task.date_limite.split('T')[0] : '';
-        
+
+        let dateValue = '';
+        if (task.date_limite) {
+            try {
+                if (task.date_limite.includes('/')) {
+                    const parts = task.date_limite.split('/');
+                    if (parts.length === 3) {
+                        dateValue = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                    }
+                } else if (task.date_limite.includes('-')) {
+                    dateValue = task.date_limite.split('T')[0];
+                } else {
+                    const date = new Date(task.date_limite);
+                    if (!isNaN(date.getTime())) {
+                        dateValue = date.toISOString().split('T')[0];
+                    }
+                }
+            } catch (error) {
+                dateValue = '';
+            }
+        }
+        document.getElementById('task-due-date').value = dateValue;
+
         // Tags
         populateTags(task.tags || []);
-        
+
         // Comments
         populateComments(task.comments || []);
-        
+
         // Assignees
         populateAssignees(task.assignes || []);
     }
@@ -599,17 +613,16 @@
     function populateTags(tags) {
         const container = document.getElementById('tags-container');
         if (!container) {
-            console.error('Container tags non trouvé');
             return;
         }
-        
+
         container.innerHTML = '';
-        
+
         if (!tags || tags.length === 0) {
             container.innerHTML = '<div class="text-gray-400 dark:text-gray-500 text-sm">Aucun tag ajouté</div>';
             return;
         }
-        
+
         tags.forEach(tag => {
             const tagElement = createTagElement(tag);
             if (tagElement) {
@@ -620,7 +633,6 @@
 
     function createTagElement(tag) {
         if (!tag || typeof tag !== 'string') {
-            console.error('Tag invalide:', tag);
             return null;
         }
 
@@ -640,17 +652,16 @@
     function populateComments(comments) {
         const container = document.getElementById('comments-container');
         if (!container) {
-            console.error('Container comments non trouvé');
             return;
         }
-        
+
         container.innerHTML = '';
-        
+
         if (!comments || comments.length === 0) {
             container.innerHTML = '<div class="text-gray-400 dark:text-gray-500 text-sm text-center py-6">Aucun commentaire</div>';
             return;
         }
-        
+
         comments.forEach(comment => {
             const commentElement = createCommentElement(comment);
             if (commentElement) {
@@ -661,18 +672,17 @@
 
     function createCommentElement(comment) {
         if (!comment) {
-            console.error('Commentaire invalide:', comment);
             return null;
         }
 
         const div = document.createElement('div');
         div.className = 'bg-white dark:bg-gray-700 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-600 hover:shadow-md transition-all duration-200';
-        
+
         const userName = comment.user?.name || 'Utilisateur';
         const userInitial = userName.charAt(0).toUpperCase();
-        const commentDate = comment.created_at ? new Date(comment.created_at).toLocaleDateString('fr-FR', { 
-            year: 'numeric', 
-            month: 'long', 
+        const commentDate = comment.created_at ? new Date(comment.created_at).toLocaleDateString('fr-FR', {
+            year: 'numeric',
+            month: 'long',
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
@@ -697,17 +707,16 @@
     function populateAssignees(assignees) {
         const container = document.getElementById('assignees-container');
         if (!container) {
-            console.error('Container assignees non trouvé');
             return;
         }
-        
+
         container.innerHTML = '';
-        
+
         if (!assignees || assignees.length === 0) {
             container.innerHTML = '<div class="text-gray-400 dark:text-gray-500 text-sm">Aucun assigné</div>';
             return;
         }
-        
+
         assignees.forEach(assignee => {
             const assigneeElement = createAssigneeElement(assignee);
             if (assigneeElement) {
@@ -719,7 +728,6 @@
     function createAssigneeElement(assignee) {
         // Vérifier que assignee existe et a les propriétés nécessaires
         if (!assignee || !assignee.id) {
-            console.error('Assignee invalide:', assignee);
             return null;
         }
 
@@ -750,10 +758,10 @@
     function closeTaskModal() {
         const modal = document.getElementById('task-modal');
         const modalContent = document.getElementById('task-modal-content');
-        
+
         modalContent.classList.remove('scale-100', 'opacity-100');
         modalContent.classList.add('scale-95', 'opacity-0');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300);
@@ -762,7 +770,7 @@
     document.getElementById('add-tag').addEventListener('click', () => {
         const input = document.getElementById('new-tag');
         const tag = input.value.trim();
-        
+
         if (tag) {
             const container = document.getElementById('tags-container');
             const tagElement = createTagElement(tag);
@@ -774,7 +782,7 @@
     document.getElementById('add-comment').addEventListener('click', () => {
         const textarea = document.getElementById('new-comment');
         const content = textarea.value.trim();
-        
+
         if (content) {
             addComment(content);
             textarea.value = '';
@@ -784,7 +792,7 @@
     document.getElementById('add-assignee').addEventListener('click', () => {
         const select = document.getElementById('assignee-select');
         const assigneeId = select.value;
-        
+
         if (assigneeId) {
             addAssignee(assigneeId);
             select.value = '';
@@ -814,6 +822,10 @@
                     const assigneeElements = document.querySelectorAll(`[data-assignee-id="${assigneeId}"]`);
                     assigneeElements.forEach(el => el.remove());
                     showNotification('Succès', 'Assigné retiré avec succès', 'success');
+
+                    // Mettre à jour la carte de tâche
+                    updateTaskCard();
+
                 } else {
                     showNotification('Erreur', data.message || 'Erreur lors du retrait', 'error');
                 }
@@ -860,6 +872,9 @@
                 if (assigneeElement && container) {
                     container.appendChild(assigneeElement);
                     showNotification('Succès', 'Assigné ajouté avec succès', 'success');
+
+                    updateTaskCard();
+
                 } else {
                     showNotification('Erreur', 'Erreur lors de la création de l\'élément assigné', 'error');
                 }
@@ -898,18 +913,103 @@
         .then(data => {
             if (data.success) {
                 showNotification('Succès', 'Tâche mise à jour avec succès', 'success');
-                // Refresh the task list if needed
-                if (typeof refreshTaskList === 'function') {
-                    refreshTaskList();
-                }
+
+                refreshTaskModal();
+                updateTaskCard();
+
             } else {
                 showNotification('Erreur', data.message || 'Erreur lors de la sauvegarde', 'error');
             }
         });
     }
 
+    function refreshTaskModal() {
+        if (currentTaskId) {
+            fetch(`/api/tasks/${currentTaskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    currentTask = data.task;
+                    populateModal(data.task);
+                })
+                .catch(error => {
+                });
+        }
+    }
+
+    function updateTaskCard() {
+        if (currentTaskId) {
+            fetch(`/api/tasks/${currentTaskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const task = data.task;
+                    const taskCard = document.querySelector(`[data-task-id="${currentTaskId}"]`);
+
+                    if (taskCard && task) {
+                        const titleElement = taskCard.querySelector('h4');
+                        if (titleElement) {
+                            titleElement.textContent = task.title;
+                        }
+
+                        const descriptionElement = taskCard.querySelector('p.line-clamp-2');
+                        if (descriptionElement) {
+                            if (task.description) {
+                                descriptionElement.textContent = task.description.substring(0, 80) + (task.description.length > 80 ? '...' : '');
+                                descriptionElement.style.display = 'block';
+                            } else {
+                                descriptionElement.style.display = 'none';
+                            }
+                        }
+
+                        const assigneesContainer = taskCard.querySelector('.flex.-space-x-1');
+                        if (assigneesContainer) {
+                            updateTaskCardAssignees(assigneesContainer, task.assignes || []);
+                        }
+
+                        const dateElement = taskCard.querySelector('.fa-calendar-alt')?.parentElement;
+                        if (dateElement) {
+                            const spanElement = dateElement.querySelector('span');
+                            if (task.date_limite && spanElement) {
+                                const date = new Date(task.date_limite);
+                                spanElement.textContent = date.toLocaleDateString('fr-FR');
+                                dateElement.style.display = 'flex';
+                            } else if (spanElement) {
+                                dateElement.style.display = 'none';
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                });
+        }
+    }
+
+    function updateTaskCardAssignees(container, assignees) {
+        container.innerHTML = '';
+
+        if (assignees && assignees.length > 0) {
+            assignees.slice(0, 3).forEach(assignee => {
+                const assigneeDiv = document.createElement('div');
+                assigneeDiv.className = 'w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white dark:border-gray-800';
+                assigneeDiv.title = assignee.name;
+                assigneeDiv.textContent = assignee.name.charAt(0).toUpperCase();
+                container.appendChild(assigneeDiv);
+            });
+
+            if (assignees.length > 3) {
+                const moreDiv = document.createElement('div');
+                moreDiv.className = 'w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 text-xs font-bold border-2 border-white dark:border-gray-800';
+                moreDiv.textContent = `+${assignees.length - 3}`;
+                container.appendChild(moreDiv);
+            }
+        }
+    }
+
     function deleteCurrentTask() {
         if (confirm('Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.')) {
+            const taskElement = document.querySelector(`[data-task-id="${currentTaskId}"]`);
+            const columnElement = taskElement ? taskElement.closest('.droppable-zone') : null;
+            const columnId = columnElement ? columnElement.dataset.colonne : null;
+
             fetch(`/api/tasks/${currentTaskId}`, {
                 method: 'DELETE',
                 headers: {
@@ -926,7 +1026,12 @@
                     if (taskRow) {
                         taskRow.style.transform = 'scale(0.8)';
                         taskRow.style.opacity = '0';
-                        setTimeout(() => taskRow.remove(), 300);
+                        setTimeout(() => {
+                            taskRow.remove();
+                            if (columnId) {
+                                updateEmptyColumnDisplay(columnId);
+                            }
+                        }, 300);
                     }
                 } else {
                     showNotification('Erreur', data.message || 'Erreur lors de la suppression', 'error');
@@ -935,50 +1040,138 @@
         }
     }
 
-    // Fonction pour afficher les notifications
+    // Fonction pour afficher les notifications (toaster amélioré)
     function showNotification(title, message, type = 'info') {
-        // Créer l'élément de notification
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-2xl transform transition-all duration-300 translate-x-full`;
-        
-        const bgColor = type === 'success' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
-                       type === 'error' ? 'bg-gradient-to-r from-red-500 to-pink-600' :
-                       type === 'warning' ? 'bg-gradient-to-r from-yellow-500 to-orange-600' :
-                       'bg-gradient-to-r from-blue-500 to-purple-600';
-        
-        notification.className += ` ${bgColor} text-white`;
-        
-        notification.innerHTML = `
-            <div class="flex items-center space-x-3">
-                <div class="flex-shrink-0">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 
-                                   type === 'error' ? 'fa-exclamation-circle' : 
-                                   type === 'warning' ? 'fa-exclamation-triangle' : 
-                                   'fa-info-circle'} text-xl"></i>
+        try {
+
+            // Vérifier que les paramètres sont valides
+            if (!title || !message) {
+                return;
+            }
+
+            // Créer un conteneur pour les notifications s'il n'existe pas
+            let notificationContainer = document.getElementById('notification-container');
+            if (!notificationContainer) {
+                notificationContainer = document.createElement('div');
+                notificationContainer.id = 'notification-container';
+                // Styles CSS complets et forcés pour le conteneur
+                notificationContainer.style.cssText = `
+                    position: fixed !important;
+                    bottom: 25px !important;
+                    right: 200px !important;
+                    z-index: 99999 !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 12px !important;
+                    pointer-events: none !important;
+                `;
+                document.body.appendChild(notificationContainer);
+            }
+
+            // Supprimer les notifications existantes pour éviter l'accumulation
+            const existingNotifications = notificationContainer.querySelectorAll('.toast-notification');
+            if (existingNotifications.length > 3) {
+                existingNotifications[0].remove();
+            }
+
+            // Créer l'élément de notification
+            const notification = document.createElement('div');
+            notification.className = 'toast-notification';
+
+            // Définir les couleurs selon le type AVANT d'appliquer les styles
+            let backgroundColor, iconClass;
+            switch(type) {
+                case 'success':
+                    backgroundColor = '#10b981'; // Vert solide
+                    iconClass = 'fa-check-circle';
+                    break;
+                case 'error':
+                    backgroundColor = '#ef4444'; // Rouge solide
+                    iconClass = 'fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    backgroundColor = '#f59e0b'; // Orange solide
+                    iconClass = 'fa-exclamation-triangle';
+                    break;
+                default:
+                    backgroundColor = '#3b82f6'; // Bleu solide
+                    iconClass = 'fa-info-circle';
+            }
+
+            // Styles CSS complets et forcés pour la notification
+            notification.style.cssText = `
+                background: ${backgroundColor} !important;
+                color: white !important;
+                padding: 16px !important;
+                border-radius: 12px !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+                transform: translateX(100%) !important;
+                transition: all 0.3s ease !important;
+                min-width: 320px !important;
+                max-width: 400px !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                margin: 0 !important;
+                position: relative !important;
+                pointer-events: auto !important;
+                border: none !important;
+                outline: none !important;
+            `;
+
+
+            // Échapper les caractères HTML pour éviter les injections
+            const safeTitle = title.replace(/[<>&"']/g, function(m) {
+                return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[m];
+            });
+            const safeMessage = message.replace(/[<>&"']/g, function(m) {
+                return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[m];
+            });
+
+            notification.innerHTML = `
+                <div style="display: flex !important; align-items: center !important; gap: 12px !important;">
+                    <div style="flex-shrink: 0 !important;">
+                        <i class="fas ${iconClass}" style="font-size: 20px !important; color: white !important;"></i>
+                    </div>
+                    <div style="flex: 1 !important;">
+                        <h4 style="font-weight: 600 !important; margin: 0 0 4px 0 !important; color: white !important;">${safeTitle}</h4>
+                        <p style="margin: 0 !important; opacity: 0.9 !important; font-size: 13px !important; color: white !important;">${safeMessage}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="color: white !important; opacity: 0.8 !important; background: none !important; border: none !important; cursor: pointer !important; padding: 4px !important; font-size: 16px !important;">
+                        <i class="fas fa-times" style="color: white !important;"></i>
+                    </button>
                 </div>
-                <div class="flex-1">
-                    <h4 class="font-semibold">${title}</h4>
-                    <p class="text-sm opacity-90">${message}</p>
-                </div>
-                <button onclick="this.parentElement.parentElement.remove()" class="text-white hover:text-gray-200 transition-colors">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Animer l'entrée
-        setTimeout(() => {
-            notification.classList.remove('translate-x-full');
-        }, 100);
-        
-        // Auto-supprimer après 5 secondes
-        setTimeout(() => {
-            notification.classList.add('translate-x-full');
-            setTimeout(() => notification.remove(), 300);
-        }, 5000);
+            `;
+
+            notificationContainer.appendChild(notification);
+
+            // Animer l'entrée
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Auto-supprimer après 5 secondes
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
+
+        } catch (error) {
+        }
     }
+
+    // Fonction de test pour le toaster
+    function testNotification() {
+        showNotification('Test', 'Le toaster fonctionne correctement !', 'success');
+    }
+
+    // Test automatique au chargement (commenté par défaut)
+    // setTimeout(() => testNotification(), 1000);
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -1002,7 +1195,7 @@
     function openCreateListModal() {
         const modal = document.getElementById('create-list-modal');
         const content = document.getElementById('create-list-content');
-        
+
         modal.classList.remove('hidden');
         setTimeout(() => {
             content.classList.remove('scale-95', 'opacity-0');
@@ -1013,10 +1206,10 @@
     function closeCreateListModal() {
         const modal = document.getElementById('create-list-modal');
         const content = document.getElementById('create-list-content');
-        
+
         content.classList.remove('scale-100', 'opacity-100');
         content.classList.add('scale-95', 'opacity-0');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300);
@@ -1024,19 +1217,16 @@
 
     function createListFromModal(e, projetSlug) {
         e.preventDefault();
-        console.log('Creating list for project:', projetSlug);
-        
+
         const form = e.target;
         const input = form.querySelector('#list-title');
         const title = input.value.trim();
-        
+
         if (!title) {
-            alert('Veuillez entrer un titre pour la liste');
+            showNotification('Erreur', 'Veuillez entrer un titre pour la liste', 'error');
             return false;
         }
-        
-        console.log('Sending request with title:', title);
-        
+
         fetch(`/listTask/create/${projetSlug}`, {
             method: 'POST',
             headers: {
@@ -1047,31 +1237,33 @@
         })
         .then(async response => {
             const text = await response.text();
-            console.log('RAW RESPONSE:', text);
             try {
                 return JSON.parse(text);
             } catch (e) {
-                alert('Erreur serveur : ' + text.substring(0, 300));
+                showNotification('Erreur', 'Erreur serveur : ' + text.substring(0, 100), 'error');
                 throw e;
             }
         })
         .then(data => {
-            console.log('Response data:', data);
             if (data && data.html) {
                 const board = document.querySelector('#kanban-board .flex');
                 board.insertAdjacentHTML('beforeend', data.html);
                 input.value = '';
                 closeCreateListModal();
-                console.log('List created successfully');
+                showNotification('Succès', 'Liste créée avec succès', 'success');
+
+                initializeDragAndDrop();
+                initializeColumnMenus();
+                initializeQuickActions();
+
             } else if (data && data.error) {
-                alert('Erreur lors de la création de la liste : ' + (data.message || 'Erreur inconnue'));
+                showNotification('Erreur', 'Erreur lors de la création de la liste : ' + (data.message || 'Erreur inconnue'), 'error');
             }
         })
         .catch(error => {
-            console.error('Error creating list:', error);
-            // L'alerte est déjà affichée dans le catch JSON
+            showNotification('Erreur', 'Erreur lors de la création de la liste', 'error');
         });
-        
+
         return false;
     }
 
@@ -1094,6 +1286,9 @@
             if (data.html) {
                 form.previousElementSibling.insertAdjacentHTML('beforeend', data.html);
                 input.value = '';
+
+                updateEmptyColumnDisplay(listTaskId);
+                initializeQuickActions();
             }
         });
         return false;
@@ -1145,20 +1340,30 @@
         initializeColumnMenus();
         initializeDragAndDrop();
         initializeQuickActions();
+
+        document.querySelectorAll('.droppable-zone').forEach(column => {
+            const columnId = column.dataset.colonne;
+            if (columnId) {
+                updateEmptyColumnDisplay(columnId);
+            }
+        });
     });
 
     function initializeColumnMenus() {
+
         // Gestion des boutons de menu
-        document.querySelectorAll('.column-menu-btn').forEach(btn => {
+        const menuBtns = document.querySelectorAll('.column-menu-btn');
+
+        menuBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const menu = this.nextElementSibling;
-                
+
                 // Ferme tous les autres menus
                 document.querySelectorAll('.column-menu').forEach(m => {
                     if (m !== menu) m.classList.add('hidden');
                 });
-                
+
                 // Toggle ce menu
                 menu.classList.toggle('hidden');
             });
@@ -1174,11 +1379,13 @@
         });
 
         // Gestion des boutons de suppression
-        document.querySelectorAll('.delete-btn').forEach(btn => {
+        const deleteBtns = document.querySelectorAll('.delete-btn');
+
+        deleteBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const columnId = this.dataset.columnId;
-                
+
                 if (confirm('Êtes-vous sûr de vouloir supprimer cette colonne ? Cette action est irréversible.')) {
                     deleteColumn(columnId);
                 }
@@ -1195,16 +1402,50 @@
         });
     }
 
+    function updateEmptyColumnDisplay(columnId) {
+        const column = document.querySelector(`[data-colonne="${columnId}"]`);
+        if (!column) return;
+
+        const tasks = column.querySelectorAll('.task-card');
+        const emptyMessage = column.querySelector('.empty-state');
+
+        if (tasks.length === 0) {
+            if (!emptyMessage) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'text-center py-8 text-gray-500 dark:text-gray-400 empty-state';
+                emptyDiv.innerHTML = `
+                    <i class="fas fa-inbox text-2xl mb-2"></i>
+                    <p class="text-sm">Aucune tâche</p>
+                    <button onclick="quickAddTask('${columnId}')"
+                            class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                        Ajouter une tâche
+                    </button>
+                `;
+                column.appendChild(emptyDiv);
+            }
+        } else {
+            if (emptyMessage) {
+                emptyMessage.remove();
+            }
+        }
+    }
+
     function initializeDragAndDrop() {
         const columns = document.querySelectorAll('.droppable-zone');
 
         columns.forEach(column => {
-            new Sortable(column, {
+            if (column.sortableInstance) {
+                column.sortableInstance.destroy();
+            }
+
+            column.sortableInstance = new Sortable(column, {
                 group: 'kanban',
                 animation: 300,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
                 dragClass: 'sortable-drag',
+                filter: '.empty-state',
+                preventOnFilter: false,
                 onStart: function(evt) {
                     evt.item.style.transform = 'rotate(5deg) scale(1.05)';
                 },
@@ -1212,9 +1453,12 @@
                     evt.item.style.transform = '';
                     const taskId = evt.item.dataset.taskId;
                     const newColumnId = evt.to.dataset.colonne;
+                    const oldColumnId = evt.from.dataset.colonne;
                     const newPosition = evt.newIndex;
 
-                    // Mise à jour en base de données
+                    updateEmptyColumnDisplay(oldColumnId);
+                    updateEmptyColumnDisplay(newColumnId);
+
                     updateTaskPosition(taskId, newColumnId, newPosition);
                 }
             });
@@ -1229,7 +1473,7 @@
                     el.classList.remove('opacity-0');
                 });
             });
-            
+
             card.addEventListener('mouseleave', function() {
                 this.querySelectorAll('.group-hover\\:opacity-100').forEach(el => {
                     if (!el.closest('.group:hover')) {
@@ -1264,11 +1508,72 @@
                 showNotification('Erreur', data.message, 'error');
             } else {
                 showNotification('Succès', 'Tâche créée avec succès', 'success');
+
+                // Mise à jour dynamique sans rechargement de page
+                const column = document.querySelector(`[data-colonne="${columnId}"]`);
+                if (column) {
+                    // Retirer le message "aucune tâche" avant d'ajouter la nouvelle tâche
+                    const emptyMessage = column.querySelector('.empty-state');
+                    if (emptyMessage) {
+                        emptyMessage.remove();
+                    }
+
+                    if (data.html) {
+                        column.insertAdjacentHTML('beforeend', data.html);
+                    } else if (data.task) {
+                        // Créer dynamiquement la nouvelle carte de tâche
+                        const newTaskCard = document.createElement('div');
+                        newTaskCard.className = 'task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group relative overflow-hidden';
+                        newTaskCard.setAttribute('data-task-id', data.task.id);
+                        newTaskCard.setAttribute('onclick', `openTaskModal(${data.task.id})`);
+
+                        newTaskCard.innerHTML = `
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex-1 pr-2">
+                                    <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 mb-1">
+                                        ${data.task.title || data.task.titre}
+                                    </h4>
+                                </div>
+                                <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="event.stopPropagation(); quickEditTask('${data.task.id}')"
+                                            class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                                            title="Modifier rapidement">
+                                        <i class="fas fa-edit text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="event.stopPropagation(); duplicateTask('${data.task.id}')"
+                                            class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                                            title="Dupliquer">
+                                        <i class="fas fa-copy text-xs"></i>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteTask('${data.task.id}')"
+                                            class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
+                                            title="Supprimer">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <div class="flex -space-x-1"></div>
+                                </div>
+                            </div>
+                        `;
+
+                        column.appendChild(newTaskCard);
+                    }
+
+                    updateEmptyColumnDisplay(columnId);
+                    initializeQuickActions();
+                    initializeDragAndDrop();
+                    return;
+                }
+
                 location.reload();
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
             showNotification('Erreur', 'Erreur lors de la création', 'error');
         });
     }
@@ -1301,7 +1606,6 @@
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
             showNotification('Erreur', 'Erreur lors de la mise à jour', 'error');
         });
     }
@@ -1314,6 +1618,10 @@
 
     function deleteTask(taskId) {
         if (confirm('Supprimer cette tâche ?')) {
+            const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+            const columnElement = taskElement ? taskElement.closest('.droppable-zone') : null;
+            const columnId = columnElement ? columnElement.dataset.colonne : null;
+
             fetch(`/task/delete/${taskId}`, {
                 method: 'DELETE',
                 headers: {
@@ -1326,11 +1634,18 @@
                     showNotification('Erreur', data.message, 'error');
                 } else {
                     showNotification('Succès', 'Tâche supprimée', 'success');
-                    location.reload();
+
+                    if (taskElement) {
+                        taskElement.remove();
+                        if (columnId) {
+                            updateEmptyColumnDisplay(columnId);
+                        }
+                    } else {
+                        location.reload();
+                    }
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
                 showNotification('Erreur', 'Erreur lors de la suppression', 'error');
             });
         }
@@ -1364,7 +1679,6 @@
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
             showNotification('Erreur', 'Erreur lors du renommage', 'error');
         });
     }
@@ -1393,12 +1707,12 @@
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
             showNotification('Erreur', 'Erreur lors du déplacement', 'error');
         });
     }
 
     function deleteColumn(columnId) {
+
         fetch(`/listTask/delete/${columnId}`, {
             method: 'DELETE',
             headers: {
@@ -1406,17 +1720,47 @@
                 'X-CSRF-TOKEN': csrfToken
             }
         })
-        .then(response => response.json())
+        .then(async response => {
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const text = await response.text();
+
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                showNotification('Erreur', 'Réponse serveur invalide', 'error');
+                throw e;
+            }
+        })
         .then(data => {
+
             if (data.error) {
                 showNotification('Erreur', data.message || 'Erreur lors de la suppression', 'error');
             } else {
                 showNotification('Succès', 'Colonne supprimée avec succès', 'success');
+
                 // Supprimer la colonne du DOM
                 const columnElement = document.querySelector(`[data-list-task-id="${columnId}"]`);
+
                 if (columnElement) {
-                    columnElement.remove();
+                    columnElement.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                    columnElement.style.transform = 'scale(0.8)';
+                    columnElement.style.opacity = '0';
+
+                    setTimeout(() => {
+                        columnElement.remove();
+                    }, 300);
+                } else {
+                    // Essayer avec l'autre sélecteur
+                    const altColumnElement = document.querySelector(`[data-list-id="${columnId}"]`);
+                    if (altColumnElement) {
+                        altColumnElement.remove();
+                    }
                 }
+
                 // Fermer tous les menus
                 document.querySelectorAll('.column-menu').forEach(menu => {
                     menu.classList.add('hidden');
@@ -1424,8 +1768,7 @@
             }
         })
         .catch(error => {
-            console.error('Erreur:', error);
-            showNotification('Erreur', 'Erreur lors de la suppression de la colonne', 'error');
+            showNotification('Erreur', 'Erreur lors de la suppression de la colonne: ' + error.message, 'error');
         });
     }
     // Edition inline du titre de liste
@@ -1462,7 +1805,6 @@
 
     // Fonction pour ouvrir le modal de couleur
     function openColorModal(columnId) {
-        console.log('Ouverture du modal pour la colonne:', columnId);
         const modal = document.getElementById('color-modal');
         if (modal) {
             modal.classList.remove('hidden');
@@ -1471,9 +1813,7 @@
             document.querySelectorAll('.color-option').forEach(opt => {
                 opt.classList.remove('ring-4', 'ring-blue-300');
             });
-            console.log('Modal ouvert avec succès');
         } else {
-            console.error('Modal non trouvé!');
         }
     }
 
@@ -1482,9 +1822,7 @@
         const modal = document.getElementById('color-modal');
         if (modal) {
             modal.classList.add('hidden');
-            console.log('Modal fermé avec succès');
         } else {
-            console.warn('Modal non trouvé lors de la fermeture');
         }
         currentColumnId = null;
         selectedColor = null;
@@ -1498,10 +1836,10 @@
         const preview = document.getElementById('color-preview');
         const previewBox = document.getElementById('preview-color-box');
         const previewName = document.getElementById('preview-color-name');
-        
+
         if (preview && previewBox && previewName) {
             preview.classList.remove('hidden');
-            
+
             // Définir la couleur de la boîte de prévisualisation
             previewBox.style.backgroundColor = color;
             previewBox.className = 'w-8 h-8 rounded-lg';
@@ -1518,22 +1856,19 @@
         // Trouver la colonne avec le bon sélecteur
         const columnElement = document.querySelector(`[data-list-task-id="${columnId}"]`);
         if (columnElement) {
-            console.log('Colonne trouvée:', columnElement);
-            
+
             // Supprimer les anciennes classes de couleur
             columnElement.className = columnElement.className.replace(/border-\w+-\d+/g, '');
             columnElement.className = columnElement.className.replace(/bg-\w+-\d+/g, '');
             columnElement.className = columnElement.className.replace(/dark:border-\w+-\d+/g, '');
             columnElement.className = columnElement.className.replace(/dark:bg-\w+-\d+/g, '');
-            
+
             // Appliquer la couleur personnalisée
             columnElement.style.borderColor = color;
             columnElement.style.backgroundColor = color + '20'; // Ajouter transparence
             columnElement.setAttribute('data-color', color);
-            console.log('Couleur personnalisée appliquée:', color);
-            
+
             // Sauvegarder en base de données
-            console.log('Envoi de la couleur en base de données:', color);
             fetch(`/listTask/update-color/${columnId}`, {
                 method: 'POST',
                 headers: {
@@ -1543,43 +1878,36 @@
                 body: JSON.stringify({ color: color })
             })
             .then(response => {
-                console.log('Réponse du serveur:', response.status);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.json();
             })
             .then(data => {
-                console.log('Données reçues du serveur:', data);
                 if (data.success) {
                     showNotification('Succès', 'Couleur de la colonne mise à jour', 'success');
-                    console.log('Couleur sauvegardée avec succès en base de données');
                 } else {
                     showNotification('Erreur', data.message || 'Erreur lors de la mise à jour', 'error');
-                    console.error('Erreur lors de la sauvegarde:', data.message);
                 }
             })
             .catch(error => {
-                console.error('Erreur lors de la sauvegarde:', error);
                 showNotification('Erreur', 'Erreur lors de la mise à jour de la couleur', 'error');
             });
         } else {
-            console.error('Colonne non trouvée pour ID:', columnId);
         }
-        
+
         // Fermer le modal manuellement
         const modal = document.getElementById('color-modal');
         if (modal) {
             modal.classList.add('hidden');
-            console.log('Modal fermé après application de la couleur');
         }
         currentColumnId = null;
         selectedColor = null;
-        
+
         // Masquer la prévisualisation
         const preview = document.getElementById('color-preview');
         if (preview) {
             preview.classList.add('hidden');
         }
-        
+
         document.querySelectorAll('.column-menu').forEach(menu => {
             menu.classList.add('hidden');
         });
@@ -1587,20 +1915,18 @@
 
     // Initialisation des gestionnaires d'événements pour le modal de couleur
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('Initialisation du modal de couleur...');
-        
+
         // Gestionnaires pour fermer le modal
         const closeBtn = document.getElementById('close-color-modal');
         const cancelBtn = document.getElementById('cancel-color-btn');
         const modal = document.getElementById('color-modal');
         const applyBtn = document.getElementById('apply-color-btn');
-        
+
         if (closeBtn) {
             closeBtn.onclick = function() {
                 const modal = document.getElementById('color-modal');
                 if (modal) {
                     modal.classList.add('hidden');
-                    console.log('Modal fermé avec succès');
                 }
                 currentColumnId = null;
                 selectedColor = null;
@@ -1608,15 +1934,13 @@
                     menu.classList.add('hidden');
                 });
             };
-            console.log('Bouton fermer attaché');
         }
-        
+
         if (cancelBtn) {
             cancelBtn.onclick = function() {
                 const modal = document.getElementById('color-modal');
                 if (modal) {
                     modal.classList.add('hidden');
-                    console.log('Modal fermé avec succès');
                 }
                 currentColumnId = null;
                 selectedColor = null;
@@ -1624,16 +1948,14 @@
                     menu.classList.add('hidden');
                 });
             };
-            console.log('Bouton annuler attaché');
         }
-        
+
         if (modal) {
             modal.onclick = function(e) {
                 if (e.target.id === 'color-modal') {
                     const modal = document.getElementById('color-modal');
                     if (modal) {
                         modal.classList.add('hidden');
-                        console.log('Modal fermé avec succès');
                     }
                     currentColumnId = null;
                     selectedColor = null;
@@ -1642,25 +1964,23 @@
                     });
                 }
             };
-            console.log('Clic extérieur attaché');
         }
 
 
-        
+
         // Color picker personnalisé
         const customColorPicker = document.getElementById('custom-color-picker');
         const applyCustomColorBtn = document.getElementById('apply-custom-color');
-        
+
         if (customColorPicker && applyCustomColorBtn) {
             applyCustomColorBtn.onclick = function() {
                 const customColor = customColorPicker.value;
-                console.log('Couleur personnalisée sélectionnée:', customColor);
-                
+
                 // Retirer la sélection des couleurs prédéfinies
                 document.querySelectorAll('.color-option').forEach(opt => {
                     opt.classList.remove('ring-4', 'ring-blue-300');
                 });
-                
+
                 selectedColor = customColor;
                 showColorPreview(customColor, 'Personnalisée');
             };
@@ -1669,12 +1989,10 @@
         // Appliquer la couleur
         if (applyBtn) {
             applyBtn.onclick = function() {
-                console.log('Bouton appliquer cliqué, couleur:', selectedColor, 'colonne:', currentColumnId);
                 if (selectedColor && currentColumnId) {
                     applyColumnColor(currentColumnId, selectedColor);
                 }
             };
-            console.log('Bouton appliquer attaché');
         }
 
         // Touche Escape pour fermer
@@ -1683,7 +2001,6 @@
                 const modal = document.getElementById('color-modal');
                 if (modal) {
                     modal.classList.add('hidden');
-                    console.log('Modal fermé avec Escape');
                 }
                 currentColumnId = null;
                 selectedColor = null;
@@ -1692,40 +2009,36 @@
                 });
             }
         });
-        
-        console.log('Initialisation terminée');
-        
+
+
         // Appliquer les couleurs sauvegardées au chargement de la page
         applySavedColors();
     });
-    
+
     // Fonction pour appliquer les couleurs sauvegardées
     function applySavedColors() {
         document.querySelectorAll('[data-list-task-id]').forEach(column => {
             const savedColor = column.getAttribute('data-color');
             if (savedColor) {
-                console.log('Couleur sauvegardée trouvée:', savedColor, 'pour la colonne:', column.getAttribute('data-list-task-id'));
-                
+
                 // Supprimer d'abord toutes les anciennes classes de couleur
                 column.className = column.className.replace(/border-\w+-\d+/g, '');
                 column.className = column.className.replace(/bg-\w+-\d+/g, '');
                 column.className = column.className.replace(/dark:border-\w+-\d+/g, '');
                 column.className = column.className.replace(/dark:bg-\w+-\d+/g, '');
-                
+
                 // Réinitialiser les styles inline
                 column.style.borderColor = '';
                 column.style.backgroundColor = '';
-                
+
                 if (savedColor.startsWith('#')) {
                     // Couleur hexadécimale personnalisée
                     column.style.borderColor = savedColor;
                     column.style.backgroundColor = savedColor + '20';
-                    console.log('Couleur personnalisée appliquée:', savedColor);
                 } else if (savedColor) {
                     // Couleur prédéfinie (nom)
                     column.classList.add(`border-${savedColor}-400`, `dark:border-${savedColor}-500`);
                     column.classList.add(`bg-${savedColor}-50`, `dark:bg-${savedColor}-900/20`);
-                    console.log('Couleur prédéfinie appliquée:', savedColor);
                 }
             }
         });
@@ -1740,13 +2053,13 @@
             background: rgba(59, 130, 246, 0.1) !important;
             border: 2px dashed #3b82f6 !important;
         }
-        
+
         .sortable-chosen {
             transform: rotate(5deg) scale(1.05);
             background: rgba(59, 130, 246, 0.2) !important;
             box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
         }
-        
+
         .sortable-drag {
             transform: rotate(5deg) scale(1.05);
             background: rgba(59, 130, 246, 0.2) !important;
@@ -1758,12 +2071,12 @@
             opacity: 0.5;
             transform: rotate(2deg) scale(1.02);
         }
-        
+
         .list-chosen {
             transform: rotate(2deg) scale(1.02);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
         }
-        
+
         .list-drag {
             transform: rotate(2deg) scale(1.02);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
@@ -1772,6 +2085,7 @@
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -1816,4 +2130,132 @@
             scrollbar-color: rgba(156, 163, 175, 0.5) rgba(156, 163, 175, 0.1);
         }
     </style>
+
+    <script>
+    // Fonction de test pour le toaster (accessible dans la console)
+    function testNotificationSystem() {
+
+        // Meilleure vérification de FontAwesome (CSS)
+        const hasFA = document.querySelector('link[href*="font-awesome"]') !== null;
+
+        // Test simple
+        showNotification('Test', 'Le toaster fonctionne !', 'info');
+
+        // Test avec tous les types
+        setTimeout(() => showNotification('Succès', 'Notification de succès en bas à droite', 'success'), 1000);
+        setTimeout(() => showNotification('Attention', 'Notification d\'avertissement avec couleur', 'warning'), 2000);
+        setTimeout(() => showNotification('Erreur', 'Notification d\'erreur colorée', 'error'), 3000);
+
+        return 'Test lancé - vérifiez les notifications en bas à droite de l\'écran';
+    }
+
+    // Fonction pour nettoyer toutes les notifications
+    function clearAllNotifications() {
+        const container = document.getElementById('notification-container');
+        if (container) {
+            const notifications = container.querySelectorAll('.toast-notification');
+            notifications.forEach(notification => {
+                notification.remove();
+            });
+        } else {
+        }
+    }
+
+    // Test automatique avec positionnement correct
+    function testPositioning() {
+        showNotification('Position Test', 'Cette notification devrait apparaître en bas à droite avec une couleur bleue', 'info');
+        setTimeout(() => {
+            showNotification('Couleur Test', 'Cette notification devrait être verte', 'success');
+
+            // Vérification après création
+            setTimeout(() => {
+                const container = document.getElementById('notification-container');
+                const notifications = document.querySelectorAll('.toast-notification');
+
+
+                if (notifications.length > 0) {
+                    const notif = notifications[0];
+                }
+            }, 200);
+        }, 1500);
+    }
+
+    // Test complet des couleurs et icônes
+    function testFullSystem() {
+        showNotification('Test Info', 'Notification bleue avec icône info', 'info');
+        setTimeout(() => showNotification('Test Succès', 'Notification verte avec icône check', 'success'), 1000);
+        setTimeout(() => showNotification('Test Avertissement', 'Notification orange avec icône warning', 'warning'), 2000);
+        setTimeout(() => showNotification('Test Erreur', 'Notification rouge avec icône erreur', 'error'), 3000);
+        return 'Tests lancés avec toutes les couleurs et icônes';
+    }
+
+    // Test simple pour vérifier l'exécution
+    function simpleTest() {
+        try {
+            showNotification('Test Simple', 'Message de test', 'info');
+        } catch (error) {
+        }
+        return 'Test simple terminé';
+    }
+
+    // Test simple et direct
+    function quickTest() {
+
+        // Test avec la fonction directement
+        try {
+            // Créer le conteneur manuellement
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px;';
+                document.body.appendChild(container);
+            }
+
+            // Créer une notification simple
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                background: linear-gradient(to right, #10b981, #059669);
+                color: white;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                min-width: 300px;
+                max-width: 400px;
+                font-weight: 500;
+            `;
+            notif.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; font-weight: 600;">Test Direct</h4>
+                        <p style="margin: 0; opacity: 0.9; font-size: 13px;">Notification créée directement</p>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(notif);
+
+            // Auto-supprimer après 5 secondes
+            setTimeout(() => {
+                if (notif.parentNode) {
+                    notif.remove();
+                }
+            }, 5000);
+
+        } catch (error) {
+        }
+
+        return 'Test direct exécuté';
+    }
+
+    // Exposer les fonctions pour le débogage
+    window.testNotificationSystem = testNotificationSystem;
+    window.clearAllNotifications = clearAllNotifications;
+    window.testPositioning = testPositioning;
+    window.testFullSystem = testFullSystem;
+    window.simpleTest = simpleTest;
+    window.quickTest = quickTest;
+    window.showNotification = showNotification;
+    </script>
 </x-app-layout>

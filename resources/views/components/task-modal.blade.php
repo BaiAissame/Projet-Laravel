@@ -311,7 +311,8 @@
     fetch(`/api/tasks/${currentTaskId}/assignees`, {
       method: 'POST',
       headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': csrfToken
       },
       body: JSON.stringify({ user_id: assigneeId })
     })

@@ -274,3 +274,39 @@
 
 @include('components.task-modal')
 @endsection
+<script>
+    function deleteTask(taskId) {
+        if (confirm('Supprimer cette tâche ?')) {
+            const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+            const columnElement = taskElement ? taskElement.closest('.droppable-zone') : null;
+            const columnId = columnElement ? columnElement.dataset.colonne : null;
+
+            fetch(`/task/delete/${taskId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showNotification('Erreur', data.message, 'error');
+                } else {
+                    showNotification('Succès', 'Tâche supprimée', 'success');
+
+                    if (taskElement) {
+                        taskElement.remove();
+                        if (columnId) {
+                            updateEmptyColumnDisplay(columnId);
+                        }
+                    } else {
+                        location.reload();
+                    }
+                }
+            })
+            .catch(error => {
+                showNotification('Erreur', 'Erreur lors de la suppression', 'error');
+            });
+        }
+    }
+</script>

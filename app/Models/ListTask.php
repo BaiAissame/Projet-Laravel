@@ -12,6 +12,7 @@ class ListTask extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'title',
         'project_id',
         'order',

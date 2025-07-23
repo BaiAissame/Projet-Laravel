@@ -28,12 +28,11 @@ class TaskController extends Controller
                 'user_id' => Auth::id(),
                 'list_task_id' => $listTask->id,
             ]);
-            
-            // Retourner le HTML de la nouvelle tâche au format moderne
+
             $html = '<div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group relative overflow-hidden" data-task-id="' . $task->id . '" onclick="openTaskModal(' . $task->id . ')">
 
                 <!-- Indicateur de priorité -->
-                
+
                 <!-- En-tête de la tâche -->
                 <div class="flex items-start justify-between mb-3 ">
                     <div class="flex-1 pr-2">
@@ -55,7 +54,7 @@ class TaskController extends Controller
                 </div>
 
                 <!-- Tags -->
-                
+
                 <!-- Actions rapides -->
                 <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                     <div class="flex items-center space-x-1 group-hover:opacity-100 transition-opacity opacity-0">
@@ -70,8 +69,13 @@ class TaskController extends Controller
                     </div>
                 </div>
             </div>';
-            
-            return response()->json(['error' => false, 'message' => 'Tâche créée avec succès', 'html' => $html]);
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Tâche créée avec succès',
+                'html' => $html,
+                'task' => $task->fresh(['assignes', 'listTask', 'comments.user', 'tags'])
+            ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'message' => $th]);
         }
@@ -80,7 +84,8 @@ class TaskController extends Controller
     public function delete(Task $task)
     {
         try {
-            if ($task->user_id !== Auth::id()) return response()->json(['error' => true, 'message' => 'Vous n\'êtes pas autorisé à supprimer cette tâche']);
+            if ($task->user_id !== Auth::id())
+                return response()->json(['error' => true, 'message' => 'Vous n\'êtes pas autorisé à supprimer cette tâche']);
 
             $task->delete();
             return response()->json(['error' => false, 'message' => 'Tâche supprimée avec succès']);
@@ -150,7 +155,11 @@ class TaskController extends Controller
 
         try {
             $task->update(['category' => $request->input('category')]);
-            return response()->json(['error' => false, 'message' => 'Catégorie mise à jour avec succès', 'value' => $task]);
+            return response()->json([
+                'error' => false,
+                'message' => 'Catégorie mise à jour avec succès',
+                'task' => $task->fresh(['assignes', 'listTask', 'comments.user', 'tags'])
+            ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
         }
@@ -164,7 +173,11 @@ class TaskController extends Controller
 
         try {
             $task->update(['priority' => $request->input('priority')]);
-            return response()->json(['error' => false, 'message' => 'Priorité mise à jour avec succès', 'value' => $task]);
+            return response()->json([
+                'error' => false,
+                'message' => 'Priorité mise à jour avec succès',
+                'task' => $task->fresh(['assignes', 'listTask', 'comments.user', 'tags'])
+            ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
         }
@@ -182,13 +195,15 @@ class TaskController extends Controller
                 'title' => $request->input('title'),
                 'description' => $request->input('description')
             ]);
-            return response()->json(['error' => false, 'message' => 'Titre et description mis à jour avec succès', 'value' => $task]);
+            return response()->json([
+                'error' => false,
+                'message' => 'Titre et description mis à jour avec succès',
+                'task' => $task->fresh(['assignes', 'listTask', 'comments.user', 'tags'])
+            ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
         }
     }
-
-    // Nouvelles méthodes pour la modal moderne
 
     public function show(Task $task)
     {
@@ -196,7 +211,7 @@ class TaskController extends Controller
             $task->load([
                 'assignes:id,name,email',
                 'listTask:id,title,project_id',
-                'comments' => function($query) {
+                'comments' => function ($query) {
                     $query->orderBy('created_at', 'desc');
                 },
                 'comments.user:id,name',
@@ -215,83 +230,80 @@ class TaskController extends Controller
         }
     }
 
-public function update(Request $request, Task $task)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string|max:1000',
-        'status' => 'nullable|exists:list_tasks,id', // Validation de l'existence
-        'priority' => 'nullable|in:basse,moyenne,élevée',
-        'category' => 'nullable|in:marketing,développement,communication',
-        'due_date' => 'nullable|date',
-        'tags' => 'nullable|array'
-    ]);
+    public function update(Request $request, Task $task)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'status' => 'nullable|exists:list_tasks,id',
+            'priority' => 'nullable|in:basse,moyenne,élevée',
+            'category' => 'nullable|in:marketing,développement,communication',
+            'due_date' => 'nullable|date',
+            'tags' => 'nullable|array'
+        ]);
 
-    try {
-        // Préparer les données à mettre à jour
-        $updateData = [
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'priority' => $request->input('priority'),
-            'category' => $request->input('category'),
-            'due_date' => $request->input('due_date'),
-        ];
+        try {
+            $updateData = [
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'status' => $request->input('status'),
+                'priority' => $request->input('priority'),
+                'category' => $request->input('category'),
+                'due_date' => $request->input('due_date'),
+            ];
 
-        // Ajouter list_task_id seulement si fourni et valide
-        if ($request->filled('status')) {
-            $updateData['list_task_id'] = $request->input('status');
-        }
+            if ($request->filled('status')) {
+                $updateData['list_task_id'] = $request->input('status');
+            }
 
-        $task->update($updateData);
+            $task->update($updateData);
 
-        // Mettre à jour les tags
-        if ($request->has('tags')) {
-            $task->tags()->delete(); // Supprimer les anciens tags
-            foreach ($request->input('tags') as $tagName) {
-                if (!empty(trim($tagName))) {
-                    $task->tags()->create(['name' => trim($tagName)]);
+            if ($request->has('tags')) {
+                $task->tags()->delete();
+                foreach ($request->input('tags') as $tagName) {
+                    if (!empty(trim($tagName))) {
+                        $task->tags()->create(['name' => trim($tagName)]);
+                    }
                 }
             }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tâche mise à jour avec succès',
+                'task' => $task->fresh(['assignes', 'listTask', 'comments.user', 'tags'])
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour: ' . $th->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Tâche mise à jour avec succès',
-            'task' => $task->fresh(['assignes', 'listTask', 'comments.user', 'tags'])
-        ]);
-    } catch (\Throwable $th) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la mise à jour: ' . $th->getMessage()
-        ], 500);
     }
-}
 
-// Ajoutez aussi cette méthode pour récupérer les détails d'une tâche pour l'édition
-public function details(Task $task)
-{
-    try {
-        $task->load([
-            'assignes:id,name,email',
-            'listTask:id,title',
-            'comments' => function($query) {
-                $query->orderBy('created_at', 'desc');
-            },
-            'comments.user:id,name',
-            'tags:id,name'
-        ]);
+    public function details(Task $task)
+    {
+        try {
+            $task->load([
+                'assignes:id,name,email',
+                'listTask:id,title',
+                'comments' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                },
+                'comments.user:id,name',
+                'tags:id,name'
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'task' => $task
-        ]);
-    } catch (\Throwable $th) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors du chargement de la tâche'
-        ], 500);
+            return response()->json([
+                'success' => true,
+                'task' => $task
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors du chargement de la tâche'
+            ], 500);
+        }
     }
-}
 
     public function addAssignee(Request $request, Task $task)
     {
@@ -300,7 +312,6 @@ public function details(Task $task)
         ]);
 
         try {
-            // Vérifier si l'utilisateur n'est pas déjà assigné
             $existingAssignment = TaskUser::where('task_id', $task->id)
                 ->where('user_id', $request->input('user_id'))
                 ->first();
@@ -335,8 +346,6 @@ public function details(Task $task)
     public function removeAssignee(Task $task, $userId)
     {
         try {
-            // Vérifier si l'utilisateur actuel peut retirer cet assigné
-            // (seul le créateur de la tâche ou l'assigné lui-même peut se retirer)
             if ($task->user_id !== Auth::id() && Auth::id() != $userId) {
                 return response()->json([
                     'success' => false,
@@ -391,7 +400,6 @@ public function details(Task $task)
     public function removeComment(Task $task, TaskComment $comment)
     {
         try {
-            // Vérifier si l'utilisateur peut supprimer ce commentaire
             if ($comment->user_id !== Auth::id() && $task->user_id !== Auth::id()) {
                 return response()->json([
                     'success' => false,

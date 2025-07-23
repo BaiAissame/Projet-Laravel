@@ -23,7 +23,6 @@ class ListTaskController extends Controller
             'project_id' => $projet->id,
         ]);
 
-        // Retourner le HTML de la nouvelle colonne Kanban avec la structure moderne
         $html = '<div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 w-80 flex-shrink-0 flex flex-col group border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-200 relative" data-list-id="' . $listTask->id . '" data-list-task-id="' . $listTask->id . '" data-color="">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2">
@@ -35,7 +34,7 @@ class ListTaskController extends Controller
                     <button onclick="quickAddTask(\'' . $listTask->id . '\')" class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                         <i class="fas fa-plus text-sm"></i>
                     </button>
-                    
+
                     <!-- Menu d\'options -->
                     <div class="relative">
                         <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200" data-column-id="' . $listTask->id . '">
@@ -66,7 +65,7 @@ class ListTaskController extends Controller
                 </div>
             </div>
         </div>';
-        
+
         return response()->json(['html' => $html]);
     }
 
@@ -105,7 +104,13 @@ class ListTaskController extends Controller
 
             return response()->json([
                 'message' => "ok",
-                'newTitle' => $listTask->title,
+                'listTask' => [
+                    'id' => $listTask->id,
+                    'title' => $listTask->title,
+                    'color' => $listTask->color,
+                    'order' => $listTask->order,
+                    'project_id' => $listTask->project_id,
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -124,12 +129,15 @@ class ListTaskController extends Controller
 
         try {
             $listTask = ListTask::findOrFail($request->input('listTaskId'));
+            if ($listTask instanceof \Illuminate\Database\Eloquent\Collection) {
+                $listTask = $listTask->first();
+            }
             $listTask->update(['color' => $request->input('color')]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Couleur mise à jour avec succès',
-                'color' => $listTask->color,
+                'color' => $listTask ? $listTask->getAttribute('color') : null,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -147,12 +155,15 @@ class ListTaskController extends Controller
 
         try {
             $listTask = ListTask::findOrFail($listTaskId);
+            if ($listTask instanceof \Illuminate\Database\Eloquent\Collection) {
+                $listTask = $listTask->first();
+            }
             $listTask->update(['color' => $request->input('color')]);
 
             return response()->json([
                 'success' => true,
                 'message' => "Couleur mise à jour avec succès",
-                'color' => $listTask->color,
+                'color' => $listTask ? $listTask->getAttribute('color') : null,
             ]);
         } catch (\Exception $e) {
             return response()->json([

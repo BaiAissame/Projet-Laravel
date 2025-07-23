@@ -85,7 +85,7 @@
                                                 class="w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                                             <i class="fas fa-plus text-sm"></i>
                                         </button>
-                                        
+
                                         <!-- Menu d'options -->
                                         <div class="relative">
                                             <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200" data-column-id="{{ $colonne->id }}">
@@ -123,7 +123,7 @@
                                                 @if($task->priorite)
                                                         <span class="priority-badge priority-{{ $task->priorite }}">
                                                         @switch($task->priorite)
-                                                            @case('haute')
+                                                            @case('élevée')
                                                                     <div class="w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
                                                                         <i class="fas fa-exclamation text-white text-xs"></i>
                                                                     </div>
@@ -141,7 +141,7 @@
                                                         @endswitch
                                                     </span>
                                                 @endif
-                                                    <button onclick="event.stopPropagation(); quickEditTask('{{ $task->id }}')" 
+                                                    <button onclick="event.stopPropagation(); quickEditTask('{{ $task->id }}')"
                                                             class="w-5 h-5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
                                                         <i class="fas fa-edit text-xs"></i>
                                                     </button>
@@ -177,7 +177,7 @@
                                                 <!-- Assignés -->
                                                 <div class="flex -space-x-2">
                                                     @foreach($task->assignes->take(3) as $assigne)
-                                                        <div class="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold" 
+                                                        <div class="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold"
                                                              title="{{ $assigne->name }}">
                                                             {{ strtoupper(substr($assigne->name, 0, 1)) }}
                                                         </div>
@@ -191,11 +191,11 @@
 
                                                 <!-- Actions rapides -->
                                                 <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')" 
+                                                    <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')"
                                                             class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
                                                         <i class="fas fa-copy text-xs"></i>
                                                     </button>
-                                                    <button onclick="event.stopPropagation(); deleteTask('{{ $task->id }}')" 
+                                                    <button onclick="event.stopPropagation(); deleteTask('{{ $task->id }}')"
                                                             class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400">
                                                         <i class="fas fa-trash text-xs"></i>
                                                     </button>
@@ -203,12 +203,12 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    
+
                                     @if($colonne->tasks->count() == 0)
                                         <div class="text-center py-8 text-gray-500 dark:text-gray-400">
                                             <i class="fas fa-inbox text-2xl mb-2"></i>
                                             <p class="text-sm">Aucune tâche</p>
-                                            <button onclick="quickAddTask('{{ $colonne->id }}')" 
+                                            <button onclick="quickAddTask('{{ $colonne->id }}')"
                                                     class="mt-2 text-blue-600 dark:text-blue-400 hover:underline text-sm">
                                                 Ajouter une tâche
                                             </button>
@@ -219,7 +219,7 @@
                                 <!-- Bouton ajouter tâche -->
                                 <button onclick="quickAddTask('{{ $colonne->id }}')"
                                         class="w-full mt-4 p-4 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center group">
-                                    <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform"></i> 
+                                    <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform"></i>
                                     <span class="group-hover:font-medium">Ajouter une tâche</span>
                                 </button>
                             </div>
@@ -263,7 +263,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <div class="grid grid-cols-4 gap-4 mb-6">
                 <button class="color-option w-16 h-16 bg-blue-500 rounded-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-white font-bold" data-color="blue">
                     <i class="fas fa-check text-lg"></i>
@@ -290,7 +290,7 @@
                     <i class="fas fa-check text-lg"></i>
                 </button>
             </div>
-            
+
             <div class="flex justify-end space-x-3">
                 <button id="cancel-color-btn" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors font-medium">
                     Annuler
@@ -336,7 +336,6 @@
                         const newColumnId = evt.to.dataset.colonne;
                         const newPosition = evt.newIndex;
 
-                        // Mise à jour en base de données
                         updateTaskPosition(taskId, newColumnId, newPosition);
                     }
                 });
@@ -424,7 +423,6 @@
         function quickAddTask(columnId) {
             const taskTitle = prompt('Nom de la tâche :');
             if (taskTitle && taskTitle.trim()) {
-                // Créer la tâche rapidement
                 createQuickTask(columnId, taskTitle.trim());
             }
         }
@@ -446,29 +444,26 @@
                     showNotification('Erreur', data.message, 'error');
                 } else {
                     showNotification('Succès', 'Tâche créée avec succès', 'success');
-                    
-                    // Mise à jour dynamique sans rechargement de page
+
                     const droppableZone = document.querySelector(`[data-colonne="${columnId}"]`);
                     if (droppableZone) {
-                        // Supprimer le message "Aucune tâche" s'il existe
                         const emptyMessage = droppableZone.parentNode.querySelector('.text-center');
                         if (emptyMessage && emptyMessage.textContent.includes('Aucune tâche')) {
                             emptyMessage.remove();
                         }
-                        
-                        // Créer la nouvelle carte de tâche
+
                         const newTaskCard = document.createElement('div');
                         newTaskCard.className = 'task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group';
                         newTaskCard.setAttribute('data-task-id', data.task.id);
                         newTaskCard.setAttribute('onclick', `openTaskModal('${data.task.id}')`);
-                        
+
                         newTaskCard.innerHTML = `
                             <div class="flex items-start justify-between mb-3">
                                 <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 flex-1 pr-2">
                                     ${data.task.titre || data.task.title}
                                 </h4>
                                 <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onclick="event.stopPropagation(); quickEditTask('${data.task.id}')" 
+                                    <button onclick="event.stopPropagation(); quickEditTask('${data.task.id}')"
                                             class="w-5 h-5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
                                         <i class="fas fa-edit text-xs"></i>
                                     </button>
@@ -477,32 +472,28 @@
                             <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                                 <div class="flex -space-x-2"></div>
                                 <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onclick="event.stopPropagation(); duplicateTask('${data.task.id}')" 
+                                    <button onclick="event.stopPropagation(); duplicateTask('${data.task.id}')"
                                             class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
                                         <i class="fas fa-copy text-xs"></i>
                                     </button>
-                                    <button onclick="event.stopPropagation(); deleteTask('${data.task.id}')" 
+                                    <button onclick="event.stopPropagation(); deleteTask('${data.task.id}')"
                                             class="w-6 h-6 text-gray-400 hover:text-red-600 dark:hover:text-red-400">
                                         <i class="fas fa-trash text-xs"></i>
                                     </button>
                                 </div>
                             </div>
                         `;
-                        
-                        // Ajouter la nouvelle tâche à la zone
+
                         droppableZone.appendChild(newTaskCard);
-                        
-                        // Réinitialiser le drag and drop pour la nouvelle tâche
+
                         initializeDragAndDrop();
-                        
-                        // Mettre à jour le compteur de tâches dans l'en-tête de colonne
+
                         const columnHeader = document.querySelector(`[data-colonne-id="${columnId}"] .text-sm`);
                         if (columnHeader) {
                             const currentCount = parseInt(columnHeader.textContent.match(/\d+/)[0]) || 0;
                             columnHeader.textContent = `${currentCount + 1} tâche(s)`;
                         }
                     } else {
-                        // Fallback: rechargement de la page si la mise à jour dynamique échoue
                         location.reload();
                     }
                 }
@@ -546,7 +537,6 @@
 
         function duplicateTask(taskId) {
             if (confirm('Dupliquer cette tâche ?')) {
-                // Logique de duplication
                 showNotification('Info', 'Fonctionnalité de duplication à implémenter', 'info');
             }
         }
@@ -655,23 +645,19 @@
         }
 
         function initializeColumnMenus() {
-            // Gestion des boutons de menu
             document.querySelectorAll('.column-menu-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const menu = this.nextElementSibling;
-                    
-                    // Ferme tous les autres menus
+
                     document.querySelectorAll('.column-menu').forEach(m => {
                         if (m !== menu) m.classList.add('hidden');
                     });
-                    
-                    // Toggle ce menu
+
                     menu.classList.toggle('hidden');
                 });
             });
 
-            // Gestion des boutons de couleur
             document.querySelectorAll('.color-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -680,19 +666,17 @@
                 });
             });
 
-            // Gestion des boutons de suppression
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const columnId = this.dataset.columnId;
-                    
+
                     if (confirm('Êtes-vous sûr de vouloir supprimer cette colonne ? Cette action est irréversible.')) {
                         deleteColumn(columnId);
                     }
                 });
             });
 
-            // Fermer les menus quand on clique ailleurs
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.column-menu-btn') && !e.target.closest('.column-menu')) {
                     document.querySelectorAll('.column-menu').forEach(menu => {
@@ -702,41 +686,33 @@
             });
         }
 
-        // Initialisation des gestionnaires d'événements pour le modal de couleur
         function initializeColorModal() {
-            // Fermer le modal
             document.getElementById('close-color-modal').addEventListener('click', closeColorModal);
             document.getElementById('cancel-color-btn').addEventListener('click', closeColorModal);
-            
-            // Clic à l'extérieur pour fermer
+
             document.getElementById('color-modal').addEventListener('click', function(e) {
                 if (e.target.id === 'color-modal') {
                     closeColorModal();
                 }
             });
 
-            // Sélection de couleur
             document.querySelectorAll('.color-option').forEach(option => {
                 option.addEventListener('click', function() {
-                    // Retirer la sélection précédente
                     document.querySelectorAll('.color-option').forEach(opt => {
                         opt.classList.remove('ring-4', 'ring-blue-300');
                     });
-                    
-                    // Sélectionner la nouvelle couleur
+
                     this.classList.add('ring-4', 'ring-blue-300');
                     selectedColor = this.getAttribute('data-color');
                 });
             });
 
-            // Appliquer la couleur
             document.getElementById('apply-color-btn').addEventListener('click', function() {
                 if (selectedColor && currentColumnId) {
                     applyColumnColor(currentColumnId, selectedColor);
                 }
             });
 
-            // Touche Escape pour fermer
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeColorModal();
@@ -745,14 +721,13 @@
         }
 
         function initializeQuickActions() {
-            // Actions rapides pour les tâches
             document.querySelectorAll('.task-card').forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.querySelectorAll('.opacity-0').forEach(el => {
                         el.classList.remove('opacity-0');
                     });
                 });
-                
+
                 card.addEventListener('mouseleave', function() {
                     this.querySelectorAll('.group-hover\\:opacity-100').forEach(el => {
                         if (!el.closest('.group:hover')) {
@@ -767,8 +742,7 @@
             document.getElementById('color-modal').classList.remove('hidden');
             currentColumnId = columnId;
             selectedColor = null;
-            
-            // Retirer toute sélection précédente
+
             document.querySelectorAll('.color-option').forEach(opt => {
                 opt.classList.remove('ring-4', 'ring-blue-300');
             });
@@ -778,8 +752,7 @@
             document.getElementById('color-modal').classList.add('hidden');
             currentColumnId = null;
             selectedColor = null;
-            
-            // Fermer tous les menus de colonne
+
             document.querySelectorAll('.column-menu').forEach(menu => {
                 menu.classList.add('hidden');
             });
@@ -788,20 +761,16 @@
         function applyColumnColor(columnId, color) {
             const columnElement = document.querySelector(`[data-colonne-id="${columnId}"]`);
             if (columnElement) {
-                // Supprimer les anciennes classes de couleur
                 columnElement.className = columnElement.className.replace(/border-\w+-\d+/g, '');
                 columnElement.className = columnElement.className.replace(/bg-\w+-\d+/g, '');
                 columnElement.className = columnElement.className.replace(/dark:border-\w+-\d+/g, '');
                 columnElement.className = columnElement.className.replace(/dark:bg-\w+-\d+/g, '');
-                
-                // Ajouter la nouvelle couleur
+
                 columnElement.classList.add(`border-${color}-400`, `dark:border-${color}-500`);
                 columnElement.classList.add(`bg-${color}-50`, `dark:bg-${color}-900/20`);
-                
-                // Mettre à jour l'attribut data-color
+
                 columnElement.setAttribute('data-color', color);
-                
-                // Sauvegarder en base de données
+
                 fetch(`/listTask/update-color/${columnId}`, {
                     method: 'POST',
                     headers: {
@@ -827,8 +796,7 @@
                     showNotification('Erreur', 'Erreur lors de la mise à jour de la couleur', 'error');
                 });
             }
-            
-            // Fermer le modal
+
             closeColorModal();
         }
 
@@ -846,12 +814,10 @@
                     showNotification('Erreur', data.message || 'Erreur lors de la suppression', 'error');
                 } else {
                     showNotification('Succès', 'Colonne supprimée avec succès', 'success');
-                    // Supprimer la colonne du DOM
                     const columnElement = document.querySelector(`[data-colonne-id="${columnId}"]`);
                     if (columnElement) {
                         columnElement.remove();
                     }
-                    // Fermer tous les menus
                     document.querySelectorAll('.column-menu').forEach(menu => {
                         menu.classList.add('hidden');
                     });
@@ -870,13 +836,13 @@
             background: rgba(59, 130, 246, 0.1) !important;
             border: 2px dashed #3b82f6 !important;
         }
-        
+
         .sortable-chosen {
             transform: rotate(5deg) scale(1.05);
             background: rgba(59, 130, 246, 0.2) !important;
             box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
         }
-        
+
         .sortable-drag {
             transform: rotate(5deg) scale(1.05);
             background: rgba(59, 130, 246, 0.2) !important;
@@ -953,12 +919,12 @@
             .ml-64 {
                 margin-left: 0;
             }
-            
+
             section.fixed {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
             }
-            
+
             section.fixed.show {
                 transform: translateX(0);
             }

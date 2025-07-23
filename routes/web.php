@@ -12,6 +12,7 @@ use App\Http\Controllers\TaskViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/post_message', [WallController::class, 'postMessage'])->name('message.post');
+Route::put('/api/tasks/{id}', [TaskController::class, 'update']);
 Route::delete('/delete_message/{id}', [WallController::class, 'deleteMessage'])->name('message.delete');
 
 Route::middleware('guest')->group(function () {
@@ -19,11 +20,9 @@ Route::middleware('guest')->group(function () {
         return view('welcome');
     })->name('home');
 
-    //route login
     Route::get('/login', function () {
         return view('auth.login');
     })->name('login');
-    //route register
     Route::get('/register', function () {
         return view('auth.register');
     })->name('register');
@@ -40,7 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/projets', [ProjectController::class, 'store'])->name('projet.store');
     Route::get('/projet/{projet}', [ProjectController::class, 'show'])->name('projet.show');
 
-    // Gestion des membres de projet
     Route::get('/projet/{projet}/members', [ProjectMemberController::class, 'index'])->name('projet.members.index');
     Route::post('/projet/{projet}/members', [ProjectMemberController::class, 'addMember'])->name('projet.members.add');
     Route::delete('/projet/{projet}/members/{user}', [ProjectMemberController::class, 'removeMember'])->name('projet.members.remove');
@@ -48,7 +46,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/kanban', [App\Http\Controllers\KanbanController::class, 'index'])->name('kanban');
 
 
-    // Routes pour les listes des tâches
     Route::post('/listTask/create/{projet:slug}', [ListTaskController::class, 'create'])->name('listTask.create');
     Route::post('/listTask/update-order', [ListTaskController::class, 'updateOrder'])->name('listTask.updateOrder');
     Route::post('/listTask/update-title/{listTask}', [ListTaskController::class, 'updateTitle'])->name('listTask.updateTitle');
@@ -56,7 +53,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/listTask/update-color/{listTask}', [ListTaskController::class, 'updateColor'])->name('listTask.updateColor');
     Route::delete('/listTask/delete/{listTask}', [ListTaskController::class, 'delete'])->name('listTask.delete');
 
-    // Routes pour les tâches
     Route::post('/task/create/{listTask}', [TaskController::class, 'create'])->name('task.create');
     Route::post('/task/update-order', [TaskController::class, 'updateOrder'])->name('task.updateOrder');
     Route::delete('/task/delete/{task}', [TaskController::class, 'delete'])->name('task.delete');
@@ -67,15 +63,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/task/update-content/{task}', [TaskController::class, 'updateTitleAndDescription'])->name('task.updateContent');
 
 
-    // Routes pour les vues des tâches
     Route::get('/projet/{projet}/tasks/list', [TaskViewController::class, 'listView'])->name('tasks.list');
     Route::get('/projet/{projet}/tasks/calendar', [TaskViewController::class, 'calendarView'])->name('tasks.calendar');
 
-    // Routes pour les détails et mise à jour des tâches
     Route::get('/task/details/{task}', [TaskController::class, 'details'])->name('task.details');
     Route::post('/task/update-due-date/{task}', [TaskController::class, 'updateDueDate'])->name('task.updateDueDate');
 
-    // Routes CRUD classiques pour les tâches (si nécessaire)
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
@@ -84,23 +77,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-    // Nouvelles routes API pour la modal moderne des tâches
     Route::prefix('api')->group(function () {
-        // Récupérer les détails d'une tâche
         Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('api.tasks.show');
 
-        // Mettre à jour une tâche complète
         Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('api.tasks.update');
 
-        // Gestion des assignés
         Route::post('/tasks/{task}/assignees', [TaskController::class, 'addAssignee'])->name('api.tasks.assignees.add');
         Route::delete('/tasks/{task}/assignees/{user}', [TaskController::class, 'removeAssignee'])->name('api.tasks.assignees.remove');
 
-        // Gestion des commentaires
         Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('api.tasks.comments.add');
         Route::delete('/tasks/{task}/comments/{comment}', [TaskController::class, 'removeComment'])->name('api.tasks.comments.remove');
 
-        // Gestion des tags
         Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag'])->name('api.tasks.tags.add');
         Route::delete('/tasks/{task}/tags/{tag}', [TaskController::class, 'removeTag'])->name('api.tasks.tags.remove');
     });

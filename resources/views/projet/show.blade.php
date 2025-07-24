@@ -26,7 +26,16 @@
                         Voir le calendrier
                     </button>
                 </a>
-            </div>
+            @if(Auth::user() && Auth::user()->hasRole('admin'))
+                <form method="POST" action="{{ route('projet.destroy', ['projet' => $projet->slug]) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-lg hover:from-red-600 hover:to-pink-700 transition-all duration-200">
+                        <i class="fas fa-trash mr-2"></i>Supprimer le projet
+                    </button>
+                </form>
+            @endif
+             </div>
         </div>
         <div class="overflow-x-auto pb-4" id="kanban-board">
             <div class="flex gap-6 min-w-max pl-0">

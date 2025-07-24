@@ -1,5 +1,4 @@
 
-// Global variables for drag and drop functionality
 let draggedList = null;
 let draggedTask = null;
 let originalListIndex = null;
@@ -8,18 +7,14 @@ let originalTaskParent = null;
 
 const taskList = document.getElementById('taskes-list');
 
-// Vérifie si le formulaire et la liste des tâches existent avant d'ajouter l'écouteur d'événements
 if (taskList) {
 
   const formCreateListTask = document.getElementById('form-create-list-task');
 
-  // Initialisation des listes pour heriter les événements de drag and drop et creation de tâches
   initlistTask()
 
-  // Initialisation des tâches pour les evénements de drag and drop
   initTask();
 
-  //formulaire pour créer une nouvelle liste de tâches 
   formCreateListTask.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -41,13 +36,10 @@ if (taskList) {
       .then(response => response.json())
       .then(data => {
 
-        // ajouter la nouvelle liste de tâches à la liste existante, composant HTML
         taskList.insertAdjacentHTML('beforeend', data.html);
 
-        // Réinitialise le champ de saisie après l'ajout de la liste
         input.value = '';
 
-        // Réinitialise les événements pour les nouvelles listes et tâches
         initlistTask()
 
       }).catch(error => {
@@ -55,7 +47,6 @@ if (taskList) {
   });
 
 
-  // Fonction pour envoyer la mise à jour de l'ordre des tâches
   function sendOrderUpdateList(orderList) {
     fetch('/listTask/update-order', {
       method: 'POST',
@@ -72,31 +63,25 @@ if (taskList) {
   }
 
 
-  // ############## LISTES #######################
 
-  // Initialisation des listes pour heriter les événements de drag and drop et creation de tâches
   function initlistTask() {
 
-    // Gérer le clic sur le trigger du menu => ... sur la liste
     document.querySelectorAll('.list-menu-trigger').forEach(trigger => {
       if (!trigger._hasMenuListener) {
         trigger.addEventListener('click', function (e) {
           e.stopPropagation();
           const menu = this.parentElement.querySelector('.list-menu');
 
-          // Ferme tous les autres menus
           document.querySelectorAll('.list-menu').forEach(m => {
             if (m !== menu) m.classList.add('hidden');
           });
 
-          // Toggle ce menu
           menu.classList.toggle('hidden');
         });
         trigger._hasMenuListener = true;
       }
     });
 
-    // Gérer le clic sur "Supprimer"
     document.querySelectorAll('.delete-list-btn').forEach(btn => {
       if (!btn._hasDeleteListener) {
         btn.addEventListener('click', function () {
@@ -137,7 +122,6 @@ if (taskList) {
 
     document.querySelectorAll('.list-task').forEach(list => {
 
-      // évite d'ajouter plusieurs fois le même listener
       if (!list._hasDragStartListener) {
 
         list.addEventListener('dragstart', function (e) {
@@ -167,7 +151,6 @@ if (taskList) {
             if (ol && ol.children.length === 0) {
 
               ol.appendChild(draggedTask);
-              // Optionnel : fetch pour update la liste et l'ordre côté serveur
             }
             draggedTask = null;
             const orderTask = Array.from(this.querySelectorAll('ol > li ')).map((task, idx) => ({
@@ -196,7 +179,6 @@ if (taskList) {
 
     document.querySelectorAll('input[name="list-title"]').forEach(input => {
 
-      // évite d'ajouter plusieurs fois le même listener
       if (!input._hasBlurListener) {
         input.addEventListener('blur', function () {
           const listTaskId = this.dataset.listTaskId;
@@ -223,7 +205,6 @@ if (taskList) {
 
     document.querySelectorAll('.form-create-task').forEach(formTask => {
 
-      // évite d'ajouter plusieurs fois le même listener
       if (!formTask._submitListener) {
         formTask._submitListener = function (e) {
           e.preventDefault();
@@ -252,14 +233,12 @@ if (taskList) {
         };
         formTask.addEventListener('submit', formTask._submitListener);
 
-        // Marque le formulaire comme ayant un listener pour éviter les doublons
         formTask._hasSubmitListener = true;
       }
     });
 
   }
 
-  // DRAGOVER pour les listes (déplacement en live)
   if (!taskList._hasDragOverListener) {
     taskList.addEventListener('dragover', function (e) {
       if (draggedList) {
@@ -288,7 +267,6 @@ if (taskList) {
     taskList._hasDropListener = true;
   }
 
-  // DRAGEND pour reset la variable
   if (!taskList._hasDragEndListener) {
     taskList.addEventListener('dragend', function () {
       draggedList = null;
@@ -296,7 +274,6 @@ if (taskList) {
     taskList._hasDragEndListener = true;
   }
 
-  // Fermer le menu si on clique ailleurs
   if (!taskList._hasClickListener) {
     document.addEventListener('click', function () {
       document.querySelectorAll('.list-menu').forEach(menu => {
@@ -306,12 +283,6 @@ if (taskList) {
     taskList._hasClickListener = true;
   }
 
-  // ############## FIN PARTIE LISTES #######################
-
-
-  //  ############## TACHES ####################### 
-
-  // Initialisation des tâches pour les evénements de drag and drop
   function initTask() {
     document.querySelectorAll('.container-task').forEach(task => {
       if (!task._hasDragStartListener) {
@@ -326,7 +297,6 @@ if (taskList) {
     });
 
 
-    // DRAGOVER pour les tâches (déplacement en live)
     document.querySelectorAll('.list-task ol').forEach(list => {
       if (!list._hasDragOverListener) {
         list.addEventListener('dragover', function (e) {
@@ -353,7 +323,6 @@ if (taskList) {
     });
   }
 
-  // Fusion des fonctions getDragAfterElement et getDragAfterElementTask en une seule fonction générique
   function getDragAfterElementGeneric(container, coord, axis = 'x', selector) {
     const draggableElements = [...container.querySelectorAll(selector)];
     let closest = { offset: Number.POSITIVE_INFINITY, element: null };
@@ -369,20 +338,15 @@ if (taskList) {
     return closest.element;
   }
 
-  // Remplacement des anciennes fonctions par la nouvelle
-  // Pour les listes (horizontal)
   function getDragAfterElement(container, x) {
     return getDragAfterElementGeneric(container, x, 'x', '.list-task:not(.opacity-50)');
   }
-  // Pour les tâches (vertical)
   function getDragAfterElementTask(container, y) {
     return getDragAfterElementGeneric(container, y, 'y', '.container-task:not(.opacity-50)');
   }
 
-  // ############## FIN PARTIE TACHES #######################
 }
 
-// Drag & drop des listes (colonnes)
 const board = document.querySelector('#kanban-board .flex');
 if (board && window.Sortable) {
   new Sortable(board, {
@@ -396,17 +360,14 @@ if (board && window.Sortable) {
     },
     onEnd: function (evt) {
       evt.item.classList.remove('dragging-list');
-      // Nettoyer toutes les classes drop-highlight
       document.querySelectorAll('.drop-highlight').forEach(el => {
         el.classList.remove('drop-highlight');
       });
-      // Rollback si drop en dehors du board
       if (evt.to !== board) {
         if (originalListIndex !== null) {
           board.insertBefore(evt.item, board.children[originalListIndex]);
         }
       } else {
-        // Met à jour l'ordre côté serveur
         const orderList = Array.from(board.querySelectorAll('[data-list-id]')).map((el, idx) => ({
           listTaskId: el.getAttribute('data-list-id'),
           order: idx + 1
@@ -424,12 +385,10 @@ if (board && window.Sortable) {
       originalListIndex = null;
     },
     onMove: function (evt) {
-      // Pas de changement de couleur pour les listes
     }
   });
 }
 
-// Drag & drop des tâches dans chaque colonne
 Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => {
   if (window.Sortable) {
     new Sortable(list, {
@@ -444,17 +403,14 @@ Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => 
       },
       onEnd: function (evt) {
         evt.item.classList.remove('dragging-task');
-        // Nettoyer toutes les classes drop-highlight
         document.querySelectorAll('.drop-highlight').forEach(el => {
           el.classList.remove('drop-highlight');
         });
-        // Rollback si drop en dehors d'une zone valide
         if (!evt.to || !evt.to.closest('[data-list-id]')) {
           if (originalTaskParent && originalTaskIndex !== null) {
             originalTaskParent.insertBefore(evt.item, originalTaskParent.children[originalTaskIndex]);
           }
         } else {
-          // Met à jour l'ordre côté serveur
           const parentListId = evt.to.closest('[data-list-id]').getAttribute('data-list-id');
           const orderTask = Array.from(evt.to.children).map((el, idx) => ({
             taskId: el.getAttribute('onclick').match(/openTaskModal\((\d+)\)/)[1],
@@ -475,13 +431,11 @@ Array.from(document.querySelectorAll('[data-list-id] .flex-1')).forEach(list => 
         originalTaskParent = null;
       },
       onMove: function (evt) {
-        // Pas de changement de couleur pour les tâches
       }
     });
   }
 });
 
-// Feedback visuel CSS
 const style = document.createElement('style');
 style.innerHTML = `
 .dragging-list { opacity: 0.7; box-shadow: 0 0 0 2px #3b82f6; }
@@ -489,24 +443,18 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// SUPPRESSION DE updateEmptyMessage (fonction jamais utilisée)
-// Appelle updateEmptyMessage après chaque suppression de tâche ou de liste
 
-// Ajoute un effet de survol sur la zone de drop valide
 const style2 = document.createElement('style');
 style2.innerHTML = `
 [data-list-id].drop-hover { box-shadow: 0 0 0 3px #a5b4fc; }
 `;
 document.head.appendChild(style2);
-// Ajoute les listeners de survol
 Array.from(document.querySelectorAll('[data-list-id]')).forEach(list => {
   list.addEventListener('dragenter', function() { this.classList.add('drop-hover'); });
   list.addEventListener('dragleave', function() { this.classList.remove('drop-hover'); });
   list.addEventListener('drop', function() { this.classList.remove('drop-hover'); });
 });
-// Nettoie les variables JS après chaque drag & drop (déjà fait dans onEnd, mais on s'assure)
 document.addEventListener('dragend', function() {
-  // Nettoyer toutes les classes drop-highlight
   document.querySelectorAll('.drop-highlight').forEach(el => {
     el.classList.remove('drop-highlight');
   });

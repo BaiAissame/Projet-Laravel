@@ -18,13 +18,11 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Vérifiez d'abord si un projet avec ce nom existe déjà pour cet utilisateur
         $exists = Project::where('name', $request->input('name'))
             ->where('user_id', Auth::id())
             ->exists();
 
         if ($exists) {
-            // Redirigez avec un message d'erreur
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Vous avez déjà un projet avec ce nom. Veuillez choisir un nom différent.');
@@ -32,7 +30,7 @@ class ProjectController extends Controller
 
         // Validate the request data
 
-            try {
+        try {
             $projet = Project::create([
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
@@ -59,14 +57,14 @@ class ProjectController extends Controller
 
         // Charger les relations nécessaires avec eager loading optimisé
         $projet->load([
-            'listTasks' => function($query) {
+            'listTasks' => function ($query) {
                 $query->orderBy('order');
             },
-            'listTasks.tasks' => function($query) {
+            'listTasks.tasks' => function ($query) {
                 $query->orderBy('order');
             },
             'listTasks.tasks.assignes',
-            'listTasks.tasks.comments' => function($query) {
+            'listTasks.tasks.comments' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             },
             'listTasks.tasks.comments.user',
@@ -78,24 +76,22 @@ class ProjectController extends Controller
         $projets = Project::where('user_id', Auth::user()->id)
             ->select('id', 'name', 'slug')
             ->get();
-            
+
         return view('projet.show', compact('projets', 'projet'));
     }
 
 
     public function destroy(Project $projet)
     {
-        // Vérification que l'utilisateur est bien le propriétaire du projet
-        if ($projet->user_id !== Auth::id()) {
-            return redirect()->route('dashboard')->with('error', 'Vous etes pas autorisé pour supprimer se projet');
+        if (!Auth::user() || !Auth::user()->hasRole('admin')) {
+            return redirect()->route('dashboard')->with('error', 'Seuls les administrateurs peuvent supprimer un projet.');
         }
 
-        // Suppression des tâches associées au projet (si la relation a été définie avec cascade delete, cette étape est optionnelle)
-        // if($projet->listTasks()) $projet->tasks()->delete();
-
-        // Suppression du projet
-        $projet->delete();
-
-        return redirect()->route('dashboard')->with('success', 'Projet supprimer avec succés!');
+        try {
+            $projet->delete();
+            return redirect()->route('dashboard')->with('success', 'Projet supprimé avec succès!');
+        } catch (\Throwable $e) {
+            return redirect()->route('dashboard')->with('error', 'Erreur lors de la suppression du projet.');
+        }
     }
 }

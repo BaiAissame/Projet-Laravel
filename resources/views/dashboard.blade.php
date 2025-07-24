@@ -111,10 +111,15 @@
                                 <p class="text-gray-600 dark:text-gray-400">{{ count($projets) }} projet(s)</p>
                             </div>
                         </div>
-                        <button onclick="openCreateProjectModal()" 
-                                class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
-                            <i class="fas fa-plus mr-2"></i>Nouveau projet
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('projects.export') }}" class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                                <i class="fas fa-file-excel mr-2"></i>Exporter en Excel
+                            </a>
+                            <button onclick="openCreateProjectModal()" 
+                                    class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
+                                <i class="fas fa-plus mr-2"></i>Nouveau projet
+                            </button>
+                        </div>
                     </div>
                     <x-block-projet :data="$projets" />
                 </div>

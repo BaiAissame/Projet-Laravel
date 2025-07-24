@@ -29,12 +29,12 @@
             </div>
         </div>
 
-        <!-- Contenu principal responsive -->
-        <div class="flex-1 p-3 sm:p-4 lg:p-8 overflow-auto">
-            <div class="max-w-7xl mx-auto">
-                <!-- Statistiques responsive -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
-                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-4 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50">
+        <!-- Contenu principal -->
+        <div class="flex-1 p-8 overflow-auto">
+            <div class="max-w-4xl mx-auto">
+                <!-- Statistiques -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $members->count() + 1 }}</p>
@@ -61,11 +61,23 @@
                     <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-4 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 sm:col-span-2 lg:col-span-1">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $members->count() }}</p>
-                                <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm lg:text-base font-medium">Membres ajoutés</p>
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ $members->count() }}</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Membres actifs</p>
                             </div>
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
-                                <i class="fas fa-user-plus text-white text-lg sm:text-xl lg:text-2xl"></i>
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+                                <i class="fas fa-user-plus text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ $pendingInvitations->count() }}</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Invitations en attente</p>
+                            </div>
+                            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                                <i class="fas fa-clock text-white text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -100,18 +112,65 @@
                     </div>
                 </div>
 
-                <!-- Membres du projet responsive -->
-                <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-4 sm:p-5 lg:p-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-4 sm:mb-6">
-                        <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                            <i class="fas fa-users mr-2 sm:mr-3 text-blue-500 text-sm sm:text-base lg:text-lg"></i>
-                            <span class="hidden sm:inline">Membres du projet</span>
-                            <span class="sm:hidden">Membres</span>
+                <!-- Invitations en attente -->
+                @if($pendingInvitations->count() > 0 && $isCreator)
+                <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-clock mr-3 text-orange-500"></i>
+                            Invitations en attente
+                        </h2>
+                        <span class="bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ $pendingInvitations->count() }} en attente
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        @foreach($pendingInvitations as $invitation)
+                            <div class="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $invitation->email }}</h3>
+                                        <p class="text-gray-600 dark:text-gray-400">Invitation envoyée le {{ $invitation->created_at->format('d/m/Y à H:i') }}</p>
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 mt-1">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            En attente
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="resendInvitation('{{ $invitation->id }}')" 
+                                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors duration-200">
+                                        <i class="fas fa-paper-plane mr-1"></i>
+                                        Renvoyer
+                                    </button>
+                                    <button onclick="cancelInvitation('{{ $invitation->id }}')" 
+                                            class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-colors duration-200">
+                                        <i class="fas fa-times mr-1"></i>
+                                        Annuler
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Membres du projet -->
+                <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-users mr-3 text-blue-500"></i>
+                            Membres du projet
                         </h2>
                         
                         @if($isCreator)
-                            <!-- Formulaire d'ajout de membre responsive -->
-                            <form action="{{ route('projet.members.add', ['projet' => $projet->slug]) }}" method="POST" class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
+                            <!-- Formulaire d'invitation par email -->
+                            <form action="{{ route('project.invitation.send', ['project' => $projet]) }}" method="POST" class="flex items-center space-x-3">
                                 @csrf
                                 <div class="relative flex-1 sm:flex-initial">
                                     <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -125,10 +184,8 @@
                                            style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
                                 </div>
                                 <button type="submit" 
-                                        class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center text-sm sm:text-base">
-                                    <i class="fas fa-user-plus mr-1 sm:mr-2 text-sm"></i> 
-                                    <span class="hidden sm:inline">Ajouter</span>
-                                    <span class="sm:hidden">Ajouter membre</span>
+                                        class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                                    <i class="fas fa-paper-plane mr-2"></i> Inviter
                                 </button>
                             </form>
                         @endif
@@ -182,32 +239,8 @@
                             <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                                 <i class="fas fa-users text-2xl sm:text-3xl text-gray-400"></i>
                             </div>
-                            <h3 class="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-2">Aucun membre ajouté</h3>
-                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 px-4">Ce projet n'a pas encore de membres supplémentaires.</p>
-                            
-                            @if($isCreator)
-                                <!-- Formulaire d'ajout de membre sans membres -->
-                                <form action="{{ route('projet.members.add', ['projet' => $projet->slug]) }}" method="POST" class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 max-w-md mx-auto">
-                                    @csrf
-                                    <div class="relative flex-1">
-                                        <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                                            <i class="fas fa-envelope text-gray-400 text-sm"></i>
-                                        </div>
-                                        <input type="email" 
-                                               name="email" 
-                                               placeholder="membre@example.com" 
-                                               required
-                                               class="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm sm:text-base"
-                                               style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
-                                    </div>
-                                    <button type="submit" 
-                                            class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center text-sm sm:text-base whitespace-nowrap">
-                                        <i class="fas fa-user-plus mr-1 sm:mr-2 text-sm"></i> 
-                                        <span class="hidden sm:inline">Ajouter le premier membre</span>
-                                        <span class="sm:hidden">Ajouter membre</span>
-                                    </button>
-                                </form>
-                            @endif
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Aucun membre ajouté</h3>
+                            <p class="text-gray-500 dark:text-gray-400 mb-6">Ce projet n'a pas encore de membres supplémentaires.</p>
                         </div>
                     @endif
                 </div>
@@ -258,5 +291,15 @@
                 }, index * 100);
             });
         });
+
+        function resendInvitation(invitationId) {
+            console.log('Resend invitation:', invitationId);
+        }
+
+        function cancelInvitation(invitationId) {
+            if (confirm('Êtes-vous sûr de vouloir annuler cette invitation ?')) {
+                console.log('Cancel invitation:', invitationId);
+            }
+        }
     </script>
 </x-app-layout>

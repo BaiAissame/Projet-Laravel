@@ -96,4 +96,9 @@ class Project extends Model
     {
         return 'slug';
     }
+
+    public function userInvitations()
+{
+    return $this->hasMany(\App\Models\UserInvitation::class);
+}
 }

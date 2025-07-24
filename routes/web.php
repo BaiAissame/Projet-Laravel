@@ -8,7 +8,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WallController;
-use App\Http\Controllers\TaskViewController;
+use App\Http\Controllers\TaskViewController;  
+use App\Http\Controllers\Project\ProjectInvitationController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/post_message', [WallController::class, 'postMessage'])->name('message.post');
@@ -77,6 +78,32 @@ Route::middleware('auth')->group(function () {
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
+       //project invitation routes
+    Route::post('/projects/{project}/invite', [ProjectInvitationController::class, 'invite'])
+        ->name('project.invitation.send');
+
+    Route::get('/invitation/{invitation}/accept', [ProjectInvitationController::class, 'accept'])
+        ->middleware(['auth'])
+        ->name('project.invitation.accept');
+
+    Route::post('/invitations/finalize', [ProjectInvitationController::class, 'finalizeAcceptance'])
+        ->middleware(['auth'])
+        ->name('project.invitation.finalize');
+
+    Route::post('/invitations/decline', [ProjectInvitationController::class, 'declineInvitation'])
+        ->middleware(['auth'])
+        ->name('project.invitation.decline');
+
+    Route::get('/invitations/{invitation}/pending', [ProjectInvitationController::class, 'showPendingInvitation'])
+        ->middleware(['auth'])
+        ->name('project.invitation.pending');
+
+    // Routes supplémentaires pour gérer les invitations
+    Route::post('/invitations/{invitation}/resend', [ProjectInvitationController::class, 'resend'])
+        ->name('project.invitation.resend');
+    Route::delete('/invitations/{invitation}/cancel', [ProjectInvitationController::class, 'cancel'])
+        ->name('project.invitation.cancel');
+    // Nouvelles routes API pour la modal moderne des tâches
     Route::prefix('api')->group(function () {
         Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('api.tasks.show');
 

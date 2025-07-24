@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,80 +10,44 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectMemberController extends Controller
 {
-    /**
-     * Afficher la page de gestion des membres du projet
-     */
     public function index(Project $projet)
     {
-        // Vérifier que l'utilisateur est membre du projet ou créateur
-        if (!$projet->members->contains(Auth::id()) && $projet->user_id !== Auth::id()) {
-            return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
+        // Vérifier les permissions
+        if ($projet->user_id !== Auth::id() && !$projet->members()->where('user_id', Auth::id())->exists()) {
+            abort(403);
         }
 
-        // Récupérer tous les membres du projet (créateur + membres)
-        $members = $projet->members;
         $creator = $projet->user;
-        
-        // Vérifier si l'utilisateur actuel est le créateur du projet
+        $members = $projet->members()->withPivot('created_at')->get();
         $isCreator = $projet->user_id === Auth::id();
 
-        // Récupérer tous les projets de l'utilisateur pour la navigation
-        $userProjects = Project::where('user_id', Auth::id())->get();
+        // Récupérer les invitations en attente
+        $pendingInvitations = $projet->userInvitations()
+            ->where('status', 'pending')
+            ->get();
 
-        return view('projet.members.index', compact('projet', 'members', 'creator', 'isCreator', 'userProjects'));
-    }
+        // AJOUTEZ CETTE LIGNE : Récupérer les projets de l'utilisateur pour la navigation
+        $userProjects = Auth::user()->ownedProjects()
+            ->select('id', 'name', 'slug')
+            ->get();
 
-    /**
-     * Ajout un membre a un projet
-     */
-    public function addMember(Request $request, Project $projet)
-    {
-        // Verifier que l'utilisateur courant est le createur du projet
-        if ($projet->user_id !== Auth::id()) {
-            return redirect()->back()->with('error', 'Vous n\'êtes pas autorisé à ajouter des membres à ce projet.');
-        }
-        
-        // Valider le formulaire
-        $validated = $request->validate([
-            'email' => 'required|email',
-        ]);
-        
-        // Chercher l'utilisateur par email
-        $user = User::where('email', $validated['email'])->first();
-        
-        // Si l'utilisateur n'existe pas
-        if (!$user) {
-            return redirect()->back()->with('error', 'Cet utilisateur n\'est pas inscrit sur la plateforme.');
-        }
-        
-        // Vérifier que l'utilisateur n'est pas déjà membre du projet
-        // et qu'il n'est pas le createur du projet
-        if ($projet->members->contains($user->id) || $projet->user_id === $user->id) {
-            return redirect()->back()->with('error', 'Cet utilisateur est déjà membre du projet.');
-        }
-        
-        // Ajouter l'utilisateur comme membre du projet
-        try {
-        $projet->members()->attach($user->id);
-            return redirect()->back()->with('success', $user->name . ' a été ajouté avec succès au projet.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout du membre.');
-        }
+        return view('projet.members.index', compact('projet', 'creator', 'members', 'isCreator', 'pendingInvitations', 'userProjects'));
     }
-    
-    /**
-     * Retire un membre d'un projet
-     */
     public function removeMember(Project $projet, User $user)
     {
-        // verfier que l'utilisateur courant est le createur du projet
+        // Vérifier que l'utilisateur est le créateur
         if ($projet->user_id !== Auth::id()) {
-            return redirect()->back()->with('error', 'Vous n\'êtes pas autorisé à retirer des membres de ce projet.');
+            return back()->with('error', 'Seul le créateur peut retirer des membres.');
         }
-        
-        // Retirer l'utilisateur des membres du projet
+
+        // Empêcher le créateur de se retirer lui-même
+        if ($user->id === $projet->user_id) {
+            return back()->with('error', 'Le créateur ne peut pas se retirer du projet.');
+        }
+
+        // Retirer le membre
         $projet->members()->detach($user->id);
-        
-        return redirect()->back()->with('success', 'Membre retiré du projet avec succès.');
+
+        return back()->with('success', 'Membre retiré avec succès.');
     }
 }

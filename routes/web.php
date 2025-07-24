@@ -12,7 +12,7 @@ use App\Http\Controllers\TaskViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/post_message', [WallController::class, 'postMessage'])->name('message.post');
-Route::put('/api/tasks/{id}', [TaskController::class, 'update']);
+Route::put('/api/tasks/{task}', [TaskController::class, 'update']);
 Route::delete('/delete_message/{id}', [WallController::class, 'deleteMessage'])->name('message.delete');
 
 Route::middleware('guest')->group(function () {

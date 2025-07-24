@@ -7,6 +7,8 @@ use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\ProjectsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
 {
@@ -93,5 +95,10 @@ class ProjectController extends Controller
         } catch (\Throwable $e) {
             return redirect()->route('dashboard')->with('error', 'Erreur lors de la suppression du projet.');
         }
+    }
+
+    public function export()
+    {
+        return Excel::download(new ProjectsExport, 'projects.xlsx');
     }
 }

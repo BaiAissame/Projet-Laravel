@@ -91,6 +91,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag'])->name('api.tasks.tags.add');
         Route::delete('/tasks/{task}/tags/{tag}', [TaskController::class, 'removeTag'])->name('api.tasks.tags.remove');
     });
+
+    Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
 });
 
 require __DIR__ . '/auth.php';

@@ -80,6 +80,11 @@ docker run --rm -v $(pwd):/app composer install
 
 ---
 
+## Lancer la queue
+
+```bash
+sail php artisan queue:work --queue=emails,notifications,default
+```
 
 
 ## 📝 Commandes utiles

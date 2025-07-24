@@ -3,22 +3,35 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Project;
 use App\Models\User;
 
-class MemberJoinedProjectNotification extends Notification
+class MemberJoinedProjectNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $project;
     protected $newMember;
 
+    /**
+     * Le nombre de tentatives pour cette notification
+     */
+    public $tries = 3;
+
+    /**
+     * Le timeout en secondes pour cette notification
+     */
+    public $timeout = 120;
+
     public function __construct(Project $project, User $newMember)
     {
         $this->project = $project;
         $this->newMember = $newMember;
+        
+        $this->onQueue('notifications');
     }
 
     public function via($notifiable)
@@ -37,5 +50,13 @@ class MemberJoinedProjectNotification extends Notification
             ->line("**Date d'adhésion :** " . now()->format('j F Y \à G:i'))
             ->action('Voir le projet', url("/projects/{$this->project->id}"))
             ->line('Souhaitez la bienvenue au nouveau membre de l\'équipe !');
+    }
+
+    /**
+     * Détermine le délai avant la prochaine tentative en cas d'échec
+     */
+    public function backoff(): array
+    {
+        return [1, 5, 10]; // 1 minute, puis 5 minutes, puis 10 minutes
     }
 }

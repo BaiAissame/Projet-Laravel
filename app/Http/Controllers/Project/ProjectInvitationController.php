@@ -12,6 +12,7 @@ use App\Services\InvitationService as SessionInvitationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\MemberJoinedProjectNotification;
+use App\Jobs\SendInvitationEmailJob;
 
 class ProjectInvitationController extends Controller
 {
@@ -34,6 +35,16 @@ class ProjectInvitationController extends Controller
         ]);
 
         $result = $this->invitationService->invite($project, $request->input('email'));
+
+        // Envoyer l'email d'invitation via la queue si l'invitation a réussi
+        if ($result['success'] && isset($result['invitation'])) {
+            // Vérifier si l'utilisateur existe déjà
+            $userExists = \App\Models\User::where('email', $request->input('email'))->exists();
+            
+            SendInvitationEmailJob::dispatch($result['invitation'], $project, $userExists)
+                ->onQueue('emails')
+                ->delay(now()->addSeconds(5));
+        }
 
         if ($request->expectsJson()) {
             return response()->json($result, $result['success'] ? 200 : 422);
@@ -78,7 +89,7 @@ class ProjectInvitationController extends Controller
 
         $user = Auth::user();
 
-        if ($invitation && $invitation->project) {
+        if ($invitation && $invitation->project && $result['success']) {
             $project = $invitation->project;
             $admin = $project->creator; // or $project->owner, depending on your model
 
@@ -141,7 +152,7 @@ class ProjectInvitationController extends Controller
             return redirect()->route('dashboard')->with('error', 'Cette invitation est pour une adresse email différente.');
         }
 
-        return view('projects.pending-invitation', [
+        return view('projet.pending-invitation', [
             'invitation' => $invitation,
             'project' => $invitation->project,
             'inviter' => $invitation->inviter,

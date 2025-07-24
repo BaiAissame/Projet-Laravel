@@ -6,9 +6,7 @@ use App\Models\UserInvitation;
 use App\Models\Project;
 use App\Models\User;
 use App\Repositories\InvitationRepository;
-use App\Mail\ProjectInvitation as ProjectInvitationMail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class InvitationService
 {
@@ -38,21 +36,19 @@ class InvitationService
             }
         }
         
-        //check if any invitation already exists for this project and email (ignore status)
         $existingInvitation = $this->invitationRepository->findExistingInvitation($project->id, $email);
             
         if ($existingInvitation) {
-            //if there is already an invitation, update status to pending
             $existingInvitation->update([
                 'status' => 'pending',
                 'inviter_id' => $currentUser->id,
             ]);
             
-            Mail::to($email)->send(new ProjectInvitationMail($project, $existingInvitation, $user !== null));
             
             return [
                 'success' => true,
-                'message' => 'Invitation a été renvoyé.'
+                'message' => 'Invitation a été renvoyé.',
+                'invitation' => $existingInvitation
             ];
         }
         
@@ -63,11 +59,11 @@ class InvitationService
             'inviter_id' => $currentUser->id,
         ]);
         
-        Mail::to($email)->send(new ProjectInvitationMail($project, $invitation, $user !== null));
         
         return [
             'success' => true,
-            'message' => 'Invitation envoyé.'
+            'message' => 'Invitation envoyé.',
+            'invitation' => $invitation 
         ];
     }
 
@@ -75,7 +71,7 @@ class InvitationService
     {
         $invitation = $this->invitationRepository->findWithRelations($invitationId);
         
-        //validate
+        
         if (!$invitation || $invitation->status !== 'pending') {
             return [
                 'success' => false,
@@ -86,7 +82,6 @@ class InvitationService
         
         $user = Auth::user();
         
-        //check if invitation email matches the logged in user's email
         if ($user->email !== $invitation->email) {
             return [
                 'success' => false,
@@ -107,7 +102,6 @@ class InvitationService
         
         $project = $invitation->project;
         
-        //add user to project if not already member
         if (!$this->invitationRepository->isUserProjectMember($project, $user)) {
             $project->members()->attach($user->id, ['role' => 'member']);
         }
@@ -135,7 +129,6 @@ class InvitationService
             ];
         }
         
-        //check if invitation is for the current user
         $user = Auth::user();
         if ($user->email !== $invitation->email) {
             return [
@@ -151,4 +144,4 @@ class InvitationService
             'message' => 'Invitation rejeté.'
         ];
     }
-} 
+}

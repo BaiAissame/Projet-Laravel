@@ -52,8 +52,15 @@ Configurer la base de données dans `.env` si besoin.
 ### 3. Installer les dépendances
 
 ```bash
+#Installer 
+sudo apt update
+sudo apt install php8.3-gd
+
+sudo apt install php-gd
+
+
 # Installer les dépendances PHP
-docker run --rm -v $(pwd):/app composer install
+composer install
 
 # Installer les dépendances front-end
 ./vendor/bin/sail npm install

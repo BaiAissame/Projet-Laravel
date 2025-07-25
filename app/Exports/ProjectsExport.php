@@ -3,22 +3,17 @@
 namespace App\Exports;
 
 use App\Models\Project;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class ProjectsExport implements FromCollection, WithHeadings
+class ProjectsExport implements WithMultipleSheets
 {
-    public function collection()
+    public function sheets(): array
     {
-        return Project::select('name', 'description', 'created_at')->get();
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Nom',
-            'Description',
-            'Date de création',
-        ];
+        $sheets = [];
+        $projects = Project::with(['listTasks.tasks.assignes'])->get();
+        foreach ($projects as $project) {
+            $sheets[] = new ProjectTasksSheetExport($project);
+        }
+        return $sheets;
     }
 }

@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
+    Route::get('/projects/download/{filename}', [ProjectController::class, 'download'])->name('projects.download');
+    Route::get('/projects/check-export/{filename}', [ProjectController::class, 'checkExport'])->name('projects.check-export');
 
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');

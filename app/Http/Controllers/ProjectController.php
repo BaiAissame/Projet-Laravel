@@ -11,7 +11,7 @@ use App\Exports\ProjectsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use App\Jobs\ExportProjectsJob;
 
 class ProjectController extends Controller
 {
@@ -94,17 +94,31 @@ class ProjectController extends Controller
 
     public function export()
     {
-        try {
-            $fileName = 'projects_export_' . Auth::id() . '_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
-            $filePath = 'exports/' . $fileName;
-
-            Excel::queue(new ProjectsExport, $filePath, 'public');
-
-            return redirect()->back()->with('success', 'Export en cours de traitement. Le fichier sera disponible dans quelques instants.');
-
-        } catch (\Throwable $e) {
-            Log::error('Erreur lors du lancement de l\'export: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Erreur lors du lancement de l\'export.');
+        $filename = 'projects_' . Auth::id() . '_' . time() . '.xlsx';
+        
+        ExportProjectsJob::dispatch(Auth::id(), $filename);
+        
+        return back()->with('export_filename', $filename)->with('success', 'Export en cours de génération...');
+    }
+    
+    public function download($filename)
+    {
+        $filePath = 'exports/' . $filename;
+        
+        if (!Storage::disk('public')->exists($filePath)) {
+            return response()->json(['ready' => false]);
         }
+        
+        $fullPath = Storage::disk('public')->path($filePath);
+        
+        return response()->download($fullPath, 'projects.xlsx');
+    }
+    
+    public function checkExport($filename)
+    {
+        $filePath = 'exports/' . $filename;
+        return response()->json([
+            'ready' => Storage::disk('public')->exists($filePath)
+        ]);
     }
 }

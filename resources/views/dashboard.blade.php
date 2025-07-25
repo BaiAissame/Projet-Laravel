@@ -281,4 +281,39 @@
             });
         </script>
     @endpush
+    @if(session('export_filename'))
+<script>
+(function() {
+    const filename = '{{ session('export_filename') }}';
+    
+    function checkExport() {
+        fetch('/projects/check-export/' + filename)
+            .then(response => response.json())
+            .then(data => {
+                if (data.ready) {
+                    // Créer un lien invisible et le cliquer pour déclencher le téléchargement
+                    const link = document.createElement('a');
+                    link.href = '/projects/download/' + filename;
+                    link.download = 'projects.xlsx';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    // Réessayer dans 2 secondes
+                    setTimeout(checkExport, 2000);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la vérification:', error);
+                // Réessayer dans 5 secondes en cas d'erreur
+                setTimeout(checkExport, 5000);
+            });
+    }
+    
+    // Démarrer la vérification
+    checkExport();
+})();
+</script>
+@endif
+
 </x-app-layout>

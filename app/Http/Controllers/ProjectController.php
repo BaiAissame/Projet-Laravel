@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\ProjectsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 
 class ProjectController extends Controller
 {
     public function create(Request $request)
     {
-
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -30,12 +32,11 @@ class ProjectController extends Controller
                 ->with('error', 'Vous avez déjà un projet avec ce nom. Veuillez choisir un nom différent.');
         }
 
-
         try {
             $projet = Project::create([
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
-                'user_id' => Auth::id(), // Assuming you have user authentication
+                'user_id' => Auth::id(),
             ]);
 
         } catch (\Throwable $th) {
@@ -47,7 +48,6 @@ class ProjectController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Projet crée avec succés!');
     }
-
 
     public function show(Project $projet)
     {
@@ -78,7 +78,6 @@ class ProjectController extends Controller
         return view('projet.show', compact('projets', 'projet'));
     }
 
-
     public function destroy(Project $projet)
     {
         if (!Auth::user() || !Auth::user()->hasRole('admin')) {
@@ -95,6 +94,17 @@ class ProjectController extends Controller
 
     public function export()
     {
-        return Excel::download(new ProjectsExport, 'projects.xlsx');
+        try {
+            $fileName = 'projects_export_' . Auth::id() . '_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+            $filePath = 'exports/' . $fileName;
+
+            Excel::queue(new ProjectsExport, $filePath, 'public');
+
+            return redirect()->back()->with('success', 'Export en cours de traitement. Le fichier sera disponible dans quelques instants.');
+
+        } catch (\Throwable $e) {
+            Log::error('Erreur lors du lancement de l\'export: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erreur lors du lancement de l\'export.');
+        }
     }
 }

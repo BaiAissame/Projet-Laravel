@@ -30,7 +30,6 @@ class ProjectController extends Controller
                 ->with('error', 'Vous avez déjà un projet avec ce nom. Veuillez choisir un nom différent.');
         }
 
-        // Validate the request data
 
         try {
             $projet = Project::create([
@@ -46,7 +45,6 @@ class ProjectController extends Controller
             );
         }
 
-        // Redirect or return a response
         return redirect()->route('dashboard')->with('success', 'Projet crée avec succés!');
     }
 
@@ -57,7 +55,6 @@ class ProjectController extends Controller
             return redirect()->route('dashboard')->with('error', 'Vous n\'avez pas accès à ce projet.');
         }
 
-        // Charger les relations nécessaires avec eager loading optimisé
         $projet->load([
             'listTasks' => function ($query) {
                 $query->orderBy('order');
@@ -74,7 +71,6 @@ class ProjectController extends Controller
             'members'
         ]);
 
-        //pour navbar left - optimisé avec eager loading
         $projets = Project::where('user_id', Auth::user()->id)
             ->select('id', 'name', 'slug')
             ->get();

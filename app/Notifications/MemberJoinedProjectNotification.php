@@ -16,21 +16,14 @@ class MemberJoinedProjectNotification extends Notification implements ShouldQueu
     protected $project;
     protected $newMember;
 
-    /**
-     * Le nombre de tentatives pour cette notification
-     */
     public $tries = 3;
-
-    /**
-     * Le timeout en secondes pour cette notification
-     */
     public $timeout = 120;
 
     public function __construct(Project $project, User $newMember)
     {
         $this->project = $project;
         $this->newMember = $newMember;
-        
+
         $this->onQueue('notifications');
     }
 
@@ -52,11 +45,9 @@ class MemberJoinedProjectNotification extends Notification implements ShouldQueu
             ->line('Souhaitez la bienvenue au nouveau membre de l\'équipe !');
     }
 
-    /**
-     * Détermine le délai avant la prochaine tentative en cas d'échec
-     */
+
     public function backoff(): array
     {
-        return [1, 5, 10]; // 1 minute, puis 5 minutes, puis 10 minutes
+        return [1, 5, 10];
     }
 }

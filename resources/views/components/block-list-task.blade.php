@@ -7,9 +7,9 @@
                 <i class="fas fa-ellipsis-h text-xl cursor-pointer list-menu-trigger"
                     data-list-task-id="{{ $listTask->id }}"></i>
 
-                <!-- Menu dropdown -->
                 <div class="list-menu hidden absolute right-50 top-8 bg-white shadow-lg rounded-md py-2 w-48 z-10">
-                    <button class="delete-list-btn w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 font-semibold"
+                    <button
+                        class="delete-list-btn w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 font-semibold"
                         data-list-task-id="{{ $listTask->id }}">
                         <i class="fas fa-trash mr-2"></i>
                         Supprimer la liste

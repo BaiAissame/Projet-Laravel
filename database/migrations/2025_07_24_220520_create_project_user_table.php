@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('project_user', function (Blueprint $table) {
@@ -14,8 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('role')->default('member');
             $table->timestamps();
-            
-            // Éviter les doublons
+
             $table->unique(['project_id', 'user_id']);
         });
     }

@@ -1,7 +1,6 @@
 <x-app-layout>
     <x-nav-left :data="$projets" :projet="$projet"></x-nav-left>
     <div class="flex-1 flex flex-col h-screen ml-64">
-        <!-- Header moderne du projet -->
         <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-xl border-b border-white/20 dark:border-gray-700/50 p-6 z-30">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-6">
@@ -22,7 +21,6 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <!-- Boutons de vue -->
                     <div class="flex bg-gray-100/80 dark:bg-gray-800/80 rounded-xl p-1 backdrop-blur-sm">
                         <button onclick="switchView('kanban')"
                                 class="px-4 py-2 rounded-lg text-sm font-medium view-btn active transition-all duration-200"
@@ -41,7 +39,6 @@
                         </button>
                     </div>
 
-                    <!-- Boutons d'action -->
                     <button onclick="openCreateTaskModal()"
                             class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
                         <i class="fas fa-plus mr-2"></i> Nouvelle tâche
@@ -55,16 +52,13 @@
             </div>
         </div>
 
-        <!-- Contenu principal -->
         <div class="flex-1 overflow-hidden">
-            <!-- Vue Kanban -->
             <div id="kanban-view" class="view-content h-full p-6 pl-8">
                 <div class="h-full">
                     <div class="flex gap-6 h-full overflow-x-auto pb-6" id="kanban-board">
                         @foreach($colonnes as $colonne)
                             <div class="kanban-column bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/50 p-6 min-w-80 max-w-80 flex flex-col relative {{ $colonne->color ? 'border-' . $colonne->color . '-400 dark:border-' . $colonne->color . '-500 bg-' . $colonne->color . '-50/50 dark:bg-' . $colonne->color . '-900/20' : '' }}"
                                  data-colonne-id="{{ $colonne->id }}" data-color="{{ $colonne->color }}">
-                                <!-- En-tête de colonne -->
                                 <div class="flex items-center justify-between mb-6">
                                     <div class="flex items-center flex-1">
                                         <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-3">
@@ -80,13 +74,11 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-1">
-                                        <!-- Bouton ajouter tâche rapide -->
                                         <button onclick="quickAddTask('{{ $colonne->id }}')"
                                                 class="w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                                             <i class="fas fa-plus text-sm"></i>
                                         </button>
 
-                                        <!-- Menu d'options -->
                                         <div class="relative">
                                             <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200" data-column-id="{{ $colonne->id }}">
                                                 <i class="fas fa-ellipsis-h"></i>
@@ -107,14 +99,12 @@
                                     </div>
                                 </div>
 
-                                <!-- Zone de tâches -->
                                 <div class="flex-1 space-y-3 droppable-zone overflow-y-auto" data-colonne="{{ $colonne->id }}">
                                     @foreach($colonne->tasks->sortBy('ordre') as $task)
                                         <div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group"
                                              data-task-id="{{ $task->id }}"
                                             onclick="openTaskModal('{{ $task->id }}')">
 
-                                            <!-- En-tête de la tâche -->
                                             <div class="flex items-start justify-between mb-3">
                                                 <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 flex-1 pr-2">
                                                     {{ $task->titre }}
@@ -148,14 +138,12 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Description -->
                                             @if($task->description)
                                                 <p class="text-gray-600 dark:text-gray-400 text-xs mb-3 line-clamp-2 leading-relaxed">
                                                     {{ Str::limit($task->description, 80) }}
                                                 </p>
                                             @endif
 
-                                            <!-- Tags et métadonnées -->
                                             <div class="flex items-center justify-between mb-3">
                                             @if($task->categorie)
                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-200">
@@ -172,9 +160,7 @@
                                                 @endif
                                             </div>
 
-                                            <!-- Pied de carte -->
                                             <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
-                                                <!-- Assignés -->
                                                 <div class="flex -space-x-2">
                                                     @foreach($task->assignes->take(3) as $assigne)
                                                         <div class="w-7 h-7 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold"
@@ -189,7 +175,6 @@
                                                     @endif
                                                 </div>
 
-                                                <!-- Actions rapides -->
                                                 <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')"
                                                             class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
@@ -216,7 +201,6 @@
                                     @endif
                                 </div>
 
-                                <!-- Bouton ajouter tâche -->
                                 <button onclick="quickAddTask('{{ $colonne->id }}')"
                                         class="w-full mt-4 p-4 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center group">
                                     <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform"></i>
@@ -225,7 +209,6 @@
                             </div>
                         @endforeach
 
-                        <!-- Colonne pour ajouter une nouvelle colonne -->
                         <div class="bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 min-w-80 max-w-80 flex flex-col items-center justify-center hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20">
                             <button onclick="addColumn()"
                                     class="w-full h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 min-h-32 group">
@@ -239,12 +222,10 @@
                 </div>
             </div>
 
-            <!-- Vue Liste -->
             <div id="list-view" class="view-content hidden h-full p-6 pl-8">
                 @include('projets.partials.list-view', ['tasks' => $tasks])
             </div>
 
-            <!-- Vue Calendrier -->
             <div id="calendar-view" class="view-content hidden h-full p-6 pl-8">
                 @include('projets.partials.calendar-view', ['tasks' => $tasks])
             </div>
@@ -254,7 +235,6 @@
     @include('projets.partials.task-modal')
     @include('projets.partials.column-modal')
 
-    <!-- Modal de sélection de couleur -->
     <div id="color-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div class="flex items-center justify-between mb-6">

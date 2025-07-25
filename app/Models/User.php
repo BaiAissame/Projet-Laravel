@@ -31,15 +31,13 @@ class User extends Authenticatable
         ];
     }
 
-    // Projets partagés avec cet utilisateur (relation inverse de Project::members)
     public function sharedProjects()
     {
         return $this->belongsToMany(Project::class, 'project_user')
-                    ->using(ProjectUser::class)
-                    ->withTimestamps();
+            ->using(ProjectUser::class)
+            ->withTimestamps();
     }
 
-    // Optionnel : projets créés par cet utilisateur
     public function ownedProjects()
     {
         return $this->hasMany(Project::class);

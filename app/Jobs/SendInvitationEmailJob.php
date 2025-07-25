@@ -21,19 +21,11 @@ class SendInvitationEmailJob implements ShouldQueue
     public $project;
     public $userExists;
 
-    /**
-     * Le nombre de tentatives pour ce job
-     */
     public $tries = 3;
 
-    /**
-     * Le timeout en secondes pour ce job
-     */
+
     public $timeout = 120;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(UserInvitation $invitation, Project $project, bool $userExists = false)
     {
         $this->invitation = $invitation;
@@ -41,13 +33,9 @@ class SendInvitationEmailJob implements ShouldQueue
         $this->userExists = $userExists;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         try {
-            // Vérifier que l'invitation est toujours valide
             if ($this->invitation->status !== 'pending') {
                 Log::warning('Tentative d\'envoi d\'email pour une invitation non-pending', [
                     'invitation_id' => $this->invitation->id,
@@ -56,7 +44,6 @@ class SendInvitationEmailJob implements ShouldQueue
                 return;
             }
 
-            // Envoyer l'email d'invitation
             Mail::to($this->invitation->email)
                 ->send(new ProjectInvitation($this->project, $this->invitation, $this->userExists));
 
@@ -77,9 +64,6 @@ class SendInvitationEmailJob implements ShouldQueue
         }
     }
 
-    /**
-     * Handle a job failure.
-     */
     public function failed(\Throwable $exception): void
     {
         Log::error('Échec définitif de l\'envoi de l\'email d\'invitation', [

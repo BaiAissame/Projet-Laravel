@@ -3,7 +3,6 @@
     <div class="custom-padding-projet bg-gray-50 dark:bg-gray-900 min-h-screen">
         <div class="mb-8">
              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                <!-- Bouton : Nouvelle liste -->
                 <button onclick="openCreateListModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -11,7 +10,6 @@
                     Nouvelle liste
                 </button>
 
-                <!-- Bouton : Liste des tâches -->
                 <a href="{{ route('tasks.list', ['projet' => $projet->slug]) }}">
                     <button class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
                         <span class="mr-2">📋</span>
@@ -19,7 +17,6 @@
                     </button>
                 </a>
 
-                <!-- Bouton : Calendrier -->
                 <a href="{{ route('tasks.calendar', ['projet' => $projet->slug]) }}">
                     <button class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
                         <span class="mr-2">📅</span>
@@ -53,13 +50,11 @@
                                 <input class="font-bold text-lg bg-transparent border-none w-3/4 text-gray-900 dark:text-white" value="{{ $listTask->title }}" readonly />
                             </div>
                             <div class="flex items-center space-x-1">
-                                <!-- Bouton ajouter tâche rapide -->
                                 <button onclick="quickAddTask('{{ $listTask->id }}')"
                                         class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
                                     <i class="fas fa-plus text-sm"></i>
                                 </button>
 
-                                <!-- Menu d'options -->
                                 <div class="relative">
                                     <button class="column-menu-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200" data-column-id="{{ $listTask->id }}">
                                         <i class="fas fa-ellipsis-h"></i>
@@ -85,7 +80,6 @@
                                      data-task-id="{{ $task->id }}"
                                      onclick="openTaskModal('{{ $task->id }}')">
 
-                                    <!-- Indicateur de priorité -->
                                     @if($task->priorite)
                                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r
                                             @switch($task->priorite)
@@ -96,7 +90,6 @@
                                         </div>
                                     @endif
 
-                                    <!-- En-tête de la tâche -->
                                     <div class="flex items-start justify-between mb-3 @if($task->priorite) mt-1 @endif">
                                         <div class="flex-1 pr-2">
                                             <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 mb-1">
@@ -138,7 +131,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Métadonnées de la tâche -->
                                     <div class="flex items-center justify-between mb-3 text-xs text-gray-500 dark:text-gray-400">
                                         <div class="flex items-center space-x-3">
                                             @if($task->date_limite)
@@ -167,7 +159,6 @@
                                         @endif
                                     </div>
 
-                                    <!-- Tags -->
                                     @if($task->tags && $task->tags->count() > 0)
                                         <div class="flex flex-wrap gap-1 mb-3">
                                             @foreach($task->tags->take(3) as $tag)
@@ -183,7 +174,6 @@
                                         </div>
                                     @endif
 
-                                    <!-- Actions rapides -->
                                     <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                                         <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button onclick="event.stopPropagation(); duplicateTask('{{ $task->id }}')"
@@ -235,7 +225,6 @@
         </div>
     </div>
 
-    <!-- Modal de création de liste -->
     <div id="create-list-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="create-list-content">
             <form onsubmit="return createListFromModal(event, '{{ $projet->slug }}')" class="p-8">
@@ -271,10 +260,8 @@
     </div>
 
 
-    <!-- Modal réutilisable des tâches -->
     @include('components.task-modal')
 
-    <!-- Modal moderne de sélection de couleur pour les listes -->
     <div id="color-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div class="flex items-center justify-between mb-6">
@@ -285,7 +272,6 @@
             </div>
 
 
-            <!-- Prévisualisation de la couleur sélectionnée -->
             <div id="color-preview" class="mb-6 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hidden">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -298,7 +284,6 @@
                 </div>
             </div>
 
-            <!-- Color picker personnalisé -->
             <div class="mb-6">
                 <div class="flex items-center space-x-3 mb-3">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Couleur personnalisée :</span>

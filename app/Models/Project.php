@@ -34,11 +34,10 @@ class Project extends Model
             ->withTimestamps();
     }
 
-    // Méthode optimisée pour récupérer les projets avec leurs tâches
     public function scopeWithTasks($query)
     {
         return $query->with([
-            'listTasks.tasks' => function($q) {
+            'listTasks.tasks' => function ($q) {
                 $q->orderBy('order');
             },
             'listTasks.tasks.assignes:id,name',
@@ -46,7 +45,6 @@ class Project extends Model
         ]);
     }
 
-    // Méthode pour compter les tâches sans les charger
     public function getTasksCountAttribute()
     {
         return $this->listTasks()->withCount('tasks')->get()->sum('tasks_count');
@@ -59,7 +57,6 @@ class Project extends Model
 
     public function getStatutAttribute()
     {
-        // Vous pouvez ajouter une logique pour déterminer le statut du projet
         return 'En cours';
     }
 
@@ -98,7 +95,7 @@ class Project extends Model
     }
 
     public function userInvitations()
-{
-    return $this->hasMany(\App\Models\UserInvitation::class);
-}
+    {
+        return $this->hasMany(\App\Models\UserInvitation::class);
+    }
 }

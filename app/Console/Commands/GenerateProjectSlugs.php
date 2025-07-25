@@ -21,7 +21,6 @@ class GenerateProjectSlugs extends Command
             $slug = $baseSlug;
             $counter = 1;
 
-            // Vérifie si le slug existe déjà
             while (Project::where('slug', $slug)->where('id', '!=', $project->id)->exists()) {
                 $slug = $baseSlug . '-' . $counter;
                 $counter++;

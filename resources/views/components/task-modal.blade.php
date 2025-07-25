@@ -849,7 +849,6 @@
     <div
       class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-visible transform transition-all duration-300 scale-95 opacity-0"
       id="task-modal-content">
-      <!-- Header -->
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
@@ -866,11 +865,8 @@
         </button>
       </div>
 
-      <!-- Content -->
       <div class="flex gap-4 p-6">
-        <!-- Main Content -->
         <div class="flex-1 pr-3 space-y-4">
-          <!-- Title -->
           <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm p-4 space-y-4">
             <div>
               <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
@@ -893,7 +889,6 @@
                 <i class="fas fa-tags text-blue-400 text-xs"></i> Tags
               </label>
               <div class="flex flex-wrap gap-2 mb-2 min-h-[24px]" id="tags-container">
-                <!-- Tags will be added here -->
               </div>
               <div class="flex gap-2">
                 <input type="text" id="new-tag"
@@ -924,7 +919,6 @@
           </div>
         </div>
 
-        <!-- Sidebar -->
         <div class="w-64 flex-shrink-0 space-y-4">
           <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm p-4 space-y-3">
             <div>
@@ -974,7 +968,6 @@
                 <i class="fas fa-users text-blue-400 text-xs"></i> Assignés
               </label>
               <div id="assignees-container" class="space-y-2 mb-2 min-h-[24px]">
-                <!-- Current assignees will be shown here -->
               </div>
               <div class="flex gap-2">
                 <select id="assignee-select"
@@ -1007,7 +1000,6 @@
   </div>
 </div>
 
-<!-- Modal moderne de sélection de couleur pour les listes -->
 <div id="color-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
     <div class="flex items-center justify-between mb-6">
@@ -1019,7 +1011,6 @@
     </div>
 
 
-    <!-- Prévisualisation de la couleur sélectionnée -->
     <div id="color-preview"
       class="mb-6 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hidden">
       <div class="flex items-center justify-between">
@@ -1033,7 +1024,6 @@
       </div>
     </div>
 
-    <!-- Color picker personnalisé -->
     <div class="mb-6">
       <div class="flex items-center space-x-3 mb-3">
         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Couleur personnalisée :</span>

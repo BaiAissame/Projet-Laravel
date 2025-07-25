@@ -32,7 +32,7 @@
                     <div class="hour-slot" data-date="{{ $dateString }}" data-hour="{{ $hour }}" ondrop="drop(event)"
                         ondragover="allowDrop(event)">
 
-                        @if($hour == 9) <!-- Afficher toutes les tâches à 9h -->
+                        @if($hour == 9)
                             @foreach($dayTasks as $task)
                                 <div class="task-block priority-{{ $task->priority }}" onclick="openTaskModal('{{ $task->id }}')"
                                     draggable="true" ondragstart="drag(event, '{{ $task->id }}')">

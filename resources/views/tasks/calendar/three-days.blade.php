@@ -1,7 +1,5 @@
-<!-- Vue 3 jours du calendrier -->
 <div class="calendar-three-days">
     <div class="row no-gutters">
-        <!-- En-têtes des jours -->
         <div class="col-2 calendar-header">Heure</div>
         @for($day = 0; $day < 3; $day++)
             @php
@@ -15,8 +13,7 @@
         @endfor
     </div>
 
-    <!-- Grille horaire -->
-    @for($hour = 6; $hour < 22; $hour++) <!-- Affichage de 6h à 22h -->
+    @for($hour = 6; $hour < 22; $hour++)
         <div class="row no-gutters">
             <div class="col-2 time-header">
                 {{ sprintf('%02d:00', $hour) }}
@@ -31,7 +28,7 @@
                 <div class="col time-slot" data-date="{{ $dateString }}" data-hour="{{ $hour }}" ondrop="drop(event)"
                     ondragover="allowDrop(event)">
 
-                    @if($hour == 9) <!-- Afficher les tâches à 9h pour simplifier -->
+                    @if($hour == 9)
                         @foreach($dayTasks as $task)
                             <div class="task-in-slot priority-{{ $task->priority }}" onclick="openTaskModal('{{ $task->id }}')"
                                 draggable="true" ondragstart="drag(event, '{{ $task->id }}')"

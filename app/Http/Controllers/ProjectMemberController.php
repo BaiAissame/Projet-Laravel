@@ -12,7 +12,6 @@ class ProjectMemberController extends Controller
 {
     public function index(Project $projet)
     {
-        // Vérifier les permissions
         if ($projet->user_id !== Auth::id() && !$projet->members()->where('user_id', Auth::id())->exists()) {
             abort(403);
         }

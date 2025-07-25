@@ -52,7 +52,7 @@ class Task extends Model
     {
         return $this->belongsTo(TaskPriority::class, 'task_priority_id');
     }
-    
+
 
     public function listTask(): BelongsTo
     {
@@ -79,19 +79,17 @@ class Task extends Model
         return $this->hasMany(TaskTag::class);
     }
 
-    // Accessor pour vérifier si la tâche est en retard
     public function getIsOverdueAttribute()
     {
         return $this->due_date && $this->due_date->isPast();
     }
 
-    // Accessor pour obtenir le nombre de jours restants
     public function getDaysRemainingAttribute()
     {
         if (!$this->due_date) {
             return null;
         }
-        
+
         return now()->diffInDays($this->due_date, false);
     }
 }

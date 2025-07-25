@@ -36,11 +36,9 @@ class ProjectInvitationController extends Controller
 
         $result = $this->invitationService->invite($project, $request->input('email'));
 
-        // Envoyer l'email d'invitation via la queue si l'invitation a réussi
         if ($result['success'] && isset($result['invitation'])) {
-            // Vérifier si l'utilisateur existe déjà
             $userExists = \App\Models\User::where('email', $request->input('email'))->exists();
-            
+
             SendInvitationEmailJob::dispatch($result['invitation'], $project, $userExists)
                 ->onQueue('emails')
                 ->delay(now()->addSeconds(5));
@@ -57,22 +55,18 @@ class ProjectInvitationController extends Controller
         }
     }
 
-    //accept invitation
     public function accept(Request $request, UserInvitation $invitation)
     {
-        //check if valid
         if ($invitation->status !== 'pending') {
             return redirect()->route('dashboard')->with('error', 'This invitation is no longer valid.');
         }
 
         $user = Auth::user();
 
-        //check if invitation email matches authenticated user email
         if ($user->email !== $invitation->email) {
             return redirect()->route('dashboard')->with('error', 'This invitation is for a different email address.');
         }
 
-        //load project and inviter information
         $invitation->load(['project', 'inviter']);
 
         return redirect()->route('project.invitation.pending', $invitation->id);
@@ -84,7 +78,6 @@ class ProjectInvitationController extends Controller
         $invitationId = $request->input('invitation_id');
         $result = $this->invitationService->finalizeAcceptance($invitationId);
 
-        // Retrieve the invitation to access its project and admin
         $invitation = $this->invitationRepository->findWithRelations($invitationId);
 
         $user = Auth::user();
@@ -111,7 +104,6 @@ class ProjectInvitationController extends Controller
         return response()->json($result, $result['success'] ? 200 : 422);
     }
 
-    //register before responding the invitation
     public function handlePostRegistration(Request $request)
     {
         $invitationId = $request->query('invitation');

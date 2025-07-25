@@ -21,7 +21,6 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -32,7 +31,6 @@
 
 <body class="font-sans antialiased bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
     <div class="min-h-screen flex flex-col">
-        <!-- Header moderne avec effet de verre -->
         <header
             class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-white/20 dark:border-gray-700/50 shadow-lg fixed top-0 left-0 right-0 z-50">
             @include('layouts.navigation')
@@ -45,7 +43,6 @@
             <x-modal-create-tableau></x-modal-create-tableau>
             <x-modal-add-member></x-modal-add-member>
 
-            <!-- Modal de notification moderne -->
             <div id="notification-modal"
                 class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0"
@@ -68,11 +65,9 @@
             </div>
         </main>
 
-        <!-- Container de notifications modernes -->
         <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 
@@ -111,12 +106,10 @@
 
             container.appendChild(toast);
 
-            // Animation d'entrée
             setTimeout(() => {
                 toast.classList.remove('translate-x-full', 'opacity-0');
             }, 100);
 
-            // Animation de sortie
             setTimeout(() => {
                 toast.classList.add('translate-x-full', 'opacity-0');
                 setTimeout(() => {
@@ -137,7 +130,6 @@
             }, 300);
         }
 
-        // Gestion du thème sombre
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -154,7 +146,6 @@
             }
         });
 
-        // Animation des modals
         document.addEventListener('DOMContentLoaded', function () {
             const modals = document.querySelectorAll('[id$="-modal"]');
             modals.forEach(modal => {

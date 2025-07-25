@@ -8,8 +8,9 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\WallController;
-use App\Http\Controllers\TaskViewController;  
+use App\Http\Controllers\TaskViewController;
 use App\Http\Controllers\Project\ProjectInvitationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/post_message', [WallController::class, 'postMessage'])->name('message.post');
@@ -73,12 +74,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+    Route::get('/tasks/search', [TaskController::class, 'search'])->name('tasks.search');
     Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-       //project invitation routes
     Route::post('/projects/{project}/invite', [ProjectInvitationController::class, 'invite'])
         ->name('project.invitation.send');
 
@@ -98,12 +99,10 @@ Route::middleware('auth')->group(function () {
         ->middleware(['auth'])
         ->name('project.invitation.pending');
 
-    // Routes supplémentaires pour gérer les invitations
     Route::post('/invitations/{invitation}/resend', [ProjectInvitationController::class, 'resend'])
         ->name('project.invitation.resend');
     Route::delete('/invitations/{invitation}/cancel', [ProjectInvitationController::class, 'cancel'])
         ->name('project.invitation.cancel');
-    // Nouvelles routes API pour la modal moderne des tâches
     Route::prefix('api')->group(function () {
         Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('api.tasks.show');
 
@@ -120,6 +119,12 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/{id}/edit-role', [UserController::class, 'editRole'])->name('users.editRole');
+        Route::put('/users/{id}/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
+    });
 });
 
 require __DIR__ . '/auth.php';

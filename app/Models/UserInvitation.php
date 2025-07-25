@@ -21,17 +21,11 @@ class UserInvitation extends Model
       'inviter_id',
    ];
 
-   /**
-    * Relation avec le modèle Project.
-    */
    public function project()
    {
       return $this->belongsTo(Project::class);
    }
 
-   /**
-    * Relation with the model User (inviter).
-    */
    public function inviter()
    {
       return $this->belongsTo(User::class, 'inviter_id');

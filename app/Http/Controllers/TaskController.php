@@ -31,9 +31,7 @@ class TaskController extends Controller
 
             $html = '<div class="task-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 draggable-task cursor-grab hover:shadow-xl transition-all duration-200 transform hover:scale-105 group relative overflow-hidden" data-task-id="' . $task->id . '" onclick="openTaskModal(' . $task->id . ')">
 
-                <!-- Indicateur de priorité -->
 
-                <!-- En-tête de la tâche -->
                 <div class="flex items-start justify-between mb-3 ">
                     <div class="flex-1 pr-2">
                         <h4 class="font-bold text-gray-900 dark:text-white text-sm leading-5 mb-1">
@@ -47,15 +45,12 @@ class TaskController extends Controller
                     </div>
                 </div>
 
-                <!-- Métadonnées de la tâche -->
                 <div class="flex items-center justify-between mb-3 text-xs text-gray-500 dark:text-gray-400">
                     <div class="flex items-center space-x-3">
                     </div>
                 </div>
 
-                <!-- Tags -->
 
-                <!-- Actions rapides -->
                 <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                     <div class="flex items-center space-x-1 group-hover:opacity-100 transition-opacity opacity-0">
                         <button onclick="event.stopPropagation(); duplicateTask(\'' . $task->id . '\')" class="w-6 h-6 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200" title="Dupliquer">
@@ -461,5 +456,16 @@ class TaskController extends Controller
                 'message' => 'Erreur lors de la suppression du tag'
             ], 500);
         }
+    }
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+        $tasks = [];
+        if ($query) {
+            $tasks = Task::where('title', 'LIKE', "%{$query}%")
+                ->orWhere('description', 'LIKE', "%{$query}%")
+                ->get();
+        }
+        return view('tasks.search', compact('tasks', 'query'));
     }
 }

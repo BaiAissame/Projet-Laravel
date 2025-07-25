@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-nav-left :data="$projets" :projet="$projet"></x-nav-left>
     <div class="custom-padding-projet bg-gray-50 dark:bg-gray-900 min-h-screen">
+        <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{{ $projet->name }}</h1>
         <div class="mb-8">
              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <button onclick="openCreateListModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200">

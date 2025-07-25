@@ -16,6 +16,8 @@ Application de gestion de projets et de tâches en mode Kanban, développée ave
 - Gestion des rôles et permissions (admin, membre, via Laratrust)
 - Export Excel de la liste des projets (maatwebsite/excel)
 - Interface responsive et moderne
+- Recherche plein texte sur les tâches (titre et description)
+- Tests unitaires et fonctionnels pour les modèles et routes principales (PHPUnit)
 
 
 ---
